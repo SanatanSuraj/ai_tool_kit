@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeftIcon, SpeakerWaveIcon, ClipboardIcon, PauseIcon, PlayIcon, CheckIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
+import Footer from '@/components/Footer';
 
 export default function TextToSpeechPage() {
   const [text, setText] = useState<string>("");
@@ -279,13 +280,7 @@ export default function TextToSpeechPage() {
       <PopularTools />
 
       {/* Footer Section */}
-      <footer className="mt-16 py-8 border-t border-gray-100">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-          <p className="text-center text-gray-500 text-sm">
-            © {new Date().getFullYear()} Text to Speech Tool. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 } 

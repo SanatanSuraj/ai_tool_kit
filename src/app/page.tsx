@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -140,7 +141,7 @@ export default function Home() {
             {/* Checker tools */}
             <div className="group relative">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-purple-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/checker" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+              <Link href="/categories/checker-tools" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-fuchsia-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
                   <div className="bg-gradient-to-br from-fuchsia-100 to-purple-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -163,7 +164,7 @@ export default function Home() {
             {/* Text tools - with similar structure but different colors */}
             <div className="group relative">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/text" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+              <Link href="/categories/text-tools" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-blue-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
                   <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -187,7 +188,7 @@ export default function Home() {
             {/* Converter tools */}
             <div className="group relative">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/converter" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+              <Link href="/categories/converter-tools" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-emerald-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
                   <div className="bg-gradient-to-br from-emerald-100 to-green-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -210,7 +211,7 @@ export default function Home() {
             {/* Generator tools */}
             <div className="group relative">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/generator" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+              <Link href="/categories/generator-tools" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-cyan-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
                   <div className="bg-gradient-to-br from-cyan-100 to-blue-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -233,7 +234,7 @@ export default function Home() {
             {/* Developer tools */}
             <div className="group relative">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/developer" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+              <Link href="/categories/developer-tools" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-violet-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
                   <div className="bg-gradient-to-br from-violet-100 to-purple-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -252,20 +253,20 @@ export default function Home() {
                 </div>
               </Link>
             </div>
-
+            
             {/* Image tools */}
             <div className="group relative">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/image" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
+              <Link href="/categories/image-tools" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-rose-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
-                  <div className="bg-gradient-to-br from-rose-100 to-pink-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <div className="bg-gradient-to-br from-rose-100 to-orange-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Image Tools</h3>
-                  <p className="text-gray-600">Powerful tools for image manipulation and optimization.</p>
+                  <p className="text-gray-600">Powerful utilities to edit, optimize, and transform your images online.</p>
                   <div className="mt-4 flex items-center text-rose-600 font-medium">
                     Explore tools
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -275,21 +276,21 @@ export default function Home() {
                 </div>
               </Link>
             </div>
-
-            {/* Unit converter tools */}
+            
+            {/* Unit Converter */}
             <div className="group relative">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/unit-converter" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
-                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-amber-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-sky-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
+              <Link href="/categories/unit-converter" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-blue-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
-                  <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                  <div className="bg-gradient-to-br from-blue-100 to-sky-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Unit Converter</h3>
-                  <p className="text-gray-600">Convert between different units of measurement with precision and accuracy.</p>
-                  <div className="mt-4 flex items-center text-amber-600 font-medium">
+                  <p className="text-gray-600">Easily convert between different units of measurement with precision.</p>
+                  <div className="mt-4 flex items-center text-blue-600 font-medium">
                     Explore tools
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -298,21 +299,21 @@ export default function Home() {
                 </div>
               </Link>
             </div>
-
-            {/* Time converter tools */}
+            
+            {/* Time Converter */}
             <div className="group relative">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/time-converter" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
-                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-teal-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
+              <Link href="/categories/time-converter" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-indigo-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
-                  <div className="bg-gradient-to-br from-teal-100 to-emerald-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Time Converter</h3>
-                  <p className="text-gray-600">Convert between different time zones and formats effortlessly.</p>
-                  <div className="mt-4 flex items-center text-teal-600 font-medium">
+                  <p className="text-gray-600">Tools for converting and calculating dates, times, and durations across formats.</p>
+                  <div className="mt-4 flex items-center text-indigo-600 font-medium">
                     Explore tools
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -321,44 +322,21 @@ export default function Home() {
                 </div>
               </Link>
             </div>
-
-            {/* Data converter tools */}
+            
+            {/* Data Converter */}
             <div className="group relative">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-lime-500 to-green-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/data-converter" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
-                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-lime-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
+              <Link href="/categories/data-converter" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-teal-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative">
-                  <div className="bg-gradient-to-br from-lime-100 to-green-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-lime-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                  <div className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Data Converter</h3>
-                  <p className="text-gray-600">Convert between different data formats and storage units.</p>
-                  <div className="mt-4 flex items-center text-lime-600 font-medium">
-                    Explore tools
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
-            </div>
-
-            {/* Misc tools */}
-            <div className="group relative">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
-              <Link href="/tools/misc" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
-                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-indigo-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
-                <div className="relative">
-                  <div className="bg-gradient-to-br from-indigo-100 to-violet-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Misc Tools</h3>
-                  <p className="text-gray-600">Additional useful tools for various development needs.</p>
-                  <div className="mt-4 flex items-center text-indigo-600 font-medium">
+                  <p className="text-gray-600">Convert between different data formats and encodings for seamless integration.</p>
+                  <div className="mt-4 flex items-center text-teal-600 font-medium">
                     Explore tools
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -405,7 +383,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Can I upgrade or downgrade my plan at any time?</h3>
               <p className="text-gray-600">Yes, you can change your plan at any time. When upgrading, you'll get immediate access to new features. When downgrading, you'll retain your current features until the end of your billing period.</p>
-                </div>
+            </div>
 
             {/* FAQ Item 3 */}
             <div className="bg-white rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl">
@@ -417,7 +395,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl">
               <h3 className="text-xl font-bold text-gray-900 mb-4">What kind of support do you offer?</h3>
               <p className="text-gray-600">We offer email support for all plans. Golden plan users receive priority support with faster response times, while Custom plan users get dedicated support channels and personalized assistance.</p>
-                </div>
+            </div>
 
             {/* FAQ Item 5 */}
             <div className="bg-white rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl">
@@ -429,8 +407,8 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Do you offer custom solutions for enterprises?</h3>
               <p className="text-gray-600">Yes, our Custom plan is designed for enterprises and teams with specific needs. Contact us to discuss your requirements, and we'll create a tailored solution with custom API limits, dedicated support, and specialized features.</p>
-                  </div>
-                </div>
+            </div>
+          </div>
 
           {/* Contact Support Button */}
           <div className="mt-12 text-center">
@@ -438,7 +416,7 @@ export default function Home() {
             <button className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-3 rounded-full font-medium transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+              </svg>
               Contact Support
             </button>
           </div>
@@ -820,91 +798,7 @@ export default function Home() {
       </section>
 
       {/* Footer Section */}
-      <footer className="relative overflow-hidden border-t border-gray-100 bg-white/80 backdrop-blur-xl">
-        {/* Decorative Elements */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/50 to-blue-100/50 opacity-50" />
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zM22.343 0L13.8 8.544 15.214 9.96l9.9-9.9h-2.77zM32.657 0l8.544 8.544-1.415 1.414-9.9-9.9h2.77zm-12.657 0l9.9 9.9-1.415 1.414L19.97 2.828 21.384 1.414 19.97 0h.03zm20.97 0l-9.9 9.9 1.415 1.414 8.544-8.544L40.03 0h.97zm-9.9 9.9l9.9 9.9-1.414 1.414L29.9 9.9l1.414-1.414-1.414-1.414L41.37 19.385l1.414-1.414-11.9-11.9v.03zm-1.414 1.414L29.9 9.9l-9.9 9.9 1.414 1.414 9.9-9.9zm-9.9-1.414l1.414 1.414-9.9 9.9-1.414-1.414 9.9-9.9zm-1.414 1.414L17.557 22.728 19 24.142l10.97-10.97-1.414-1.414zm2.828 2.828l-1.414 1.414 8.544 8.544 1.414-1.414-8.544-8.544zm-4.242 4.242l-1.414 1.414 8.544 8.544 1.414-1.414-8.544-8.544zm2.828 2.828l-1.414 1.414 8.544 8.544 1.414-1.414-8.544-8.544zm-4.242 4.242l-1.414 1.414 8.544 8.544 1.414-1.414-8.544-8.544zm2.828 2.828l-1.414 1.414 8.544 8.544 1.414-1.414-8.544-8.544zm-4.242 4.242l-1.414 1.414 8.544 8.544 1.414-1.414-8.544-8.544z' fill='%234B5563' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-          backgroundSize: '60px 60px'
-        }} />
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-16 relative">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Logo and Description */}
-            <div className="space-y-8">
-              <div className="flex items-center gap-3">
-                <div className="relative group">
-                  <Image
-                    src="/logo.svg"
-                    alt="AI Toolkit Logo"
-                    width={44}
-                    height={44}
-                    className="w-11 h-11 transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-blue-500/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300" />
-                </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                  AI Toolkit
-                </span>
-              </div>
-              
-              <p className="text-gray-600 text-lg max-w-md leading-relaxed">
-                Access powerful AI tools instantly — no downloads, no installations. Code, optimize, debug, and collaborate all in one place.
-              </p>
-
-              <div className="flex gap-6">
-                <a href="#" className="text-gray-400 hover:text-gray-600 transition-all duration-300 hover:scale-110">
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600 transition-all duration-300 hover:scale-110">
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600 transition-all duration-300 hover:scale-110">
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* WebBuddy Logo and Attribution */}
-            <div className="flex flex-col items-center justify-center relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-blue-500/10 to-purple-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
-              <div className="relative">
-                <Image
-                  src="/1.png"
-                  alt="WebBuddy Logo"
-                  width={280}
-                  height={84}
-                  className="transition-all duration-500 group-hover:scale-105"
-                />
-              </div>
-              <p className="mt-6 text-gray-600 text-base font-medium tracking-wide">
-                Crafted by{' '}
-                <a 
-                  href="https://webbuddy.agency" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-gray-900 hover:text-blue-600 transition-colors duration-300"
-                >
-                  webbuddy.agency
-                </a>
-              </p>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="mt-16 pt-8 border-t border-gray-100">
-            <p className="text-center text-gray-500 text-sm">
-              © {new Date().getFullYear()} AI Toolkit. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
