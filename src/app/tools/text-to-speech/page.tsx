@@ -124,7 +124,7 @@ export default function TextToSpeechPage() {
                       <textarea
                         id="text"
                         rows={8}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none shadow-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none shadow-sm text-gray-900"
                         placeholder="Type or paste your text here..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}

@@ -1,6 +1,19 @@
 import Link from 'next/link';
 
-const PopularTools = () => {
+interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  url: string;
+}
+
+interface PopularToolsProps {
+  tools: Tool[];
+}
+
+const PopularTools = ({ tools }: PopularToolsProps) => {
   return (
     <section className="py-16 relative">
       {/* Background decorations */}

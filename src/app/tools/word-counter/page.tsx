@@ -145,7 +145,7 @@ export default function WordCounterPage() {
                   </div>
                   
                   <textarea
-                    className="w-full h-64 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                    className="w-full h-64 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors text-gray-900"
                     placeholder="Type or paste your text here..."
                     value={text}
                     onChange={(e) => setText(e.target.value)}

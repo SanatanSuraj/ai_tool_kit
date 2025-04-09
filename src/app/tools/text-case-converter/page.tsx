@@ -258,7 +258,7 @@ export default function TextCaseConverterPage() {
                         <textarea
                           id="inputText"
                           placeholder="Type or paste your text here..."
-                          className="w-full min-h-[180px] p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
+                          className="w-full min-h-[180px] p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y text-gray-900"
                           value={text}
                           onChange={handleTextChange}
                         />
@@ -327,7 +327,7 @@ export default function TextCaseConverterPage() {
                       <textarea
                         id="outputText"
                         placeholder="Converted text will appear here..."
-                        className="w-full min-h-[180px] p-4 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
+                        className="w-full min-h-[180px] p-4 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y text-gray-900"
                         value={output}
                         readOnly
                       />
