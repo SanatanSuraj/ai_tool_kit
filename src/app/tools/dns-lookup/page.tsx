@@ -6,6 +6,37 @@ import { ArrowLeftIcon, GlobeAltIcon, ServerIcon, DocumentTextIcon } from "@hero
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
 
+interface SoaRecord { // for record type SOA
+  nsname: string;
+  hostmaster: string;
+  serial: number;
+  refresh: number;
+  retry: number;
+  expire: number;
+  minttl: number;
+}
+
+interface SrvRecord { // for record type SRV
+  priority: number;
+  weight: number;
+  port: number;
+  name: string;
+}
+
+interface MxRecord { // for record type MX
+  priority: number;
+  exchange: string;
+}
+
+interface CaaRecord { // for record type CAA
+  critical: number;
+  issue?: string | undefined;
+  issuewild?: string | undefined;
+  iodef?: string | undefined;
+  contactemail?: string | undefined;
+  contactphone?: string | undefined;
+}
+
 // DNS Record types
 const DNS_RECORD_TYPES = [
   { value: "A", label: "A (IPv4 Address)" },
@@ -23,8 +54,16 @@ const DNS_RECORD_TYPES = [
 export default function DNSLookupPage() {
   const [domain, setDomain] = useState("");
   const [recordType, setRecordType] = useState("A");
+  const [currentRecordType, setCurrentRecordType] = useState(recordType);
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<
+    | string[]
+    | MxRecord[]
+    | SoaRecord
+    | SrvRecord[]
+    | string[][]
+    | CaaRecord[]
+  >([]);
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -38,98 +77,33 @@ export default function DNSLookupPage() {
     
     // Simple domain validation
     const domainPattern = /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-    if (!domainPattern.test(domain)) {
+    if (recordType !== "PTR" && !domainPattern.test(domain)) {
       setError("Please enter a valid domain name");
       return;
     }
-    
+    setCurrentRecordType(recordType);
     setIsLoading(true);
     setError("");
     setResults([]);
     
     try {
-      // In a real implementation, you would make an API call to perform DNS lookup
-      // For this demo, we'll simulate a response based on the record type
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock data - in a real app, this would come from your API
-      let mockResults: any[] = [];
-      
-      switch (recordType) {
-        case "A":
-          mockResults = [
-            { type: "A", name: domain, value: "192.0.2.1", ttl: 3600 },
-            { type: "A", name: domain, value: "192.0.2.2", ttl: 3600 }
-          ];
-          break;
-        case "AAAA":
-          mockResults = [
-            { type: "AAAA", name: domain, value: "2001:db8::1", ttl: 3600 }
-          ];
-          break;
-        case "CNAME":
-          mockResults = [
-            { type: "CNAME", name: `www.${domain}`, value: domain, ttl: 3600 }
-          ];
-          break;
-        case "MX":
-          mockResults = [
-            { type: "MX", name: domain, value: `mail.${domain}`, priority: 10, ttl: 3600 },
-            { type: "MX", name: domain, value: `mail2.${domain}`, priority: 20, ttl: 3600 }
-          ];
-          break;
-        case "TXT":
-          mockResults = [
-            { type: "TXT", name: domain, value: "v=spf1 include:_spf.google.com ~all", ttl: 3600 },
-            { type: "TXT", name: domain, value: "google-site-verification=abcdefghijklmnopqrstuvwxyz", ttl: 3600 }
-          ];
-          break;
-        case "NS":
-          mockResults = [
-            { type: "NS", name: domain, value: `ns1.${domain}`, ttl: 86400 },
-            { type: "NS", name: domain, value: `ns2.${domain}`, ttl: 86400 }
-          ];
-          break;
-        case "SOA":
-          mockResults = [
-            { 
-              type: "SOA", 
-              name: domain, 
-              primaryNameServer: `ns1.${domain}`,
-              adminEmail: `admin.${domain}`,
-              serialNumber: "2023010100",
-              refresh: 28800,
-              retry: 7200,
-              expire: 604800,
-              minimumTTL: 86400,
-              ttl: 86400
-            }
-          ];
-          break;
-        case "SRV":
-          mockResults = [
-            { type: "SRV", name: `_sip._tcp.${domain}`, priority: 10, weight: 5, port: 5060, target: `sip.${domain}`, ttl: 3600 }
-          ];
-          break;
-        case "CAA":
-          mockResults = [
-            { type: "CAA", name: domain, flags: 0, tag: "issue", value: "letsencrypt.org", ttl: 3600 }
-          ];
-          break;
-        case "PTR":
-          mockResults = [
-            { type: "PTR", name: "1.2.0.192.in-addr.arpa", value: `server.${domain}`, ttl: 86400 }
-          ];
-          break;
-        default:
-          mockResults = [
-            { type: "A", name: domain, value: "192.0.2.1", ttl: 3600 }
-          ];
+      const response = await fetch("/api/dns-lookup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ domain, type: recordType })
+      });
+
+      if (!response.ok) {
+        const { error } = await response.json();
+        throw new Error(error || "Unknown error");
       }
-      
-      setResults(mockResults);
-    } catch (err) {
-      setError("Failed to perform DNS lookup. Please try again.");
+  
+      const data = await response.json();
+      setResults(data.records || []);
+    } catch (err: any) {
+      setError(err.message || "Failed to perform DNS lookup. Please try again.");
       console.error("DNS lookup error:", err);
     } finally {
       setIsLoading(false);
@@ -319,50 +293,126 @@ export default function DNSLookupPage() {
                     </button>
                   </form>
                   
-                  {results.length > 0 && (
+                  {(Array.isArray(results) && results.length > 0) || (!Array.isArray(results) && currentRecordType === "SOA") ? (
                     <div className="mt-6 p-5 bg-gray-50 rounded-xl border border-gray-100">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">DNS Results for {domain}</h3>
                         <div className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
-                          {recordType} Record{results.length > 1 ? 's' : ''}
+                          {currentRecordType} Record{Array.isArray(results) && results?.length > 1 ? "s" : ""}
                         </div>
                       </div>
-                      
+
                       <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                           <thead className="bg-gray-100">
                             <tr>
-                              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">
-                                Type
-                              </th>
-                              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Name
-                              </th>
-                              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Value
-                              </th>
-                              <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">
-                                TTL
-                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TTL</th>
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {results.map((record, index) => (
-                              <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                                  {record.type}
+                            {currentRecordType === "SOA" && !Array.isArray(results) ? (
+                              <tr className="bg-white">
+                                <td className="px-4 py-3 text-sm font-medium text-gray-900">SOA</td>
+                                <td className="px-4 py-3 text-sm text-gray-700 font-mono">{domain}</td>
+                                <td className="px-4 py-3 text-sm text-gray-700 break-all">
+                                  NS: {results?.nsname || ""}
+                                  <br />
+                                  Hostmaster: {results?.hostmaster || ""}
+                                  <br />
+                                  Serial: {results?.serial || ""}
+                                  <br />
+                                  Refresh: {results?.refresh || ""}s
+                                  <br />
+                                  Retry: {results?.retry  || ""}s
+                                  <br />
+                                  Expire: {results?.expire || ""}s
+                                  <br />
+                                  Minimum TTL: {results?.minttl || ""}s
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-700 font-mono">
-                                  {record.name}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-700">
-                                  {renderRecordValue(record)}
-                                </td>
-                                <td className="px-4 py-3 text-sm text-gray-500">
-                                  {record.ttl}s
-                                </td>
+                                <td className="px-4 py-3 text-sm text-gray-500">{results?.minttl}s</td>
                               </tr>
-                            ))}
+                            ) : (
+                              Array.isArray(results) &&
+                              results.map((record: any, index: number) => {
+                                const isEven = index % 2 === 0;
+                                const rowClass = isEven ? "bg-white" : "bg-gray-50";
+                              
+                                let valueContent = "";
+                                const ttl = record?.ttl ?? "-";
+                                const name = record?.name ?? domain;
+                              
+                                switch (currentRecordType) {
+                                  case "A":
+                                  case "AAAA":
+                                  case "CNAME":
+                                  case "NS":
+                                  case "PTR": {
+                                    valueContent = record?.value ?? record;
+                                    break;
+                                  }
+                              
+                                  case "TXT": {
+                                    valueContent = Array.isArray(record)
+                                      ? record?.join(" ")
+                                      : record?.value ?? record;
+                                    break;
+                                  }
+                              
+                                  case "MX": {
+                                    const mx = record as MxRecord;
+                                    valueContent = `${mx?.exchange} (Priority: ${mx?.priority})`;
+                                    break;
+                                  }
+                              
+                                  case "SRV": {
+                                    const srv = record as SrvRecord;
+                                    valueContent = `${srv?.name}:${srv?.port} (Priority: ${srv?.priority}, Weight: ${srv?.weight})`;
+                                    break;
+                                  }
+                              
+                                  case "CAA": {
+                                    const caa = record as CaaRecord;
+                                    const details: string[] = [];
+                                    if (caa?.issue) details.push(`issue: ${caa?.issue}`);
+                                    if (caa?.issuewild) details.push(`issuewild: ${caa?.issuewild}`);
+                                    if (caa?.iodef) details.push(`iodef: ${caa?.iodef}`);
+                                    if (caa?.contactemail) details.push(`email: ${caa?.contactemail}`);
+                                    if (caa?.contactphone) details.push(`phone: ${caa?.contactphone}`);
+                                    valueContent = `Critical: ${caa?.critical}${details?.length ? `, ${details.join(", ")}` : ""}`;
+                                    break;
+                                  }
+                              
+                                  case "ANY": {
+                                    valueContent = JSON.stringify(record, null, 2);
+                                    break;
+                                  }
+                              
+                                  default: {
+                                    valueContent = typeof record === "string" ? record : JSON.stringify(record, null, 2);
+                                  }
+                                }
+                              
+                                return (
+                                  <tr key={index} className={rowClass}>
+                                    <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                                      {record?.type ?? currentRecordType}
+                                    </td>
+                                    <td className="px-4 py-3 text-sm text-gray-700 font-mono">
+                                      {name}
+                                    </td>
+                                    <td className="px-4 py-3 text-sm text-gray-700 break-all">
+                                      {valueContent}
+                                    </td>
+                                    <td className="px-4 py-3 text-sm text-gray-500">
+                                      {ttl}s
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            )}
                           </tbody>
                         </table>
                       </div>
@@ -373,7 +423,7 @@ export default function DNSLookupPage() {
                         </div>
                       </div>
                     </div>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>
