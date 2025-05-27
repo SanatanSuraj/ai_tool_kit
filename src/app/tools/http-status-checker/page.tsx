@@ -33,37 +33,24 @@ export default function HttpStatusCheckerPage() {
     setResult(null);
     
     try {
-      // In a real implementation, you would make an API call to check the URL status
-      // For this demo, we'll simulate a response
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock data - in a real app, this would come from your API
-      const mockResponse = {
-        url: url,
-        statusCode: 200,
-        statusText: "OK",
-        responseTime: 325, // ms
+      const response = await fetch("/api/http-status-checker", {
+        method: "POST",
         headers: {
-          "content-type": "text/html; charset=utf-8",
-          "cache-control": "max-age=600",
-          "content-length": "12864",
-          "date": new Date().toUTCString(),
-          "server": "nginx/1.20.1",
-          "x-powered-by": "PHP/8.0.13",
-          "strict-transport-security": "max-age=31536000; includeSubDomains",
-          "x-content-type-options": "nosniff",
-          "x-frame-options": "SAMEORIGIN",
-          "x-xss-protection": "1; mode=block",
+          "Content-Type": "application/json"
         },
-        redirectCount: 1,
-        ip: "192.168.1.1",
-        ssl: true,
-        contentType: "text/html; charset=utf-8",
-      };
+        body: JSON.stringify({ url })
+      });
+
+      if (!response.ok) {
+        const { error } = await response.json();
+        throw new Error(error || "Unknown error");
+      }
+
+      const data = await response.json();
       
-      setResult(mockResponse);
+      setResult({...data, url, contentType: data?.headers["content-type"] || ""});
     } catch (err) {
-      setError("Failed to check URL status. Please try again.");
+      setError((err as Error)?.message ?? "Failed to check URL status. Please try again.");
       console.error("HTTP status check error:", err);
     } finally {
       setIsLoading(false);
