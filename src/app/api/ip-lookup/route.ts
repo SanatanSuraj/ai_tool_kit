@@ -1,3 +1,4 @@
+import { IP_API_URL } from '@/utils/constants/ipApiUrl';
 import { NextResponse } from 'next/server';
 import net from "node:net";
 
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const response = await fetch(`http://ip-api.com/json/${ip}`);
+    const response = await fetch(`${IP_API_URL}/${ip}`);
     const data = await response.json();
     return NextResponse.json(data);
   } catch (err) {
