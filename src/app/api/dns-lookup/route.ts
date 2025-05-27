@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     // Special handling for PTR (reverse lookup)
     if (type === "PTR") {
       const ipType = net.isIP(domain); // 0 = invalid, 4 = IPv4, 6 = IPv6
-      if (!net.isIP(domain)) {
+      if (!ipType) {
         return NextResponse.json(
           { error: "Invalid IP address for PTR record" },
           { status: 400 }

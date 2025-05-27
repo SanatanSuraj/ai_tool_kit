@@ -55,7 +55,7 @@ export default function WhoisLookupPage() {
       
       setResult(data);
     } catch (err) {
-      setError("Failed to perform WHOIS lookup. Please try again.");
+      setError((err as Error).message ?? "Failed to perform WHOIS lookup. Please try again.");
       console.error("WHOIS lookup error:", err);
     } finally {
       setIsLoading(false);
