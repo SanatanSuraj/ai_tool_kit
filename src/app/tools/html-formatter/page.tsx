@@ -213,20 +213,27 @@ function greet() {
   };
   
   // Minify the HTML
-  const minifyHtml = () => {
+  const minifyHtml = async () => {
     try {
       if (!input.trim()) return;
       
-      // Simple minification (in a real app, use a dedicated library)
-      const minified = input
-        .replace(/<!--[\s\S]*?-->/g, '') // Remove comments
-        .replace(/\s+/g, ' ') // Replace multiple spaces with a single space
-        .replace(/>\s+</g, '><') // Remove space between tags
-        .replace(/\s+>/g, '>') // Remove space before closing angle bracket
-        .replace(/<\s+/g, '<') // Remove space after opening angle bracket
-        .replace(/\s+\/>/g, '/>') // Remove space before self-closing tag
-        .trim();
-      
+      const response = await fetch("/api/html-minifier", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ html: input })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const { error } = data;
+        throw new Error(error || "Unknown error");
+      }
+
+      const { minified } = data || {};
+
       setOutput(minified);
       updateStats(input, minified);
     } catch (err) {
