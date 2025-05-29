@@ -12,11 +12,10 @@ import {
   PaperAirplaneIcon
 } from "@heroicons/react/24/outline";
 import Footer from '@/components/Footer';
+import { getLocalDateTimeString } from "@/utils/getLocalDateTimeString";
 
 export default function TimeZoneConverterPage() {
-  const [sourceTime, setSourceTime] = useState<string>(
-    new Date().toISOString().slice(0, 16)
-  );
+  const [sourceTime, setSourceTime] = useState<string>("");
   const [sourceTimezone, setSourceTimezone] = useState<string>("UTC");
   const [targetTimezone, setTargetTimezone] = useState<string>("America/New_York");
   const [targetTime, setTargetTime] = useState<string>("");
@@ -66,9 +65,9 @@ export default function TimeZoneConverterPage() {
   const convertTime = () => {
     try {
       setError("");
-      setIsConverting(true);
       
-      setTimeout(() => {
+      if(sourceTime) {
+        setIsConverting(true);
         const sourceDate = new Date(sourceTime);
         
         if (isNaN(sourceDate.getTime())) {
@@ -91,7 +90,7 @@ export default function TimeZoneConverterPage() {
         const formattedDate = new Intl.DateTimeFormat('en-US', options).format(sourceDate);
         setTargetTime(formattedDate);
         setIsConverting(false);
-      }, 400); // Add a slight delay for animation effect
+      }
     } catch (err) {
       setError("Error converting time. Please check your inputs.");
       setIsConverting(false);
@@ -146,7 +145,7 @@ export default function TimeZoneConverterPage() {
 
   // Reset to current time
   const resetToCurrentTime = () => {
-    setSourceTime(new Date().toISOString().slice(0, 16));
+    setSourceTime(getLocalDateTimeString(sourceTimezone));
   };
 
   // Convert time when inputs change
@@ -159,6 +158,10 @@ export default function TimeZoneConverterPage() {
     
     return () => clearInterval(intervalId);
   }, [sourceTime, sourceTimezone, targetTimezone]);
+
+  useEffect(() => {
+    resetToCurrentTime();
+  }, [sourceTimezone]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-indigo-50">
