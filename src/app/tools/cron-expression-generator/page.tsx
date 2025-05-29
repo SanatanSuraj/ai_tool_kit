@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, DocumentDuplicateIcon, CheckIcon, ClockIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { getNextExecutions } from "@/utils/cronService";
 
 interface CronField {
   name: string;
@@ -25,6 +26,7 @@ export default function CronExpressionGeneratorPage() {
   const [nextExecutions, setNextExecutions] = useState<string[]>([]);
   const [copied, setCopied] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'simple' | 'advanced'>('simple');
+  const [error, setError] = useState("");
   const [schedule, setSchedule] = useState<CronSchedule>({
     minute: "*",
     hour: "*",
@@ -64,8 +66,7 @@ export default function CronExpressionGeneratorPage() {
         { label: "Every day", value: "*" },
         { label: "First day of month", value: "1" },
         { label: "Last day of month", value: "L" },
-        { label: "Every weekday", value: "1-5" },
-        { label: "Every weekend", value: "6,0" },
+        { label: "Weekdays (Mon–Fri)", value: "*" },
       ]
     },
     {
@@ -110,31 +111,16 @@ export default function CronExpressionGeneratorPage() {
   // Calculate next execution times
   useEffect(() => {
     try {
-      const now = new Date();
-      const nextDates: string[] = [];
-      let currentDate = new Date(now);
-
-      // Simple simulation of next 5 execution times
-      // Note: This is a simplified version. In a production environment,
-      // you would want to use a proper cron parser library
-      for (let i = 0; i < 5; i++) {
-        currentDate = getNextExecutionTime(currentDate, cronExpression);
-        nextDates.push(currentDate.toLocaleString());
-      }
-
+      setError("");
+      const nextDates = getNextExecutions(cronExpression)?.map((d) =>
+        d.toLocaleString()
+      );
       setNextExecutions(nextDates);
     } catch (error) {
+      setError((error as Error).message);
       setNextExecutions([]);
     }
   }, [cronExpression]);
-
-  // Simple function to get next execution time
-  // Note: This is a simplified version for demonstration
-  const getNextExecutionTime = (date: Date, cron: string): Date => {
-    // Add 1 minute for demonstration
-    // In a real implementation, you would parse the cron expression properly
-    return new Date(date.getTime() + 60000);
-  };
 
   // Copy cron expression to clipboard
   const copyToClipboard = () => {
@@ -240,7 +226,7 @@ export default function CronExpressionGeneratorPage() {
                             <button
                               key={index}
                               onClick={() => loadSchedule(schedule.expression)}
-                              className="text-left p-3 rounded-lg border border-gray-200 hover:border-amber-300 hover:bg-amber-50 transition-colors"
+                              className={`text-left p-3 rounded-lg border hover:border-amber-300 hover:bg-amber-50 transition-colors ${schedule.expression === cronExpression ? "bg-yellow-50 border-yellow-100" : "border-gray-200"}`}
                             >
                               <div className="font-medium text-gray-900">{schedule.label}</div>
                               <div className="text-sm text-gray-500 font-mono mt-1">{schedule.expression}</div>
@@ -303,6 +289,11 @@ export default function CronExpressionGeneratorPage() {
                             )}
                           </button>
                         </div>
+                        {error && (
+                          <p className="mt-2 mb-4 text-red-600 text-sm">
+                            {error}
+                          </p>
+                        )}
                       </div>
 
                       <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
