@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, ServerIcon, BuildingOffice2Icon, CloudIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { HostingService } from '@/services/hosting.service';
 
 export default function WebsiteHostingCheckerPage() {
   const [url, setUrl] = useState("");
@@ -44,29 +45,10 @@ export default function WebsiteHostingCheckerPage() {
     setResult(null);
     
     try {
-      const response = await fetch("/api/hosting-checker", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ domain: url })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        const { error } = data;
-        throw new Error(error || "Unknown error");
-      }
-
-      if (data?.whoisError) {
-        const { whoisError } = data;
-        throw new Error(whoisError || "Not found error");
-      }
-      
+      const data = await HostingService.check({ domain: hostname });
       setResult(data);
     } catch (err) {
-      setError("Failed to check hosting information. Please try again.");
+      setError((err as Error).message || "Failed to check hosting information. Please try again.");
       console.error("Hosting check error:", err);
     } finally {
       setIsLoading(false);

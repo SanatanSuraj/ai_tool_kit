@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, DocumentDuplicateIcon, CheckIcon, ArrowPathIcon, CodeBracketSquareIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { HTMLMinifierService } from '@/services/html-minifier.service';
 
 export default function HtmlFormatterPage() {
   const [input, setInput] = useState<string>('');
@@ -217,25 +218,9 @@ function greet() {
     try {
       if (!input.trim()) return;
       
-      const response = await fetch("/api/html-minifier", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ html: input })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        const { error } = data;
-        throw new Error(error || "Unknown error");
-      }
-
-      const { minified } = data || {};
-
-      setOutput(minified);
-      updateStats(input, minified);
+      const data = await HTMLMinifierService.minify({ html: input });
+      setOutput(data.minified);
+      updateStats(input, data.minified);
     } catch (err) {
       setError((err as Error).message);
     }

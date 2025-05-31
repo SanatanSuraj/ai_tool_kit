@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, MapPinIcon, GlobeAltIcon, ServerIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { IPService } from '@/services/ip.service';
 
 export default function IPLookupPage() {
   const [ipAddress, setIpAddress] = useState("");
@@ -33,25 +34,7 @@ export default function IPLookupPage() {
     setResult(null);
     
     try {
-      const response = await fetch("/api/ip-lookup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ ip: ipAddress })
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        const { error } = data;
-        throw new Error(error || "Unknown error");
-      }
-
-      if (data?.whoisError) {
-        const { whoisError } = data;
-        throw new Error(whoisError || "Not found error");
-      }
-      
+      const data = await IPService.lookup({ ip: ipAddress });
       setResult(data);
     } catch (err) {
       setError((err as Error).message ?? "Failed to lookup IP information. Please try again.");

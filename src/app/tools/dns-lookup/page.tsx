@@ -5,37 +5,9 @@ import Link from "next/link";
 import { ArrowLeftIcon, GlobeAltIcon, ServerIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { DNSService } from '@/services/dns.service';
+import { MxRecord, SoaRecord, SrvRecord, CaaRecord, DNSRecord } from '@/types';
 
-interface SoaRecord { // for record type SOA
-  nsname: string;
-  hostmaster: string;
-  serial: number;
-  refresh: number;
-  retry: number;
-  expire: number;
-  minttl: number;
-}
-
-interface SrvRecord { // for record type SRV
-  priority: number;
-  weight: number;
-  port: number;
-  name: string;
-}
-
-interface MxRecord { // for record type MX
-  priority: number;
-  exchange: string;
-}
-
-interface CaaRecord { // for record type CAA
-  critical: number;
-  issue?: string | undefined;
-  issuewild?: string | undefined;
-  iodef?: string | undefined;
-  contactemail?: string | undefined;
-  contactphone?: string | undefined;
-}
 
 // DNS Record types
 const DNS_RECORD_TYPES = [
@@ -56,14 +28,7 @@ export default function DNSLookupPage() {
   const [recordType, setRecordType] = useState("A");
   const [currentRecordType, setCurrentRecordType] = useState(recordType);
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<
-    | string[]
-    | MxRecord[]
-    | SoaRecord
-    | SrvRecord[]
-    | string[][]
-    | CaaRecord[]
-  >([]);
+  const [results, setResults] = useState<DNSRecord[] | SoaRecord | null>(null);
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -87,72 +52,13 @@ export default function DNSLookupPage() {
     setResults([]);
     
     try {
-      const response = await fetch("/api/dns-lookup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ domain, type: recordType })
-      });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Unknown error");
-      }
-  
-      const data = await response.json();
-      setResults(data.records || []);
+      const { records } = await DNSService.lookup({ domain, type: recordType });
+      setResults(records || []);
     } catch (err: any) {
       setError(err.message || "Failed to perform DNS lookup. Please try again.");
       console.error("DNS lookup error:", err);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const renderRecordValue = (record: any) => {
-    switch (record.type) {
-      case "MX":
-        return (
-          <div>
-            <div className="font-medium">{record.priority} {record.value}</div>
-            <div className="text-xs text-gray-500">Priority: {record.priority}</div>
-          </div>
-        );
-      case "SOA":
-        return (
-          <div className="space-y-1 text-sm">
-            <div><span className="font-medium">Primary NS:</span> {record.primaryNameServer}</div>
-            <div><span className="font-medium">Admin:</span> {record.adminEmail}</div>
-            <div><span className="font-medium">Serial:</span> {record.serialNumber}</div>
-            <div className="grid grid-cols-2 gap-x-4">
-              <div><span className="font-medium">Refresh:</span> {record.refresh}s</div>
-              <div><span className="font-medium">Retry:</span> {record.retry}s</div>
-              <div><span className="font-medium">Expire:</span> {record.expire}s</div>
-              <div><span className="font-medium">Min TTL:</span> {record.minimumTTL}s</div>
-            </div>
-          </div>
-        );
-      case "SRV":
-        return (
-          <div className="space-y-1 text-sm">
-            <div className="font-medium">{record.target}</div>
-            <div className="grid grid-cols-3 gap-x-2">
-              <div><span className="font-medium">Priority:</span> {record.priority}</div>
-              <div><span className="font-medium">Weight:</span> {record.weight}</div>
-              <div><span className="font-medium">Port:</span> {record.port}</div>
-            </div>
-          </div>
-        );
-      case "CAA":
-        return (
-          <div className="space-y-1 text-sm">
-            <div className="font-medium">{record.value}</div>
-            <div><span className="font-medium">Flags:</span> {record.flags} | <span className="font-medium">Tag:</span> {record.tag}</div>
-          </div>
-        );
-      default:
-        return <span className="font-medium">{record.value}</span>;
     }
   };
 
@@ -313,26 +219,26 @@ export default function DNSLookupPage() {
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {currentRecordType === "SOA" && !Array.isArray(results) ? (
+                            {currentRecordType === "SOA" && !Array.isArray(results) && results ? (
                               <tr className="bg-white">
                                 <td className="px-4 py-3 text-sm font-medium text-gray-900">SOA</td>
                                 <td className="px-4 py-3 text-sm text-gray-700 font-mono">{domain}</td>
                                 <td className="px-4 py-3 text-sm text-gray-700 break-all">
-                                  NS: {results?.nsname || ""}
+                                  NS: {(results as SoaRecord).nsname || ""}
                                   <br />
-                                  Hostmaster: {results?.hostmaster || ""}
+                                  Hostmaster: {(results as SoaRecord).hostmaster || ""}
                                   <br />
-                                  Serial: {results?.serial || ""}
+                                  Serial: {(results as SoaRecord).serial || ""}
                                   <br />
-                                  Refresh: {results?.refresh || ""}s
+                                  Refresh: {(results as SoaRecord).refresh || ""}s
                                   <br />
-                                  Retry: {results?.retry  || ""}s
+                                  Retry: {(results as SoaRecord).retry || ""}s
                                   <br />
-                                  Expire: {results?.expire || ""}s
+                                  Expire: {(results as SoaRecord).expire || ""}s
                                   <br />
-                                  Minimum TTL: {results?.minttl || ""}s
+                                  Minimum TTL: {(results as SoaRecord).minttl || ""}s
                                 </td>
-                                <td className="px-4 py-3 text-sm text-gray-500">{results?.minttl}s</td>
+                                <td className="px-4 py-3 text-sm text-gray-500">{(results as SoaRecord).minttl}s</td>
                               </tr>
                             ) : (
                               Array.isArray(results) &&

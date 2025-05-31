@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, DocumentMagnifyingGlassIcon, CalendarIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { WhoisService } from '@/services/whois.service';
 
 export default function WhoisLookupPage() {
   const [domain, setDomain] = useState("");
@@ -33,26 +34,7 @@ export default function WhoisLookupPage() {
     setResult(null);
     
     try {
-      const response = await fetch("/api/whois-lookup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ domain })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        const { error } = data;
-        throw new Error(error || "Unknown error");
-      }
-
-      if (data?.whoisError) {
-        const { whoisError } = data;
-        throw new Error(whoisError || "Not found error");
-      }
-      
+      const data = await WhoisService.lookup({ domain });
       setResult(data);
     } catch (err) {
       setError((err as Error).message ?? "Failed to perform WHOIS lookup. Please try again.");

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { ImageService } from '@/services/image.service';
 
 export default function BackgroundRemoverPage() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -69,21 +70,7 @@ export default function BackgroundRemoverPage() {
       const response = await fetch(originalImage);
       const blob = await response.blob();
 
-      // Create form data
-      const formData = new FormData();
-      formData.append('image', blob);
-
-      const result = await fetch('/api/remove-background', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await result.json();
-
-      if (!result.ok) {
-        throw new Error(data.error || 'Failed to remove background');
-      }
-
+      const data = await ImageService.removeBackground(blob);
       setProcessedImage(data.image);
     } catch (err) {
       setError((err as Error).message || 'Error removing background');

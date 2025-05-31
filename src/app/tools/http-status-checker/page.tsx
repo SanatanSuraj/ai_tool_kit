@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, ArrowPathIcon, CheckCircleIcon, ExclamationTriangleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { HTTPStatusService } from '@/services/http-status.service';
 
 export default function HttpStatusCheckerPage() {
   const [url, setUrl] = useState("");
@@ -33,22 +34,8 @@ export default function HttpStatusCheckerPage() {
     setResult(null);
     
     try {
-      const response = await fetch("/api/http-status-checker", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ url })
-      });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Unknown error");
-      }
-
-      const data = await response.json();
-      
-      setResult({...data, url, contentType: data?.headers["content-type"] || ""});
+      const data = await HTTPStatusService.check({ url });
+      setResult({...data, url, contentType: data.headers["content-type"] || ""});
     } catch (err) {
       setError((err as Error)?.message ?? "Failed to check URL status. Please try again.");
       console.error("HTTP status check error:", err);

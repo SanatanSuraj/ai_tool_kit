@@ -1,13 +1,5 @@
+import { ContentType } from "@/types";
 import QRCode, { QRCodeErrorCorrectionLevel } from "qrcode";
-
-export type ContentType =
-  | "url"
-  | "text"
-  | "email"
-  | "phone"
-  | "sms"
-  | "wifi"
-  | "contact";
 
 export const generateQRCode = ({
   contentType,

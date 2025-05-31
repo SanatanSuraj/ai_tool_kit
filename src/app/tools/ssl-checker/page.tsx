@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, ShieldCheckIcon, CheckCircleIcon, XCircleIcon, ClockIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { SSLService } from '@/services/ssl.service';
 
 export default function SSLCheckerPage() {
   const [domain, setDomain] = useState("");
@@ -26,21 +27,7 @@ export default function SSLCheckerPage() {
     setResult(null);
     
     try {
-      const response = await fetch("/api/ssl-checker", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ domain })
-      });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Unknown error");
-      }
-
-      const data = await response.json();
-      
+      const data = await SSLService.check({ domain });
       setResult(data);
     } catch (err) {
       setError((err as Error)?.message || "Failed to check SSL certificate. Please try again.");
