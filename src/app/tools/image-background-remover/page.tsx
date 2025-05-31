@@ -58,25 +58,38 @@ export default function BackgroundRemoverPage() {
   };
 
   // Process the image to remove background
-  const removeBackground = () => {
+  const removeBackground = async () => {
     if (!originalImage) return;
     
     setIsProcessing(true);
     setError(null);
     
-    // In a real implementation, we would use a background removal API or library
-    // For this demo, we'll simulate the process with a timeout
-    setTimeout(() => {
-      try {
-        // Simulate background removal - in a real app, you would call an API or use a library
-        // This is just for demo purposes. In a real app, we would use services like Remove.bg API
-        setProcessedImage(originalImage); // In a real app, this would be the processed image
-        setIsProcessing(false);
-      } catch (err) {
-        setError('Error removing background');
-        setIsProcessing(false);
+    try {
+      // Convert base64 to blob
+      const response = await fetch(originalImage);
+      const blob = await response.blob();
+
+      // Create form data
+      const formData = new FormData();
+      formData.append('image', blob);
+
+      const result = await fetch('/api/remove-background', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await result.json();
+
+      if (!result.ok) {
+        throw new Error(data.error || 'Failed to remove background');
       }
-    }, 2000);
+
+      setProcessedImage(data.image);
+    } catch (err) {
+      setError((err as Error).message || 'Error removing background');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // Download processed image
