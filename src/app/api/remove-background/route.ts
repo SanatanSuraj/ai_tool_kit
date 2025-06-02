@@ -1,15 +1,6 @@
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const REMOVE_BG_API_KEY = process.env.REMOVE_BG_API_KEY || "";
-
-  if (!REMOVE_BG_API_KEY) {
-    return NextResponse.json(
-      { error: 'API key is not configured' },
-      { status: 500 }
-    );
-  }
-
   try {
     const formData = await req.formData();
     const file = formData.get('image') as File;
@@ -21,15 +12,18 @@ export async function POST(req: Request) {
       );
     }
 
-    const formDataForApi = new FormData();
-    formDataForApi.append('image_file', file);
+    const arrayBuffer = await file.arrayBuffer();
+    const base64Image = Buffer.from(arrayBuffer).toString('base64');
+    const REMOVE_BG_URL = process.env.REMOVE_BG_URL || '';
 
-    const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+    const response = await fetch(REMOVE_BG_URL, {
       method: 'POST',
       headers: {
-        'X-Api-Key': REMOVE_BG_API_KEY,
+        'Content-Type': 'application/json',
       },
-      body: formDataForApi,
+      body: JSON.stringify({
+        image_base64: base64Image,
+      }),
     });
 
     if (!response.ok) {
@@ -37,12 +31,10 @@ export async function POST(req: Request) {
       throw new Error(error);
     }
 
-    const processedImageBuffer = await response.arrayBuffer();
+    const data = await response.json();
 
-    const base64Image = Buffer.from(processedImageBuffer).toString('base64');
-    
-    return NextResponse.json({ 
-      image: `data:image/png;base64,${base64Image}` 
+    return NextResponse.json({
+      image: `data:image/png;base64,${data.output_base64}`,
     });
   } catch (error) {
     console.error('Background removal error:', error);
