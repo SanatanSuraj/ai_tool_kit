@@ -6,6 +6,9 @@ import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+import { centerAspectCrop, getAspectRatio } from "@/utils/imageCropService";
 
 interface CropOptions {
   aspectRatio: string;
@@ -20,6 +23,9 @@ export default function ImageCropperPage() {
   const [isCropping, setIsCropping] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [crop, setCrop] = useState<Crop>();
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   
   const [options, setOptions] = useState<CropOptions>({
     aspectRatio: 'free',
@@ -39,6 +45,20 @@ export default function ImageCropperPage() {
     { name: '5:4', value: '5:4', description: 'Medium format photography' },
   ];
 
+  const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { width, height } = e.currentTarget;
+    const aspect = getAspectRatio(options.aspectRatio);
+    const newCrop = centerAspectCrop(width, height, aspect);
+    setCrop(newCrop);
+    setCompletedCrop({
+      x: (newCrop.x * width) / 100,
+      y: (newCrop.y * height) / 100,
+      width: (newCrop.width * width) / 100,
+      height: (newCrop.height * height) / 100,
+      unit: 'px'
+    });
+  };
+
   // Handle file selection
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -47,6 +67,8 @@ export default function ImageCropperPage() {
     // Reset states
     setError(null);
     setCroppedImage(null);
+    setCrop(undefined);
+    setCompletedCrop(undefined);
     
     // Check file type
     if (!file.type.startsWith('image/')) {
@@ -76,35 +98,90 @@ export default function ImageCropperPage() {
   }, []);
 
   // Update option
-  const updateOption = (key: keyof CropOptions, value: any) => {
+  const updateOption = useCallback((key: keyof CropOptions, value: any) => {
     setOptions(prev => ({ ...prev, [key]: value }));
-  };
+    if (key === 'aspectRatio' && imgRef.current) {
+      const aspect = getAspectRatio(value as string);
+      const newCrop = centerAspectCrop(imgRef.current.width, imgRef.current.height, aspect);
+      setCrop(newCrop);
+      // Update completedCrop when aspect ratio changes
+      setCompletedCrop({
+        x: (newCrop.x * imgRef.current.width) / 100,
+        y: (newCrop.y * imgRef.current.height) / 100,
+        width: (newCrop.width * imgRef.current.width) / 100,
+        height: (newCrop.height * imgRef.current.height) / 100,
+        unit: 'px'
+      });
+    }
+  }, []);
 
   // Set aspect ratio
-  const setAspectRatio = (ratio: string) => {
+  const setAspectRatio = useCallback((ratio: string) => {
     updateOption('aspectRatio', ratio);
-  };
+  }, [updateOption]);
 
   // Crop image
-  const cropImage = () => {
-    if (!originalImage) return;
+  const cropImage = useCallback(async () => {
+    if (!originalImage || !completedCrop || !imgRef.current) return;
     
     setIsCropping(true);
     setError(null);
     
-    // In a real implementation, we would use a cropping library or API
-    // For this demo, we'll simulate cropping with a timeout
-    setTimeout(() => {
-      try {
-        // Simulate cropping - in a real app, you would actually crop the image
-        setCroppedImage(originalImage);
-        setIsCropping(false);
-      } catch (err) {
-        setError('Error cropping image');
-        setIsCropping(false);
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        throw new Error('No 2d context');
       }
-    }, 1500);
-  };
+
+      const pixelRatio = window.devicePixelRatio;
+      const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
+      const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
+
+      canvas.width = completedCrop.width * pixelRatio * scaleX;
+      canvas.height = completedCrop.height * pixelRatio * scaleY;
+
+      ctx.scale(pixelRatio, pixelRatio);
+      ctx.imageSmoothingQuality = 'high';
+
+      const cropX = completedCrop.x * scaleX;
+      const cropY = completedCrop.y * scaleY;
+      const cropWidth = completedCrop.width * scaleX;
+      const cropHeight = completedCrop.height * scaleY;
+
+      ctx.drawImage(
+        imgRef.current,
+        cropX,
+        cropY,
+        cropWidth,
+        cropHeight,
+        0,
+        0,
+        cropWidth,
+        cropHeight,
+      );
+
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+          },
+          `image/${options.format}`,
+          options.quality / 100
+        );
+      });
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCroppedImage(reader.result as string);
+        setIsCropping(false);
+      };
+      reader.readAsDataURL(blob);
+    } catch (err) {
+      setError('Error cropping image');
+      setIsCropping(false);
+    }
+  }, [originalImage, completedCrop, options.format, options.quality]);
 
   // Trigger file input click
   const triggerFileInput = () => {
@@ -202,24 +279,31 @@ export default function ImageCropperPage() {
                       </div>
                     ) : (
                       <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {/* Image Preview with crop overlay (simplified) */}
+                        <div className="grid grid-cols-1 gap-6">
+                          {/* Image Preview with crop overlay */}
                           <div className="space-y-2">
                             <h3 className="text-sm font-medium text-gray-700">Original Image</h3>
                             <div className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
-                              <div className="relative aspect-square w-full overflow-hidden rounded-md bg-gray-100">
-                                <Image
-                                  src={originalImage}
-                                  alt="Original image"
-                                  fill
-                                  className="object-contain"
-                                />
-                                {/* This would be replaced with an actual crop UI component in a real app */}
-                                <div className="absolute inset-0 pointer-events-none border-4 border-dashed border-green-500/70"></div>
+                              <div className="relative w-full overflow-hidden rounded-md bg-gray-100">
+                                <ReactCrop
+                                  crop={crop}
+                                  onChange={(_, percentCrop) => setCrop(percentCrop)}
+                                  onComplete={(c) => setCompletedCrop(c)}
+                                  aspect={getAspectRatio(options.aspectRatio)}
+                                  className="max-h-[500px] w-full object-contain"
+                                >
+                                  <img
+                                    ref={imgRef}
+                                    alt="Crop me"
+                                    src={originalImage}
+                                    onLoad={onImageLoad}
+                                    className="max-h-[500px] w-full object-contain"
+                                  />
+                                </ReactCrop>
                               </div>
                             </div>
                             <div className="text-xs text-gray-500 mt-1 text-center">
-                              Drag to adjust crop area (simulated)
+                              Drag to adjust crop area
                             </div>
                           </div>
                           

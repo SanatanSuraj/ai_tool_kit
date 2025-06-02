@@ -5,13 +5,15 @@ import Link from "next/link";
 import { ArrowLeftIcon, QrCodeIcon, CameraIcon, LinkIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { ContentType, generateQRCode } from "@/utils/generateQRCode";
+import { QRCodeErrorCorrectionLevel } from "qrcode";
 
 export default function QRCodeGeneratorPage() {
   const [content, setContent] = useState("");
-  const [contentType, setContentType] = useState("url");
+  const [contentType, setContentType] = useState<ContentType>("url");
   const [qrColor, setQrColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
-  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState("M");
+  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState<QRCodeErrorCorrectionLevel>("M");
   const [size, setSize] = useState(200);
   const [isLoading, setIsLoading] = useState(false);
   const [qrCodeImage, setQrCodeImage] = useState("");
@@ -30,19 +32,23 @@ export default function QRCodeGeneratorPage() {
     setError("");
     
     try {
-      // In a real implementation, you would call an API or use a library to generate QR codes
-      // For this demo, we'll simulate generating a QR code
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Generate a Google Charts API URL for the QR code
       // This is a simple way to generate QR codes without needing a library in this demo
-      const googleChartsUrl = `https://chart.googleapis.com/chart?cht=qr&chs=${size}x${size}&chl=${encodeURIComponent(content)}&choe=UTF-8&chld=${errorCorrectionLevel}`;
-      
-      // In a real implementation, you would use a QR code library and customize colors
-      // The Google Charts API doesn't support custom colors, but this serves as a placeholder
-      setQrCodeImage(googleChartsUrl);
+      // const googleChartsUrl = `https://chart.googleapis.com/chart?cht=qr&chs=${size}x${size}&chl=${encodeURIComponent(content)}&choe=UTF-8&chld=${errorCorrectionLevel}`;
+
+      const imageUrl = await generateQRCode({
+        contentType,
+        content,
+        color: qrColor,
+        backgroundColor: bgColor,
+        errorCorrectionLevel,
+        size,
+      })
+          
+      setQrCodeImage(imageUrl);
     } catch (err) {
-      setError("Failed to generate QR code. Please try again.");
+      setError((err as Error)?.message ?? "Failed to generate QR code. Please try again.");
       console.error("QR generation error:", err);
     } finally {
       setIsLoading(false);
@@ -73,9 +79,9 @@ export default function QRCodeGeneratorPage() {
       case 'sms':
         return '+1234567890: Your message here';
       case 'wifi':
-        return 'SSID: MyWiFi; Password: mypassword; Encryption: WPA';
+        return 'MyWiFi;mypassword;WPA';
       case 'contact':
-        return 'Name: John Doe; Email: john@example.com; Phone: +1234567890';
+        return 'FN: John Doe; EMAIL: john@example.com; PHONE: +1234567890';
       default:
         return 'Enter content here';
     }
@@ -151,7 +157,7 @@ export default function QRCodeGeneratorPage() {
                       <select
                         id="contentType"
                         value={contentType}
-                        onChange={(e) => setContentType(e.target.value)}
+                        onChange={(e) => setContentType(e.target.value as ContentType)}
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
                       >
                         <option value="url">Website URL</option>
@@ -238,7 +244,7 @@ export default function QRCodeGeneratorPage() {
                         <select
                           id="errorCorrectionLevel"
                           value={errorCorrectionLevel}
-                          onChange={(e) => setErrorCorrectionLevel(e.target.value)}
+                          onChange={(e) => setErrorCorrectionLevel(e.target.value as QRCodeErrorCorrectionLevel)}
                           className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
                         >
                           <option value="L">Low (7%)</option>

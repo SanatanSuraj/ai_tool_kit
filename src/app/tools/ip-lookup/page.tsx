@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, MapPinIcon, GlobeAltIcon, ServerIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { IPService } from '@/services/ip.service';
 
 export default function IPLookupPage() {
   const [ipAddress, setIpAddress] = useState("");
@@ -20,51 +21,30 @@ export default function IPLookupPage() {
       setError("Please enter an IP address");
       return;
     }
-    
-    const ipPattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$|^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-    if (!ipPattern.test(ipAddress)) {
-      setError("Please enter a valid IPv4 or IPv6 address");
-      return;
-    }
+
+    // validating ip input in API through node:net
+    // const ipPattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$|^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+    // if (!ipPattern.test(ipAddress)) {
+    //   setError("Please enter a valid IPv4 or IPv6 address");
+    //   return;
+    // }
     
     setIsLoading(true);
     setError("");
     setResult(null);
     
     try {
-      // In a real implementation, you would make an API call to get IP info
-      // For this demo, we'll simulate a response
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock data - in a real app, this would come from your API
-      const mockResponse = {
-        ip: ipAddress,
-        version: ipAddress.includes(':') ? 'IPv6' : 'IPv4',
-        city: "San Francisco",
-        region: "California",
-        country: "United States",
-        countryCode: "US",
-        location: {
-          latitude: 37.7749,
-          longitude: -122.4194
-        },
-        timezone: "America/Los_Angeles",
-        isp: "Cloudflare, Inc.",
-        org: "Cloudflare",
-        asn: "AS13335",
-        proxy: false,
-        hosting: true,
-        mobile: false
-      };
-      
-      setResult(mockResponse);
+      const data = await IPService.lookup({ ip: ipAddress });
+      setResult(data);
     } catch (err) {
-      setError("Failed to lookup IP information. Please try again.");
+      setError((err as Error).message ?? "Failed to lookup IP information. Please try again.");
       console.error("IP lookup error:", err);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const valueOrNA = (value: string) => value ?? "N/A";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-purple-50">
@@ -181,7 +161,7 @@ export default function IPLookupPage() {
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">IP Address Information</h3>
                         <div className="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-sm font-medium">
-                          {result.version}
+                          {result?.version || ""}
                         </div>
                       </div>
                       
@@ -191,32 +171,32 @@ export default function IPLookupPage() {
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">IP Address</span>
-                            <span className="font-medium text-gray-900">{result.ip}</span>
+                            <span className="font-medium text-gray-900">{result?.query || ipAddress || ""}</span>
                           </div>
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">City</span>
-                            <span className="font-medium text-gray-900">{result.city}</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.city)}</span>
                           </div>
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">Region</span>
-                            <span className="font-medium text-gray-900">{result.region}</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.region)}</span>
                           </div>
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">Country</span>
-                            <span className="font-medium text-gray-900">{result.country} ({result.countryCode})</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.country)} ({valueOrNA(result?.countryCode)})</span>
                           </div>
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">Coordinates</span>
-                            <span className="font-medium text-gray-900">{result.location.latitude}, {result.location.longitude}</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.lat)}, {valueOrNA(result?.lon)}</span>
                           </div>
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">Timezone</span>
-                            <span className="font-medium text-gray-900">{result.timezone}</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.timezone)}</span>
                           </div>
                         </div>
                         
@@ -225,37 +205,42 @@ export default function IPLookupPage() {
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">ISP</span>
-                            <span className="font-medium text-gray-900">{result.isp}</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.isp)}</span>
                           </div>
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">Organization</span>
-                            <span className="font-medium text-gray-900">{result.org}</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.org)}</span>
                           </div>
                           
                           <div className="flex justify-between">
                             <span className="text-gray-600">ASN</span>
-                            <span className="font-medium text-gray-900">{result.asn}</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.asname)}</span>
+                          </div>
+
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">AS</span>
+                            <span className="font-medium text-gray-900">{valueOrNA(result?.as)}</span>
                           </div>
                           
                           <div className="flex justify-between items-center">
                             <span className="text-gray-600">Proxy/VPN</span>
-                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${result.proxy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                              {result.proxy ? 'Yes' : 'No'}
+                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${result?.proxy ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                              {result?.proxy ? 'Yes' : 'No'}
                             </span>
                           </div>
                           
                           <div className="flex justify-between items-center">
                             <span className="text-gray-600">Hosting/Data Center</span>
-                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${result.hosting ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
-                              {result.hosting ? 'Yes' : 'No'}
+                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${result?.hosting ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
+                              {result?.hosting ? 'Yes' : 'No'}
                             </span>
                           </div>
                           
                           <div className="flex justify-between items-center">
                             <span className="text-gray-600">Mobile Network</span>
-                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${result.mobile ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'}`}>
-                              {result.mobile ? 'Yes' : 'No'}
+                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${result?.mobile ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'}`}>
+                              {result?.mobile ? 'Yes' : 'No'}
                             </span>
                           </div>
                         </div>

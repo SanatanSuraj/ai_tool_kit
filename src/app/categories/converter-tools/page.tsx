@@ -45,7 +45,7 @@ export default function ConverterToolsPage() {
       description: 'Convert times between different time zones around the world instantly.',
       icon: 'ClockIcon',
       color: 'indigo',
-      url: '/tools/time-zone-converter',
+      url: '/tools/timezone-converter',
       popular: true,
     },
     {

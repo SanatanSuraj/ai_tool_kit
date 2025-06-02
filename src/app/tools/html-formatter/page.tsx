@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, DocumentDuplicateIcon, CheckIcon, ArrowPathIcon, CodeBracketSquareIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { HTMLMinifierService } from '@/services/html-minifier.service';
 
 export default function HtmlFormatterPage() {
   const [input, setInput] = useState<string>('');
@@ -213,22 +214,13 @@ function greet() {
   };
   
   // Minify the HTML
-  const minifyHtml = () => {
+  const minifyHtml = async () => {
     try {
       if (!input.trim()) return;
       
-      // Simple minification (in a real app, use a dedicated library)
-      const minified = input
-        .replace(/<!--[\s\S]*?-->/g, '') // Remove comments
-        .replace(/\s+/g, ' ') // Replace multiple spaces with a single space
-        .replace(/>\s+</g, '><') // Remove space between tags
-        .replace(/\s+>/g, '>') // Remove space before closing angle bracket
-        .replace(/<\s+/g, '<') // Remove space after opening angle bracket
-        .replace(/\s+\/>/g, '/>') // Remove space before self-closing tag
-        .trim();
-      
-      setOutput(minified);
-      updateStats(input, minified);
+      const data = await HTMLMinifierService.minify({ html: input });
+      setOutput(data.minified);
+      updateStats(input, data.minified);
     } catch (err) {
       setError((err as Error).message);
     }

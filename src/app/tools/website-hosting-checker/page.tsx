@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, ServerIcon, BuildingOffice2Icon, CloudIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { HostingService } from '@/services/hosting.service';
 
 export default function WebsiteHostingCheckerPage() {
   const [url, setUrl] = useState("");
@@ -44,45 +45,10 @@ export default function WebsiteHostingCheckerPage() {
     setResult(null);
     
     try {
-      // In a real implementation, you would make an API call to get hosting info
-      // For this demo, we'll simulate a response
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock data - in a real app, this would come from your API
-      const mockResponse = {
-        domain: hostname,
-        ip: "104.18.2.23",
-        ipv6: "2606:4700:20::681a:1e1f",
-        hosting: {
-          company: "Cloudflare",
-          website: "https://cloudflare.com",
-          type: "CDN / Cloud Hosting",
-          country: "United States",
-          asn: "AS13335",
-        },
-        server: {
-          software: "cloudflare",
-          technology: "HTTP/2, HTTPS, IPv6, TLS 1.3",
-          operatingSystem: "Linux",
-        },
-        additional: {
-          googleCloud: false,
-          aws: false,
-          azure: false,
-          cloudflare: true,
-          digitalOcean: false,
-          waf: true,
-          cdn: true,
-          nameservers: [
-            "ns3.cloudflare.com",
-            "ns4.cloudflare.com"
-          ]
-        }
-      };
-      
-      setResult(mockResponse);
+      const data = await HostingService.check({ domain: hostname });
+      setResult(data);
     } catch (err) {
-      setError("Failed to check hosting information. Please try again.");
+      setError((err as Error).message || "Failed to check hosting information. Please try again.");
       console.error("Hosting check error:", err);
     } finally {
       setIsLoading(false);

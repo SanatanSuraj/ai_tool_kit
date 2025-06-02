@@ -72,7 +72,7 @@ export default function DeveloperToolsPage() {
       description: 'Convert time between different time zones with support for daylight saving time.',
       icon: 'ClockIcon',
       color: 'green',
-      url: '/tools/time-zone-converter',
+      url: '/tools/timezone-converter',
       popular: true,
     },
     {

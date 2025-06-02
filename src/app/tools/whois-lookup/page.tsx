@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, DocumentMagnifyingGlassIcon, CalendarIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { WhoisService } from '@/services/whois.service';
 
 export default function WhoisLookupPage() {
   const [domain, setDomain] = useState("");
@@ -33,44 +34,10 @@ export default function WhoisLookupPage() {
     setResult(null);
     
     try {
-      // In a real implementation, you would make an API call to perform WHOIS lookup
-      // For this demo, we'll simulate a response
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock data - in a real app, this would come from your API
-      const mockResponse = {
-        domain: domain,
-        domainStatus: ["clientTransferProhibited", "clientUpdateProhibited", "clientDeleteProhibited"],
-        nameServers: [
-          `ns1.${domain}`,
-          `ns2.${domain}`,
-        ],
-        dates: {
-          created: "2005-08-21T00:00:00Z",
-          updated: "2023-04-15T00:00:00Z",
-          expires: "2025-08-21T00:00:00Z",
-        },
-        registrar: {
-          name: "Example Registrar, Inc.",
-          url: "https://www.exampleregistrar.com",
-          whoisServer: "whois.exampleregistrar.com",
-          abuseContactEmail: "abuse@exampleregistrar.com",
-          abuseContactPhone: "+1.1234567890",
-        },
-        registrant: {
-          organization: "Example Organization, LLC",
-          state: "CA",
-          country: "US",
-          countryCode: "US",
-          privacy: true,
-        },
-        dnssec: "unsigned",
-        privacyEnabled: true,
-      };
-      
-      setResult(mockResponse);
+      const data = await WhoisService.lookup({ domain });
+      setResult(data);
     } catch (err) {
-      setError("Failed to perform WHOIS lookup. Please try again.");
+      setError((err as Error).message ?? "Failed to perform WHOIS lookup. Please try again.");
       console.error("WHOIS lookup error:", err);
     } finally {
       setIsLoading(false);
@@ -93,6 +60,9 @@ export default function WhoisLookupPage() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
+
+  const isRegistrantPrivate = result?.registrantName?.includes('REDACTED');
+  const registryExpiryDate = result?.registrarRegistrationExpirationDate ?? result?.registryExpiryDate;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-purple-50">
@@ -211,49 +181,49 @@ export default function WhoisLookupPage() {
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="text-lg font-semibold text-gray-900">Domain Overview</h3>
                           <div className="px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-sm font-medium">
-                            {result.privacyEnabled ? 'Privacy Protected' : 'Public Records'}
+                            {isRegistrantPrivate ? 'Privacy Protected' : 'Public Records'}
                           </div>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                           <div>
                             <p className="text-sm text-gray-500 mb-1">Domain Name</p>
-                            <p className="text-lg font-medium text-gray-900">{result.domain}</p>
+                            <p className="text-lg font-medium text-gray-900">{result?.domainName ?? 'N/A'}</p>
                           </div>
-                          
+
                           <div>
                             <p className="text-sm text-gray-500 mb-1">Registrar</p>
-                            <p className="text-gray-900">{result.registrar.name}</p>
+                            <p className="text-gray-900">{result?.registrar ?? 'N/A'}</p>
                           </div>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="bg-white rounded-lg p-3 border border-purple-100 flex flex-col items-center text-center">
                             <div className="text-sm text-gray-500 mb-1">Created On</div>
-                            <div className="font-medium">{formatDate(result.dates.created)}</div>
+                            <div className="font-medium">{formatDate(result?.creationDate)}</div>
                           </div>
-                          
+
                           <div className="bg-white rounded-lg p-3 border border-purple-100 flex flex-col items-center text-center">
                             <div className="text-sm text-gray-500 mb-1">Last Updated</div>
-                            <div className="font-medium">{formatDate(result.dates.updated)}</div>
+                            <div className="font-medium">{formatDate(result?.updatedDate)}</div>
                           </div>
-                          
+
                           <div className="bg-white rounded-lg p-3 border border-purple-100 flex flex-col items-center text-center">
                             <div className="text-sm text-gray-500 mb-1">Expires On</div>
-                            <div className="font-medium">{formatDate(result.dates.expires)}</div>
+                            <div className="font-medium">{formatDate(registryExpiryDate)}</div>
                             <div className={`text-xs mt-1 px-2 py-0.5 rounded-full 
-                              ${getRemainingDays(result.dates.expires) > 90 
+                              ${getRemainingDays(registryExpiryDate) > 90
                                 ? 'bg-green-100 text-green-700'
-                                : getRemainingDays(result.dates.expires) > 30
+                                : getRemainingDays(registryExpiryDate) > 30
                                   ? 'bg-amber-100 text-amber-700'
                                   : 'bg-red-100 text-red-700'
                               }`}>
-                              {getRemainingDays(result.dates.expires)} days remaining
+                              {getRemainingDays(registryExpiryDate)} days remaining
                             </div>
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Detailed Information */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Registrar Information */}
@@ -261,42 +231,50 @@ export default function WhoisLookupPage() {
                           <h3 className="text-md font-semibold text-gray-900 mb-3">Registrar Information</h3>
                           <ul className="space-y-3">
                             <li className="flex justify-between">
-                              <span className="text-gray-600">Registrar</span>
-                              <span className="font-medium text-gray-900">{result.registrar.name}</span>
+                              <span className="text-gray-600">Registrar</span>                              
+                              <span className="font-medium text-gray-900">{result?.registrar ?? 'N/A'}</span>
                             </li>
                             <li className="flex justify-between">
                               <span className="text-gray-600">Website</span>
-                              <a href={result.registrar.url} className="font-medium text-purple-600 hover:text-purple-800 transition-colors" target="_blank" rel="noopener noreferrer">
-                                {result.registrar.url.replace('https://', '')}
+                              <a
+                                href={result?.registrarUrl ?? '#'}
+                                className="font-medium text-purple-600 hover:text-purple-800 transition-colors"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {result?.registrarUrl?.replace('https://', '') ?? 'N/A'}
                               </a>
                             </li>
                             <li className="flex justify-between">
                               <span className="text-gray-600">WHOIS Server</span>
-                              <span className="font-medium text-gray-900">{result.registrar.whoisServer}</span>
+                               <span className="font-medium text-gray-900">{result?.registrarWhoisServer ?? 'N/A'}</span>
                             </li>
                             <li className="flex justify-between">
                               <span className="text-gray-600">Abuse Contact Email</span>
-                              <a href={`mailto:${result.registrar.abuseContactEmail}`} className="font-medium text-purple-600 hover:text-purple-800 transition-colors">
-                                {result.registrar.abuseContactEmail}
+                              <a
+                                href={`mailto:${result?.registrarAbuseContactEmail}`}
+                                className="font-medium text-purple-600 hover:text-purple-800 transition-colors"
+                              >
+                                {result?.registrarAbuseContactEmail ?? 'N/A'}
                               </a>
                             </li>
                             <li className="flex justify-between">
                               <span className="text-gray-600">Abuse Contact Phone</span>
-                              <span className="font-medium text-gray-900">{result.registrar.abuseContactPhone}</span>
+                              <span className="font-medium text-gray-900">{result?.registrarAbuseContactPhone ?? 'N/A'}</span>
                             </li>
                           </ul>
                         </div>
-                        
+
                         {/* Domain Status and Technical Details */}
                         <div className="p-5 bg-gray-50 rounded-xl border border-gray-100">
                           <h3 className="text-md font-semibold text-gray-900 mb-3">Domain Status & Technical Details</h3>
-                          
+
                           <div className="mb-4">
                             <p className="text-gray-600 mb-2">Domain Status</p>
                             <div className="flex flex-wrap gap-2">
-                              {result.domainStatus.map((status: string, index: number) => (
-                                <span 
-                                  key={index} 
+                              {result?.domainStatus?.split(' ')?.map((status: string, index: number) => (
+                                <span
+                                  key={index}
                                   className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-700 rounded-full"
                                 >
                                   {status}
@@ -304,55 +282,55 @@ export default function WhoisLookupPage() {
                               ))}
                             </div>
                           </div>
-                          
+
                           <div className="mb-4">
                             <p className="text-gray-600 mb-2">Name Servers</p>
                             <ul className="space-y-1">
-                              {result.nameServers.map((ns: string, index: number) => (
+                              {result?.nameServer?.split(' ')?.map((ns: string, index: number) => (
                                 <li key={index} className="font-medium text-gray-900 font-mono text-sm">{ns}</li>
                               ))}
                             </ul>
                           </div>
-                          
+
                           <div>
                             <p className="text-gray-600 mb-2">DNSSEC</p>
-                            <p className="font-medium text-gray-900">{result.dnssec}</p>
+                            <p className="font-medium text-gray-900">{result?.dnssec ?? 'N/A'}</p>
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Registrant Information */}
                       <div className="p-5 bg-gray-50 rounded-xl border border-gray-100">
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="text-md font-semibold text-gray-900">Registrant Information</h3>
-                          {result.registrant.privacy && (
+                          {isRegistrantPrivate && (
                             <div className="flex items-center text-sm text-amber-700">
                               <LockClosedIcon className="h-4 w-4 mr-1" />
                               Privacy Protected
                             </div>
                           )}
                         </div>
-                        
+
                         <p className="text-gray-600 mb-4">
-                          {result.registrant.privacy 
+                          {isRegistrantPrivate
                             ? 'This domain uses privacy protection services that hide the owner\'s personal information.'
                             : 'This domain\'s registration information is publicly available.'}
                         </p>
-                        
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                           <div>
                             <p className="text-sm text-gray-500 mb-1">Organization</p>
-                            <p className="font-medium text-gray-900">{result.registrant.organization}</p>
+                            <p className="font-medium text-gray-900">{result?.registrantOrganization ?? 'N/A'}</p>
                           </div>
-                          
+
                           <div>
                             <p className="text-sm text-gray-500 mb-1">State/Province</p>
-                            <p className="font-medium text-gray-900">{result.registrant.state}</p>
+                            <p className="font-medium text-gray-900">{result?.registrantStateProvince ?? 'N/A'}</p>
                           </div>
-                          
+
                           <div>
                             <p className="text-sm text-gray-500 mb-1">Country</p>
-                            <p className="font-medium text-gray-900">{result.registrant.country} ({result.registrant.countryCode})</p>
+                            <p className="font-medium text-gray-900">{result?.registrantCountry ?? 'N/A'}</p>
                           </div>
                         </div>
                       </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeftIcon, ShieldCheckIcon, CheckCircleIcon, XCircleIcon, ClockIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { SSLService } from '@/services/ssl.service';
 
 export default function SSLCheckerPage() {
   const [domain, setDomain] = useState("");
@@ -26,29 +27,10 @@ export default function SSLCheckerPage() {
     setResult(null);
     
     try {
-      // In a real implementation, you would make an API call to check SSL
-      // For this demo, we'll simulate a response
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock data - in a real app, this would come from your API
-      const mockResponse = {
-        valid: true,
-        domain: domain,
-        issuer: "Let's Encrypt Authority X3",
-        validFrom: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days ago
-        validTo: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 days in future
-        daysRemaining: 60,
-        protocol: "TLS 1.3",
-        cipher: "ECDHE-RSA-AES256-GCM-SHA384",
-        grade: "A+",
-        hasCertificateTransparency: true,
-        hasStrictTransportSecurity: true,
-        hasPublicKeyPinning: false,
-      };
-      
-      setResult(mockResponse);
+      const data = await SSLService.check({ domain });
+      setResult(data);
     } catch (err) {
-      setError("Failed to check SSL certificate. Please try again.");
+      setError((err as Error)?.message || "Failed to check SSL certificate. Please try again.");
       console.error("SSL check error:", err);
     } finally {
       setIsLoading(false);
@@ -212,7 +194,7 @@ export default function SSLCheckerPage() {
                           <span className="font-medium text-gray-900">{result.cipher}</span>
                         </div>
                         
-                        <div className="flex justify-between">
+                        {/* <div className="flex justify-between">
                           <span className="text-gray-600">Security Grade</span>
                           <span className={`font-medium ${
                             result.grade.startsWith('A') ? 'text-green-600' : 
@@ -220,7 +202,7 @@ export default function SSLCheckerPage() {
                             result.grade.startsWith('C') ? 'text-amber-600' : 
                             'text-red-600'
                           }`}>{result.grade}</span>
-                        </div>
+                        </div> */}
                       </div>
                       
                       <div className="mt-6 pt-4 border-t border-gray-200">
