@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dns from "dns/promises";
 import net from "node:net";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export async function POST(req: Request) {
   const { domain, type } = await req.json();
@@ -29,12 +30,18 @@ export async function POST(req: Request) {
       records = await dns.resolve(domain, type as string);
     }
     return NextResponse.json({ records });
-  } catch (error: any) {
-    if (error.code === "ENODATA" || error.code === "ENOTFOUND") {
+  } catch (error) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      ((error as { code: string }).code === 'ENODATA' ||
+      (error as { code: string }).code === 'ENOTFOUND')
+    ) {
       return NextResponse.json({ records: [] }); // No records found, but not an error
     }
 
     console.error(`DNS resolve error (${type}) for ${domain}:`, error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 });
   }
 }

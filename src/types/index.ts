@@ -170,3 +170,13 @@ export type ContentType =
     dnssec?: string;
     whoisError?: string;
   }
+
+  export interface Tool {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    color: string;
+    url: string;
+    popular: boolean;
+  }

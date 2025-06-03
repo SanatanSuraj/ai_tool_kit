@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@/utils/getErrorMessage';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Background removal error:', error);
     return NextResponse.json(
-      { error: (error as Error).message || 'Failed to remove background' },
+      { error: getErrorMessage(error, 'Failed to remove background') },
       { status: 500 }
     );
   }

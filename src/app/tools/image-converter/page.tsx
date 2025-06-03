@@ -72,7 +72,7 @@ export default function ImageConverterPage() {
         setOriginalImage(event.target.result as string);
         
         // If we have an image, load its dimensions
-        const img = new Image();
+        const img = document.createElement('img');
         img.onload = () => {
           setOptions(prev => ({
             ...prev,
@@ -94,7 +94,7 @@ export default function ImageConverterPage() {
   // Handle aspect ratio
   const handleDimensionChange = (dimension: 'width' | 'height', value: number) => {
     if (options.maintainAspectRatio && originalImage) {
-      const img = new Image();
+      const img = document.createElement('img');
       img.onload = () => {
         const aspectRatio = img.width / img.height;
         

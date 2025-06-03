@@ -5,8 +5,9 @@ import Link from "next/link";
 import { ArrowLeftIcon, QrCodeIcon, CameraIcon, LinkIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
-import { ContentType, generateQRCode } from "@/utils/generateQRCode";
+import { generateQRCode } from "@/utils/generateQRCode";
 import { QRCodeErrorCorrectionLevel } from "qrcode";
+import { ContentType } from "@/types";
 
 export default function QRCodeGeneratorPage() {
   const [content, setContent] = useState("");

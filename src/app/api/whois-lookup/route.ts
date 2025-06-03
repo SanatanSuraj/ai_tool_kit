@@ -1,3 +1,4 @@
+import { getErrorMessage } from "@/utils/getErrorMessage";
 import { NextResponse } from "next/server";
 import whois from "whois-json";
 
@@ -11,7 +12,7 @@ export async function POST(req: Request) {
   try {
     const data = await whois(domain);
     return NextResponse.json(data);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 });
   }
 }

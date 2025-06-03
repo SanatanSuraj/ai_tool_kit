@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@/utils/getErrorMessage';
 import { NextResponse } from 'next/server';
 import dns from 'node:dns/promises';
 
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
     let currentUrl = url;
     let redirectCount = 0;
     let response: Response | null = null;
-    const visited = new Set();
+    const visited = new Set<string>();
 
     while (redirectCount < 5) {
       if (visited.has(currentUrl)) {
@@ -88,8 +89,8 @@ export async function POST(req: Request) {
       ip: resolvedIP || 'Unavailable',
       ssl,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: getErrorMessage(error, 'Internal Server Error') }, { status: 500 });
   }
 }

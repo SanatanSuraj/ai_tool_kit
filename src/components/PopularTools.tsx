@@ -10,7 +10,7 @@ interface Tool {
 }
 
 interface PopularToolsProps {
-  tools: Tool[];
+  tools?: Tool[];
 }
 
 const PopularTools = ({ tools }: PopularToolsProps) => {

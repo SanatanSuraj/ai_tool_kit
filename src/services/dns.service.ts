@@ -1,4 +1,4 @@
-import { DNSLookupRequest, DNSLookupResponse } from "@/types";
+import { DNSLookupRequest, DNSLookupResponse, DNSRecord } from "@/types";
 
 export class DNSService {
   private static readonly API_ENDPOINT = '/api/dns-lookup';
@@ -21,11 +21,11 @@ export class DNSService {
       const data = await response.json();
       
       const records = Array.isArray(data.records) 
-        ? data.records.map((record: any) => {
+        ? data.records.map((record: DNSRecord) => {
             if (typeof record === 'string') {
               return { type: request.type, value: record };
             }
-            return { type: request.type, ...record };
+            return { ...record, type: request.type };
           })
         : [{ type: request.type, ...data.records }];
 

@@ -54,8 +54,8 @@ export default function DNSLookupPage() {
     try {
       const { records } = await DNSService.lookup({ domain, type: recordType });
       setResults(records || []);
-    } catch (err: any) {
-      setError(err.message || "Failed to perform DNS lookup. Please try again.");
+    } catch (err) {
+      setError("Failed to perform DNS lookup. Please try again.");
       console.error("DNS lookup error:", err);
     } finally {
       setIsLoading(false);
@@ -242,7 +242,7 @@ export default function DNSLookupPage() {
                               </tr>
                             ) : (
                               Array.isArray(results) &&
-                              results.map((record: any, index: number) => {
+                              results.map((record, index: number) => {
                                 const isEven = index % 2 === 0;
                                 const rowClass = isEven ? "bg-white" : "bg-gray-50";
                               
