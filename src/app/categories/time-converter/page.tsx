@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ClockIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Footer from '@/components/Footer';
+import { Tool } from '@/types';
 
 export default function TimeConverterPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredTools, setFilteredTools] = useState([]);
+  const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Mock data for time converter tools

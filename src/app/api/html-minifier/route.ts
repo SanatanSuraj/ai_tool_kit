@@ -3,6 +3,7 @@ export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from "next/server";
 import { minify } from "html-minifier-terser";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No request body found" }, { status: 400 });
     }
 
-    let chunks: Uint8Array[] = [];
+    const chunks: Uint8Array[] = [];
     let totalSize = 0;
 
     while (true) {
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
     let parsed: { html?: string };
     try {
       parsed = JSON.parse(rawBody);
-    } catch (err) {
+    } catch {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Minification error:", err);
     return NextResponse.json(
-      { error: `Minification failed ${(err as Error).message || ""}` },
+      { error: getErrorMessage(err)},
       { status: 500 }
     );
   }

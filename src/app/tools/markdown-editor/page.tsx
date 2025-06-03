@@ -543,7 +543,7 @@ function sayHello() {
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-700 mb-1">Other Elements</p>
                         <pre className="text-xs font-mono bg-gray-100 p-2 rounded">
-                          > Blockquote
+                          {">"} Blockquote
                           <br />
                           <br />
                           --- (Horizontal Rule)

@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ClipboardIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Footer from '@/components/Footer';
-
+import { Tool } from '@/types';
 export default function CheckerToolsPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredTools, setFilteredTools] = useState([]);
+  const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Mock data for checker tools
@@ -83,7 +83,7 @@ export default function CheckerToolsPage() {
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [searchTerm, checkerTools]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -159,7 +159,7 @@ export default function CheckerToolsPage() {
               Popular Checker Tools
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {checkerTools.filter(tool => tool.popular).map((tool, index) => (
+              {checkerTools.filter(tool => tool.popular).map((tool) => (
                 <Link key={tool.id} href={tool.url} className="group">
                   <div className="bg-white rounded-xl shadow-sm hover:shadow-md p-6 border border-gray-100 h-full transition-all duration-200 group-hover:-translate-y-1 transform-gpu">
                     <div className={`bg-${tool.color}-100 w-12 h-12 rounded-lg mb-4 flex items-center justify-center`}>

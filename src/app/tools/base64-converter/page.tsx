@@ -435,11 +435,7 @@ export default function Base64ConverterPage() {
             Related Tools
           </h2>
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <PopularTools
-              category="data-converter"
-              currentTool="base64-converter"
-              limit={3}
-            />
+            <PopularTools/>
           </div>
         </div>
       </section>

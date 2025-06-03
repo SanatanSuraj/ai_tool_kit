@@ -91,7 +91,7 @@ export default function ImageResizerPage() {
         setOriginalImage(dataUrl);
         
         // Get original dimensions
-        const img = new Image();
+        const img = document.createElement('img');
         img.onload = () => {
           setOriginalDimensions({
             width: img.width,
@@ -105,7 +105,7 @@ export default function ImageResizerPage() {
   }, []);
 
   // Update option
-  const updateOption = (key: keyof ResizeOptions, value: any) => {
+  const updateOption = (key: keyof ResizeOptions, value: string | number | boolean) => {
     setOptions(prev => ({ ...prev, [key]: value }));
   };
 

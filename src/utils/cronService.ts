@@ -10,7 +10,7 @@ export function getNextExecutions(cronExpression: string, count = 5): Date[] {
     }
 
     return dates;
-  } catch (err) {
+  } catch {
     throw new Error("Invalid cron expression");
   }
 }

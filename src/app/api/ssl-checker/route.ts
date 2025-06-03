@@ -1,3 +1,4 @@
+import { getErrorMessage } from "@/utils/getErrorMessage";
 import { NextResponse } from "next/server";
 import tls from "node:tls";
 import isFQDN from "validator/es/lib/isFQDN";
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const result = await new Promise<any>((resolve, reject) => {
+    const result = await new Promise((resolve, reject) => {
       const socket = tls.connect(
         443,
         domain,
@@ -86,8 +87,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 });
   }
 }

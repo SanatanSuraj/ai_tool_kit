@@ -317,7 +317,7 @@ export default function JsonToCsvPage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Only handle keyboard shortcuts when the input is focused
-      if (!isInputFocused && !e.target?.closest('textarea, input')) return;
+      if (!isInputFocused && !(e.target as Element)?.closest('textarea, input')) return;
       
       // Ctrl/Cmd + Enter to convert
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
@@ -690,11 +690,7 @@ export default function JsonToCsvPage() {
             Related Tools
           </h2>
           <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-200 hover:shadow-md transition-all duration-200">
-            <PopularTools
-              category="data-converter"
-              currentTool="json-to-csv"
-              limit={3}
-            />
+            <PopularTools/>
           </div>
         </div>
       </section>

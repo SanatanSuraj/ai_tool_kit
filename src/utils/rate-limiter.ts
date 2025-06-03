@@ -13,7 +13,7 @@ export const rateLimiter = new RateLimiterMemory({
 export async function rateLimiterMiddleware(ip: string): Promise<void> {
   try {
     await rateLimiter.consume(ip);
-  } catch (error) {
+  } catch {
     throw new Error('Too many requests. Please try again later.');
   }
 } 

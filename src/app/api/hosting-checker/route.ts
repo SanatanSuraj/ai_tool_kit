@@ -4,6 +4,7 @@ import { getWebsite } from "@/utils/getWebsite";
 import { getHostingType } from "@/utils/getHostingType";
 import { IP_API_URL } from "@/utils/constants/ipApiUrl";
 import isFQDN from "validator/es/lib/isFQDN";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 export async function POST(req: Request) {
   const { domain } = await req.json();
@@ -90,8 +91,8 @@ export async function POST(req: Request) {
     };
 
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 });
   }
 }

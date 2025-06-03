@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeftIcon, DocumentDuplicateIcon, ArrowUpTrayIcon, ArrowDownTrayIcon, ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
@@ -380,7 +380,7 @@ export default function UrlEncoderPage() {
               <p className="mt-4">Characters that need to be encoded:</p>
               <ul className="mt-2 space-y-1 ml-5 list-disc">
                 <li>Reserved characters (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm">:, /, ?, #, [, ], @, !</code>)</li>
-                <li>Unsafe characters (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm">space, ", &lt;, &gt;, {, }, |, \, ^, ~</code>)</li>
+                <li>Unsafe characters (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm">space, ", &lt;, &gt;, {"," }, |, \, ^, ~</code>)</li>
                 <li>Characters outside the ASCII set (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm">é, ö, ñ, 漢字</code>)</li>
               </ul>
               
@@ -438,11 +438,7 @@ export default function UrlEncoderPage() {
             Related Tools
           </h2>
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <PopularTools
-              category="data-converter"
-              currentTool="url-encoder"
-              limit={3}
-            />
+            <PopularTools/>
           </div>
         </div>
       </section>

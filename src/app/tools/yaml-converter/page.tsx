@@ -567,11 +567,7 @@ salary: 95000`;
             Related Tools
           </h2>
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <PopularTools
-              category="data-converter"
-              currentTool="yaml-converter"
-              limit={3}
-            />
+            <PopularTools/>
           </div>
         </div>
       </section>

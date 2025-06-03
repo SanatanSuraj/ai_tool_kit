@@ -1,4 +1,5 @@
 import { IP_API_URL } from '@/utils/constants/ipApiUrl';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 import { NextResponse } from 'next/server';
 import net from "node:net";
 
@@ -21,6 +22,6 @@ export async function POST(req: Request) {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({ error: 'Failed to fetch IP info' }, { status: 500 });
+    return NextResponse.json({ error: getErrorMessage(err, 'Failed to fetch IP info')}, { status: 500 });
   }
 }

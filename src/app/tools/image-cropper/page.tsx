@@ -98,7 +98,7 @@ export default function ImageCropperPage() {
   }, []);
 
   // Update option
-  const updateOption = useCallback((key: keyof CropOptions, value: any) => {
+  const updateOption = useCallback((key: keyof CropOptions, value: string | number) => {
     setOptions(prev => ({ ...prev, [key]: value }));
     if (key === 'aspectRatio' && imgRef.current) {
       const aspect = getAspectRatio(value as string);
@@ -177,7 +177,7 @@ export default function ImageCropperPage() {
         setIsCropping(false);
       };
       reader.readAsDataURL(blob);
-    } catch (err) {
+    } catch {
       setError('Error cropping image');
       setIsCropping(false);
     }
@@ -292,7 +292,7 @@ export default function ImageCropperPage() {
                                   aspect={getAspectRatio(options.aspectRatio)}
                                   className="max-h-[500px] w-full object-contain"
                                 >
-                                  <img
+                                  <Image
                                     ref={imgRef}
                                     alt="Crop me"
                                     src={originalImage}
