@@ -83,7 +83,7 @@ export default function CheckerToolsPage() {
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [searchTerm, checkerTools]);
+  }, [searchTerm]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
