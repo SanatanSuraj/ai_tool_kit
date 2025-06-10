@@ -71,7 +71,7 @@ export default function Home() {
                   Explore Tools
                   <ArrowRightIcon className="h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
                 </motion.button>
-                <motion.button
+                {/* <motion.button
                   onClick={() => setIsSignInModalOpen(true)}
                   aria-label="Try Playground"
                   className="relative overflow-hidden border-2 border-gray-200 hover:border-blue-300 text-gray-800 hover:text-blue-600 px-8 py-4 rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2 hover:-translate-y-0.5 group"
@@ -80,7 +80,7 @@ export default function Home() {
                 >
                   <span className="relative z-10">Try Playground</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                </motion.button>
+                </motion.button> */}
               </div>
               
               <div className="mt-12 flex items-center gap-4 justify-center lg:justify-start">
