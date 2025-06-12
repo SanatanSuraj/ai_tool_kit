@@ -180,3 +180,35 @@ export type ContentType =
     url: string;
     popular: boolean;
   }
+
+
+  interface SearchResult {
+    position: number;
+    title: string;
+    link: string;
+    snippet: string;
+  }
+  
+  export interface SearchResponse {
+    items: SearchResult[];
+    totalResults?: string;
+    searchTime?: number;
+    keyword: string;
+    domain: string;
+    location: string;
+  }
+
+  interface KeywordResult {
+    keyword: string;
+    searchVolume: number;
+    cpc: number;
+    competition: string;
+  }
+  
+  export interface KeywordData {
+    keyword: string;
+    results: KeywordResult[];
+    totalResults: number;
+    language: string;
+    location: string;
+  }

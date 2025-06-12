@@ -63,7 +63,7 @@ const Navbar = () => {
               </div>
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex md:items-center md:space-x-2">
+              {/* <div className="hidden md:flex md:items-center md:space-x-2">
                 <Link 
                   href="/pricing" 
                   className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 transition-colors"
@@ -85,10 +85,10 @@ const Navbar = () => {
                 >
                   Get Started
                 </Link>
-              </div>
+              </div> */}
 
               {/* Mobile menu button */}
-              <div className="md:hidden">
+              {/* <div className="md:hidden">
                 <button
                   id="mobile-menu-button"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -102,7 +102,7 @@ const Navbar = () => {
                     <Bars3Icon className="h-6 w-6" />
                   )}
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
 

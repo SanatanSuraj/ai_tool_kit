@@ -1,0 +1,17 @@
+export const countries = [
+  { code: "us", name: "United States" },
+  { code: "gb", name: "United Kingdom" },
+  { code: "ca", name: "Canada" },
+  { code: "au", name: "Australia" },
+  { code: "in", name: "India" },
+  { code: "de", name: "Germany" },
+  { code: "fr", name: "France" },
+  { code: "it", name: "Italy" },
+  { code: "es", name: "Spain" },
+  { code: "br", name: "Brazil" },
+  { code: "mx", name: "Mexico" },
+  { code: "jp", name: "Japan" },
+  { code: "nl", name: "Netherlands" },
+  { code: "pl", name: "Poland" },
+  { code: "tr", name: "Turkey" },
+].sort((a, b) => a.name.localeCompare(b.name));

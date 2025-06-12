@@ -141,7 +141,7 @@ export default function PingPage() {
                       >
                         <option value="HTTP(s)">HTTP(s)</option>
                         <option value="TCP">TCP</option>
-                        <option value="ICMP">ICMP</option>
+                        {/* <option value="ICMP">ICMP</option> */}
                       </select>
                       <p className="mt-2 text-sm text-gray-500">Ideal for monitoring websites, APIs and web services.</p>
                     </div>
