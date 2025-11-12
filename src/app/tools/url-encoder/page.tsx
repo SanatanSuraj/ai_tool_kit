@@ -230,7 +230,7 @@ export default function UrlEncoderPage() {
                       placeholder={mode === "encode" 
                         ? "Enter text to encode..." 
                         : "Enter URL-encoded text to decode..."}
-                      className="w-full h-72 p-4 border-2 rounded-xl font-mono text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-inner bg-white"
+                      className="w-full h-72 p-4 border-2 rounded-xl font-mono text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-inner bg-white text-gray-900"
                       style={{resize: 'vertical'}}
                     />
                     {input && (

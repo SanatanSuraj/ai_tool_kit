@@ -247,7 +247,7 @@ export default function CronExpressionGeneratorPage() {
                               <select
                                 value={field.value}
                                 onChange={(e) => updateSchedule(field.name as keyof CronSchedule, e.target.value)}
-                                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500"
+                                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 text-gray-900 bg-white"
                               >
                                 {field.options.map((option, index) => (
                                   <option key={index} value={option.value}>

@@ -211,4 +211,7 @@ export type ContentType =
     totalResults: number;
     language: string;
     location: string;
+    note?: string;
+    error?: string;
+    attemptedEndpoints?: string[];
   }

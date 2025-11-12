@@ -138,7 +138,7 @@ export default function HostingCheckerPage() {
                         placeholder="example.com"
                         value={host}
                         onChange={(e) => setHost(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm text-gray-900 bg-white"
                         required
                       />
                     </div>

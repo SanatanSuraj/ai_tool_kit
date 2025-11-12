@@ -6,22 +6,13 @@ import { ClockIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Footer from '@/components/Footer';
 import { Tool } from '@/types';
 
-export default function TimeConverterPage() {
+export default function CalculatorPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data for time converter tools
-  const timeTools = [
-    {
-      id: 'timezone-converter',
-      name: 'Time Zone Converter',
-      description: 'Convert times between different time zones worldwide with daylight saving time support.',
-      icon: 'GlobeIcon',
-      color: 'indigo',
-      url: '/tools/timezone-converter',
-      popular: true,
-    },
+  // Mock data for calculator tools
+  const calculatorTools = [
     {
       id: 'date-calculator',
       name: 'Date Calculator',
@@ -72,7 +63,7 @@ export default function TimeConverterPage() {
   // Filter tools based on search term
   useEffect(() => {
     setFilteredTools(
-      timeTools.filter(tool => 
+      calculatorTools.filter(tool => 
         tool.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         tool.description.toLowerCase().includes(searchTerm.toLowerCase())
       )
@@ -109,10 +100,10 @@ export default function TimeConverterPage() {
               </div>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 fade-in-bottom">Time Converter</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 fade-in-bottom">Calculator</h1>
             
             <p className="text-xl text-gray-600 mb-8 fade-in-bottom [animation-delay:200ms]">
-              Convert and calculate time, dates, and time zones effortlessly. Our time tools make working with temporal data simple.
+              Perform calculations and conversions with our comprehensive calculator tools. Calculate dates, time, and more effortlessly.
             </p>
             
             <div className="flex justify-center fade-in-bottom [animation-delay:300ms]">
@@ -138,7 +129,7 @@ export default function TimeConverterPage() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                placeholder="Search time tools..."
+                placeholder="Search calculator tools..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -157,10 +148,10 @@ export default function TimeConverterPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
               </span>
-              Popular Time Tools
+              Popular Calculator Tools
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {timeTools.filter(tool => tool.popular).map((tool, index) => (
+              {calculatorTools.filter(tool => tool.popular).map((tool, index) => (
                 <Link key={tool.id} href={tool.url} className="group">
                   <div className="bg-white rounded-xl shadow-sm hover:shadow-md p-6 border border-gray-100 h-full transition-all duration-200 group-hover:-translate-y-1 transform-gpu">
                     <div className={`bg-${tool.color}-100 w-12 h-12 rounded-lg mb-4 flex items-center justify-center`}>
@@ -207,7 +198,7 @@ export default function TimeConverterPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </span>
-              All Time Tools
+              All Calculator Tools
             </h2>
           )}
           
@@ -224,7 +215,7 @@ export default function TimeConverterPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(searchTerm !== '' ? filteredTools : timeTools).map((tool, index) => (
+              {(searchTerm !== '' ? filteredTools : calculatorTools).map((tool, index) => (
                 <Link 
                   key={tool.id} 
                   href={tool.url} 
@@ -324,4 +315,5 @@ export default function TimeConverterPage() {
       <Footer />
     </div>
   );
-} 
+}
+

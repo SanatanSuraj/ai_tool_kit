@@ -355,7 +355,7 @@ salary: 95000`;
                       placeholder={conversionMode === "yaml-to-json" 
                         ? "Paste your YAML data here..." 
                         : "Paste your JSON data here..."}
-                      className={`w-full h-72 p-4 border-2 rounded-xl font-mono text-base ${!isInputValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent shadow-inner bg-white`}
+                      className={`w-full h-72 p-4 border-2 rounded-xl font-mono text-base ${!isInputValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent shadow-inner bg-white text-gray-900`}
                       style={{resize: 'vertical'}}
                     />
                     {input && (
@@ -384,7 +384,7 @@ salary: 95000`;
                     <select
                       value={indentation}
                       onChange={(e) => setIndentation(Number(e.target.value))}
-                      className="block w-32 rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50 bg-white"
+                      className="block w-32 rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50 bg-white text-gray-900"
                     >
                       <option value="2">2 spaces</option>
                       <option value="4">4 spaces</option>

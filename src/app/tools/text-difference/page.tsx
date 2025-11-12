@@ -196,7 +196,7 @@ export default function TextDifferencePage() {
                       id="compareMode"
                       value={compareMode}
                       onChange={(e) => setCompareMode(e.target.value as "char" | "word" | "line")}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors shadow-sm"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors shadow-sm text-gray-900 bg-white"
                     >
                       <option value="char">Characters</option>
                       <option value="word">Words</option>
@@ -264,7 +264,7 @@ export default function TextDifferencePage() {
                     value={text1}
                     onChange={(e) => setText1(e.target.value)}
                     placeholder="Enter or paste the original text here..."
-                    className="w-full h-64 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                    className="w-full h-64 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors text-gray-900 bg-white"
                   ></textarea>
                 </div>
                 
@@ -282,7 +282,7 @@ export default function TextDifferencePage() {
                       value={text2}
                       onChange={(e) => setText2(e.target.value)}
                       placeholder="Enter or paste the modified text here..."
-                      className="w-full h-64 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors"
+                      className="w-full h-64 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-colors text-gray-900 bg-white"
                     ></textarea>
                     <button
                       onClick={handleSwitchTexts}

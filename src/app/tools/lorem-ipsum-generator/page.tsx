@@ -214,7 +214,7 @@ export default function LoremIpsumGeneratorPage() {
                           id="type"
                           value={type}
                           onChange={(e) => setType(e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm text-gray-900 bg-white"
                         >
                           <option value="paragraphs">Paragraphs</option>
                           <option value="sentences">Sentences</option>
@@ -234,7 +234,7 @@ export default function LoremIpsumGeneratorPage() {
                           max={100}
                           value={count}
                           onChange={(e) => setCount(parseInt(e.target.value, 10))}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm text-gray-900 bg-white"
                         />
                       </div>
                     </div>

@@ -317,7 +317,7 @@ export default function TemperatureConverterPage() {
                           id="fromValue"
                           value={fromValue}
                           onChange={handleFromValueChange}
-                          className="w-full px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                          className="w-full px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-gray-900 bg-white"
                           placeholder="Enter value"
                         />
                         <select
@@ -354,7 +354,7 @@ export default function TemperatureConverterPage() {
                           id="toValue"
                           value={toValue}
                           onChange={handleToValueChange}
-                          className="w-full px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                          className="w-full px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-gray-900 bg-white"
                           placeholder="Result"
                         />
                         <select

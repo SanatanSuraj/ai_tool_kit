@@ -32,20 +32,46 @@ export default function DNSLookupPage() {
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
+  const isValidIP = (ip: string): boolean => {
+    // IPv4 pattern
+    const ipv4Pattern = /^(\d{1,3}\.){3}\d{1,3}$/;
+    
+    if (ipv4Pattern.test(ip)) {
+      const parts = ip.split('.');
+      return parts.every(part => {
+        const num = parseInt(part, 10);
+        return num >= 0 && num <= 255;
+      });
+    }
+    
+    // IPv6 pattern - basic validation (Node.js net.isIP will do more thorough validation)
+    const ipv6Pattern = /^([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}$|^::([0-9a-fA-F]{0,4}:){0,6}[0-9a-fA-F]{0,4}$|^([0-9a-fA-F]{0,4}:){1,6}::$/i;
+    return ipv6Pattern.test(ip);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!domain) {
-      setError("Please enter a domain name");
+      setError(recordType === "PTR" ? "Please enter an IP address" : "Please enter a domain name");
       return;
     }
     
-    // Simple domain validation
-    const domainPattern = /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-    if (recordType !== "PTR" && !domainPattern.test(domain)) {
-      setError("Please enter a valid domain name");
-      return;
+    // Validation based on record type
+    if (recordType === "PTR") {
+      if (!isValidIP(domain)) {
+        setError("Please enter a valid IP address (IPv4 or IPv6) for PTR lookup");
+        return;
+      }
+    } else {
+      // Simple domain validation for other record types
+      const domainPattern = /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+      if (!domainPattern.test(domain)) {
+        setError("Please enter a valid domain name");
+        return;
+      }
     }
+    
     setCurrentRecordType(recordType);
     setIsLoading(true);
     setError("");
@@ -127,7 +153,7 @@ export default function DNSLookupPage() {
                   <form ref={formRef} onSubmit={handleSubmit} className="mb-6">
                     <div className="mb-4">
                       <label htmlFor="domain" className="block text-sm font-medium text-gray-700 mb-1">
-                        Domain Name
+                        {recordType === "PTR" ? "IP Address" : "Domain Name"}
                       </label>
                       <div className="relative">
                         <input
@@ -136,10 +162,25 @@ export default function DNSLookupPage() {
                           name="domain"
                           value={domain}
                           onChange={(e) => setDomain(e.target.value)}
-                          placeholder="example.com"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm"
+                          placeholder={recordType === "PTR" ? "8.8.8.8 or 2001:4860:4860::8888" : "example.com"}
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm text-gray-900 bg-white"
                         />
                       </div>
+                      {recordType === "PTR" && (
+                        <div className="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                          <div className="flex items-start">
+                            <svg className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                            </svg>
+                            <div>
+                              <p className="text-sm font-medium text-blue-900 mb-1">PTR Record (Reverse DNS Lookup)</p>
+                              <p className="text-sm text-blue-700">
+                                PTR records require an IP address instead of a domain name. Enter an IPv4 address (e.g., 8.8.8.8) or IPv6 address (e.g., 2001:4860:4860::8888) to perform a reverse DNS lookup.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="mb-6">
@@ -152,7 +193,7 @@ export default function DNSLookupPage() {
                           name="recordType"
                           value={recordType}
                           onChange={(e) => setRecordType(e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm appearance-none bg-white"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm appearance-none bg-white text-gray-900"
                         >
                           {DNS_RECORD_TYPES.map((type) => (
                             <option key={type.value} value={type.value}>
@@ -256,38 +297,58 @@ export default function DNSLookupPage() {
                                   case "CNAME":
                                   case "NS":
                                   case "PTR": {
-                                    valueContent = record?.value ?? record;
+                                    if (typeof record === "string") {
+                                      valueContent = record;
+                                    } else if (record?.value) {
+                                      valueContent = String(record.value);
+                                    } else {
+                                      valueContent = JSON.stringify(record);
+                                    }
                                     break;
                                   }
                               
                                   case "TXT": {
-                                    valueContent = Array.isArray(record)
-                                      ? record?.join(" ")
-                                      : record?.value ?? record;
+                                    if (Array.isArray(record)) {
+                                      valueContent = record.join(" ");
+                                    } else if (record?.value) {
+                                      valueContent = String(record.value);
+                                    } else if (typeof record === "string") {
+                                      valueContent = record;
+                                    } else {
+                                      valueContent = JSON.stringify(record);
+                                    }
                                     break;
                                   }
                               
                                   case "MX": {
                                     const mx = record as MxRecord;
-                                    valueContent = `${mx?.exchange} (Priority: ${mx?.priority})`;
+                                    if (mx?.exchange && mx?.priority !== undefined) {
+                                      valueContent = `${mx.exchange} (Priority: ${mx.priority})`;
+                                    } else {
+                                      valueContent = JSON.stringify(record);
+                                    }
                                     break;
                                   }
                               
                                   case "SRV": {
                                     const srv = record as SrvRecord;
-                                    valueContent = `${srv?.name}:${srv?.port} (Priority: ${srv?.priority}, Weight: ${srv?.weight})`;
+                                    if (srv?.name && srv?.port !== undefined) {
+                                      valueContent = `${srv.name}:${srv.port} (Priority: ${srv.priority ?? "N/A"}, Weight: ${srv.weight ?? "N/A"})`;
+                                    } else {
+                                      valueContent = JSON.stringify(record);
+                                    }
                                     break;
                                   }
                               
                                   case "CAA": {
                                     const caa = record as CaaRecord;
                                     const details: string[] = [];
-                                    if (caa?.issue) details.push(`issue: ${caa?.issue}`);
-                                    if (caa?.issuewild) details.push(`issuewild: ${caa?.issuewild}`);
-                                    if (caa?.iodef) details.push(`iodef: ${caa?.iodef}`);
-                                    if (caa?.contactemail) details.push(`email: ${caa?.contactemail}`);
-                                    if (caa?.contactphone) details.push(`phone: ${caa?.contactphone}`);
-                                    valueContent = `Critical: ${caa?.critical}${details?.length ? `, ${details.join(", ")}` : ""}`;
+                                    if (caa?.issue) details.push(`issue: ${caa.issue}`);
+                                    if (caa?.issuewild) details.push(`issuewild: ${caa.issuewild}`);
+                                    if (caa?.iodef) details.push(`iodef: ${caa.iodef}`);
+                                    if (caa?.contactemail) details.push(`email: ${caa.contactemail}`);
+                                    if (caa?.contactphone) details.push(`phone: ${caa.contactphone}`);
+                                    valueContent = `Critical: ${caa?.critical ?? "N/A"}${details.length ? `, ${details.join(", ")}` : ""}`;
                                     break;
                                   }
                               
@@ -297,7 +358,13 @@ export default function DNSLookupPage() {
                                   }
                               
                                   default: {
-                                    valueContent = typeof record === "string" ? record : JSON.stringify(record, null, 2);
+                                    if (typeof record === "string") {
+                                      valueContent = record;
+                                    } else if (record?.value) {
+                                      valueContent = String(record.value);
+                                    } else {
+                                      valueContent = JSON.stringify(record, null, 2);
+                                    }
                                   }
                                 }
                               

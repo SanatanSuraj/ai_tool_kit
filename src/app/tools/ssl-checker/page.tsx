@@ -112,7 +112,7 @@ export default function SSLCheckerPage() {
                           value={domain}
                           onChange={(e) => setDomain(e.target.value)}
                           placeholder="example.com"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors shadow-sm"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors shadow-sm text-gray-900 bg-white"
                         />
                       </div>
                       {error && (

@@ -479,6 +479,29 @@ export default function Home() {
                 </div>
               </Link>
             </div>
+
+            {/* Calculator */}
+            <div className="group relative">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 transform transition-transform group-hover:scale-[1.02] group-hover:translate-y-1"></div>
+              <Link href="/categories/calculator" className="relative block bg-white rounded-2xl p-6 overflow-hidden shadow-lg transition-all duration-300 group-hover:shadow-2xl">
+                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-teal-600 to-transparent opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition-opacity"></div>
+                <div className="relative">
+                  <div className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl p-3 w-12 h-12 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Calculator</h3>
+                  <p className="text-gray-600">Perform calculations and conversions with our comprehensive calculator tools.</p>
+                  <div className="mt-4 flex items-center text-teal-600 font-medium">
+                    Explore tools
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

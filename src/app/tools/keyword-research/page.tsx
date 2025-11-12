@@ -36,19 +36,25 @@ export default function KeywordResearchPage() {
         body: JSON.stringify({ keyword: trimmedKeyword, country }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch keyword data");
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        // If we have results despite the error (demo data), show them
+        if (data.results && data.results.length > 0) {
+          setKeywordData(data);
+          return;
+        }
+        throw new Error(data.error || `Failed to fetch keyword data (${response.status})`);
+      }
       
-      if (data.error) {
+      // If there's an error but we have results (demo data), show them with the warning
+      if (data.error && (!data.results || data.results.length === 0)) {
         throw new Error(data.error);
       }
 
       setKeywordData(data);
     } catch (err) {
-      setError((err as Error).message);
+      setError((err as Error).message || "An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +115,7 @@ export default function KeywordResearchPage() {
                       value={keyword}
                       onChange={(e) => setKeyword(e.target.value)}
                       placeholder="Enter a keyword to research"
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 bg-white"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           searchKeywords();
@@ -126,7 +132,7 @@ export default function KeywordResearchPage() {
                       name="country"
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                     >
                       {countries.map((country) => (
                         <option key={country.code} value={country.code}>
@@ -158,6 +164,35 @@ export default function KeywordResearchPage() {
               {/* Results Section */}
               {keywordData && (
                 <div className="mt-8">
+                  {/* Info Banner */}
+                  {(keywordData.note || keywordData.error) && (
+                    <div className={`mb-4 p-4 border rounded-lg ${
+                      keywordData.error 
+                        ? 'bg-yellow-50 border-yellow-200' 
+                        : 'bg-blue-50 border-blue-200'
+                    }`}>
+                      <div className="flex items-start">
+                        <InformationCircleIcon className={`h-5 w-5 mr-2 mt-0.5 flex-shrink-0 ${
+                          keywordData.error ? 'text-yellow-600' : 'text-blue-600'
+                        }`} />
+                        <div className="flex-1">
+                          <p className={`text-sm font-medium ${
+                            keywordData.error ? 'text-yellow-800' : 'text-blue-800'
+                          }`}>
+                            {keywordData.error || keywordData.note}
+                          </p>
+                          {keywordData.attemptedEndpoints && keywordData.attemptedEndpoints.length > 0 && (
+                            <p className={`text-xs mt-1 ${
+                              keywordData.error ? 'text-yellow-700' : 'text-blue-700'
+                            }`}>
+                              To use real data, configure a valid RapidAPI keyword research service endpoint.
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   {/* Summary */}
                   <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                     <h2 className="text-lg font-semibold mb-2">Research Summary</h2>
@@ -240,7 +275,7 @@ export default function KeywordResearchPage() {
               <ol className="list-decimal list-inside space-y-2 text-gray-700">
                 <li>Enter a keyword you want to research</li>
                 <li>Select your target country for location-specific data</li>
-                <li>Click "Research Keywords" or press Enter</li>
+                <li>Click &quot;Research Keywords&quot; or press Enter</li>
                 <li>Analyze search volume, CPC and competition level</li>
               </ol>
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
@@ -272,7 +307,7 @@ export default function KeywordResearchPage() {
                 <div className="space-y-2">
                   <h3 className="font-medium text-gray-900">Competition Level</h3>
                   <p className="text-sm text-gray-600">
-                    How challenging it will be to rank on the first page of search results for this keyword phrase. The higher the difficulty rating, the more competition you'll face.
+                    How challenging it will be to rank on the first page of search results for this keyword phrase. The higher the difficulty rating, the more competition you&apos;ll face.
                   </p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">

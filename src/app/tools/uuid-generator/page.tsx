@@ -281,7 +281,7 @@ export default function UuidGeneratorPage() {
                             max="100"
                             value={quantity}
                             onChange={(e) => setQuantity(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-gray-900 bg-white"
                           />
                         </div>
                         <p className="text-xs text-gray-500 mt-1">
@@ -297,7 +297,7 @@ export default function UuidGeneratorPage() {
                           id="version"
                           value={version}
                           onChange={(e) => setVersion(e.target.value as "v1" | "v4")}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-gray-900 bg-white"
                         >
                           <option value="v4">Version 4 (Random)</option>
                           <option value="v1">Version 1 (Time-based)</option>
@@ -312,7 +312,7 @@ export default function UuidGeneratorPage() {
                           id="format"
                           value={format}
                           onChange={(e) => setFormat(e.target.value as "standard" | "braces" | "no-hyphens")}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-gray-900 bg-white"
                         >
                           <option value="standard">Standard (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)</option>
                           <option value="braces">With Braces ({"{"}xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx{"}"})</option>

@@ -307,7 +307,7 @@ export default function XmlToJsonPage() {
                       value={xmlInput}
                       onChange={(e) => setXmlInput(e.target.value)}
                       placeholder="Paste your XML data here..."
-                      className={`w-full h-72 p-4 border-2 rounded-xl font-mono text-base ${!isXmlValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-inner bg-white`}
+                      className={`w-full h-72 p-4 border-2 rounded-xl font-mono text-base ${!isXmlValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-inner bg-white text-gray-900`}
                       style={{resize: 'vertical'}}
                     />
                     {xmlInput && (

@@ -182,11 +182,11 @@ export default function TimeZoneConverterPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-4">
             <Link 
-              href="/categories/time-converter"
+              href="/"
               className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors group"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1 group-hover:-translate-x-1 transition-transform" />
-              <span>Back to Time Tools</span>
+              <span>Back to Home</span>
             </Link>
           </div>
           

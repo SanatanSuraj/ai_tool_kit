@@ -416,7 +416,7 @@ export default function JsonToCsvPage() {
                       onFocus={() => setIsInputFocused(true)}
                       onBlur={() => setIsInputFocused(false)}
                       placeholder="Paste your JSON data here..."
-                      className={`w-full h-64 md:h-72 p-3 md:p-4 border-2 rounded-xl font-mono text-sm md:text-base ${!isJsonValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent shadow-inner bg-white transition-all duration-200`}
+                      className={`w-full h-64 md:h-72 p-3 md:p-4 border-2 rounded-xl font-mono text-sm md:text-base ${!isJsonValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent shadow-inner bg-white transition-all duration-200 text-gray-900`}
                       style={{resize: 'vertical'}}
                       aria-label="JSON input"
                       aria-invalid={!isJsonValid}

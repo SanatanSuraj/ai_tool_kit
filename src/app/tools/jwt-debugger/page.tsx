@@ -227,7 +227,7 @@ export default function JwtDebuggerPage() {
                         id="jwtInput"
                         value={jwtToken}
                         onChange={(e) => setJwtToken(e.target.value)}
-                        className="w-full h-32 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        className="w-full h-32 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 bg-white"
                         placeholder="Paste your JWT token here..."
                       ></textarea>
                       <button

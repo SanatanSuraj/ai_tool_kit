@@ -212,7 +212,7 @@ export default function TimeDurationCalculatorPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-4">
             <Link 
-              href="/categories/time-converter"
+              href="/categories/calculator"
               className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors group"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1 group-hover:-translate-x-1 transition-transform" />

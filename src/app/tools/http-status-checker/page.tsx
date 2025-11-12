@@ -147,7 +147,7 @@ export default function HttpStatusCheckerPage() {
                           value={url}
                           onChange={(e) => setUrl(e.target.value)}
                           placeholder="https://example.com"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors shadow-sm text-gray-900 bg-white"
                         />
                       </div>
                       {error && (

@@ -13,23 +13,23 @@ import {
 } from "@heroicons/react/24/outline";
 import Footer from '@/components/Footer';
 
-export default function UnixTimestampConverterPage() {
-  // State for human date to unix timestamp
+export default function EpochConverterPage() {
+  // State for human date to epoch timestamp
   const [humanDate, setHumanDate] = useState<string>("");
-  const [unixTimestamp, setUnixTimestamp] = useState<string>("");
+  const [epochTimestamp, setEpochTimestamp] = useState<string>("");
   
-  // State for unix timestamp to human date
+  // State for epoch timestamp to human date
   const [timestampInput, setTimestampInput] = useState<string>("");
   const [humanDateResult, setHumanDateResult] = useState<string>("");
   const [includeMilliseconds, setIncludeMilliseconds] = useState<boolean>(false);
   
   // Current time states
-  const [currentUnixTime, setCurrentUnixTime] = useState<number>(0);
-  const [currentUnixTimeMs, setCurrentUnixTimeMs] = useState<number>(0);
+  const [currentEpochTime, setCurrentEpochTime] = useState<number>(0);
+  const [currentEpochTimeMs, setCurrentEpochTimeMs] = useState<number>(0);
   const [currentHumanTime, setCurrentHumanTime] = useState<string>("");
   
   const [error, setError] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<"toUnix" | "toHuman">("toUnix");
+  const [activeTab, setActiveTab] = useState<"toEpoch" | "toHuman">("toEpoch");
   const [converting, setConverting] = useState<boolean>(false);
 
   // Set today's date for default values and update the current time
@@ -40,8 +40,8 @@ export default function UnixTimestampConverterPage() {
     
     const updateCurrentTime = () => {
       const now = new Date();
-      setCurrentUnixTime(Math.floor(now.getTime() / 1000));
-      setCurrentUnixTimeMs(now.getTime());
+      setCurrentEpochTime(Math.floor(now.getTime() / 1000));
+      setCurrentEpochTimeMs(now.getTime());
       setCurrentHumanTime(now.toISOString().replace("T", " ").replace("Z", ""));
     };
     
@@ -51,8 +51,8 @@ export default function UnixTimestampConverterPage() {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Convert human date to Unix timestamp
-  const convertToUnix = () => {
+  // Convert human date to Epoch timestamp
+  const convertToEpoch = () => {
     setError("");
     setConverting(true);
     
@@ -67,17 +67,17 @@ export default function UnixTimestampConverterPage() {
         }
         
         const timestamp = Math.floor(date.getTime() / 1000);
-        setUnixTimestamp(timestamp.toString());
+        setEpochTimestamp(timestamp.toString());
         setConverting(false);
       } catch (err) {
-        setError("Error converting to Unix timestamp. Please check your input.");
+        setError("Error converting to Epoch timestamp. Please check your input.");
         console.error("Conversion error:", err);
         setConverting(false);
       }
     }, 300);
   };
 
-  // Convert Unix timestamp to human date
+  // Convert Epoch timestamp to human date
   const convertToHuman = () => {
     setError("");
     setConverting(true);
@@ -85,7 +85,7 @@ export default function UnixTimestampConverterPage() {
     setTimeout(() => {
       try {
         if (!timestampInput) {
-          setError("Please enter a Unix timestamp.");
+          setError("Please enter an Epoch timestamp.");
           setConverting(false);
           return;
         }
@@ -93,7 +93,7 @@ export default function UnixTimestampConverterPage() {
         const timestamp = parseInt(timestampInput);
         
         if (isNaN(timestamp)) {
-          setError("Please enter a valid number for the Unix timestamp.");
+          setError("Please enter a valid number for the Epoch timestamp.");
           setConverting(false);
           return;
         }
@@ -125,7 +125,7 @@ export default function UnixTimestampConverterPage() {
   
   // Fill current timestamp
   const fillCurrentTimestamp = () => {
-    setTimestampInput(includeMilliseconds ? currentUnixTimeMs.toString() : currentUnixTime.toString());
+    setTimestampInput(includeMilliseconds ? currentEpochTimeMs.toString() : currentEpochTime.toString());
   };
   
   // Fill current date
@@ -136,7 +136,7 @@ export default function UnixTimestampConverterPage() {
   // Auto-convert when inputs change
   useEffect(() => {
     if (humanDate) {
-      convertToUnix();
+      convertToEpoch();
     }
   }, [humanDate]);
   
@@ -179,8 +179,8 @@ export default function UnixTimestampConverterPage() {
                 <CodeBracketIcon className="h-9 w-9 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">Unix Timestamp Converter</h1>
-                <p className="text-gray-600 text-sm sm:text-base mt-1">Convert between human-readable dates and Unix timestamps</p>
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">Epoch Converter</h1>
+                <p className="text-gray-600 text-sm sm:text-base mt-1">Convert between human-readable dates and Unix epoch timestamps</p>
               </div>
             </div>
           </div>
@@ -194,12 +194,12 @@ export default function UnixTimestampConverterPage() {
                 <div className="font-mono text-sm text-gray-800">{currentHumanTime}</div>
               </div>
               <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-3 border border-teal-100">
-                <div className="text-xs text-teal-700 font-medium mb-1">Unix Timestamp (s):</div>
-                <div className="font-mono text-sm text-gray-800">{currentUnixTime}</div>
+                <div className="text-xs text-teal-700 font-medium mb-1">Epoch Timestamp (s):</div>
+                <div className="font-mono text-sm text-gray-800">{currentEpochTime}</div>
               </div>
               <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-3 border border-teal-100">
-                <div className="text-xs text-teal-700 font-medium mb-1">Unix Timestamp (ms):</div>
-                <div className="font-mono text-sm text-gray-800">{currentUnixTimeMs}</div>
+                <div className="text-xs text-teal-700 font-medium mb-1">Epoch Timestamp (ms):</div>
+                <div className="font-mono text-sm text-gray-800">{currentEpochTimeMs}</div>
               </div>
             </div>
           </div>
@@ -216,13 +216,13 @@ export default function UnixTimestampConverterPage() {
                 <div className="flex">
                   <button 
                     className={`flex-1 py-4 px-4 text-center font-medium text-sm transition-colors ${
-                      activeTab === 'toUnix' 
+                      activeTab === 'toEpoch' 
                         ? 'bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-sm' 
                         : 'bg-white text-gray-600 hover:bg-teal-50'
                     }`}
-                    onClick={() => setActiveTab('toUnix')}
+                    onClick={() => setActiveTab('toEpoch')}
                   >
-                    Date to Unix Timestamp
+                    Date to Epoch Timestamp
                   </button>
                   <button 
                     className={`flex-1 py-4 px-4 text-center font-medium text-sm transition-colors ${
@@ -232,7 +232,7 @@ export default function UnixTimestampConverterPage() {
                     }`}
                     onClick={() => setActiveTab('toHuman')}
                   >
-                    Unix Timestamp to Date
+                    Epoch Timestamp to Date
                   </button>
                 </div>
               </div>
@@ -243,8 +243,8 @@ export default function UnixTimestampConverterPage() {
                 <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gradient-to-br from-teal-100/40 to-cyan-100/40 blur-2xl"></div>
                 
                 <div className="relative">
-                  {/* Human Date to Unix Timestamp */}
-                  {activeTab === 'toUnix' && (
+                  {/* Human Date to Epoch Timestamp */}
+                  {activeTab === 'toEpoch' && (
                     <div className="space-y-6 animate-fadeIn">
                       <div className="space-y-4">
                         <div>
@@ -275,20 +275,20 @@ export default function UnixTimestampConverterPage() {
                         </div>
                         
                         <div>
-                          <label htmlFor="unixTimestamp" className="block text-sm font-medium text-gray-700 mb-2">
-                            Unix Timestamp (seconds)
+                          <label htmlFor="epochTimestamp" className="block text-sm font-medium text-gray-700 mb-2">
+                            Epoch Timestamp (seconds)
                           </label>
                           <div className={`flex shadow-md rounded-xl overflow-hidden transition-all relative ${converting ? 'animate-pulse' : ''}`}>
                             <input
                               type="text"
-                              id="unixTimestamp"
-                              value={unixTimestamp}
+                              id="epochTimestamp"
+                              value={epochTimestamp}
                               readOnly
                               className="w-full px-4 py-3.5 border border-teal-100 bg-teal-50/50 focus:outline-none text-gray-800 text-base font-mono"
                             />
-                            {unixTimestamp && (
+                            {epochTimestamp && (
                               <button 
-                                onClick={() => navigator.clipboard.writeText(unixTimestamp)}
+                                onClick={() => navigator.clipboard.writeText(epochTimestamp)}
                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-teal-600 hover:text-teal-800 transition-colors"
                                 title="Copy to clipboard"
                               >
@@ -302,21 +302,21 @@ export default function UnixTimestampConverterPage() {
                       </div>
                       
                       {/* Additional Information */}
-                      {unixTimestamp && (
+                      {epochTimestamp && (
                         <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl p-5 border border-teal-100/60 shadow-sm">
                           <h3 className="text-lg font-semibold text-gray-900 mb-4">Timestamp Details</h3>
                           <div className="space-y-3 text-sm">
                             <p className="text-gray-700">
-                              <span className="font-medium">Milliseconds:</span> {parseInt(unixTimestamp) * 1000}
+                              <span className="font-medium">Milliseconds:</span> {parseInt(epochTimestamp) * 1000}
                             </p>
                             <p className="text-gray-700">
-                              <span className="font-medium">As ISO 8601:</span> {new Date(parseInt(unixTimestamp) * 1000).toISOString()}
+                              <span className="font-medium">As ISO 8601:</span> {new Date(parseInt(epochTimestamp) * 1000).toISOString()}
                             </p>
                             <p className="text-gray-700">
-                              <span className="font-medium">As UTC String:</span> {new Date(parseInt(unixTimestamp) * 1000).toUTCString()}
+                              <span className="font-medium">As UTC String:</span> {new Date(parseInt(epochTimestamp) * 1000).toUTCString()}
                             </p>
                             <p className="text-gray-700">
-                              <span className="font-medium">As Local String:</span> {new Date(parseInt(unixTimestamp) * 1000).toString()}
+                              <span className="font-medium">As Local String:</span> {new Date(parseInt(epochTimestamp) * 1000).toString()}
                             </p>
                           </div>
                         </div>
@@ -324,14 +324,14 @@ export default function UnixTimestampConverterPage() {
                     </div>
                   )}
                   
-                  {/* Unix Timestamp to Human Date */}
+                  {/* Epoch Timestamp to Human Date */}
                   {activeTab === 'toHuman' && (
                     <div className="space-y-6 animate-fadeIn">
                       <div className="space-y-4">
                         <div>
                           <label htmlFor="timestampInput" className="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span>Unix Timestamp</span>
+                              <span>Epoch Timestamp</span>
                               <button 
                                 onClick={fillCurrentTimestamp}
                                 className="text-xs bg-teal-100 text-teal-600 px-2 py-0.5 rounded-full hover:bg-teal-200 transition-colors"
@@ -445,24 +445,24 @@ export default function UnixTimestampConverterPage() {
               <div className="bg-white rounded-2xl p-6 shadow-xl border border-teal-100/60 space-y-6 sticky top-8">
                 <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
                   <CodeBracketIcon className="h-5 w-5 text-teal-500" />
-                  <span>What is Unix Time?</span>
+                  <span>What is Epoch Time?</span>
                 </h2>
                 
                 <div className="space-y-4 text-gray-700">
                   <div className="bg-teal-50 rounded-xl p-4 border border-teal-100">
-                    <h3 className="font-medium text-gray-900 mb-2">Unix Timestamp Definition</h3>
+                    <h3 className="font-medium text-gray-900 mb-2">Epoch Timestamp Definition</h3>
                     <p className="text-sm text-gray-600 mb-2">
-                      Unix time (also known as POSIX time or Epoch time) represents the number of seconds that have elapsed since January 1, 1970, 00:00:00 UTC.
+                      Epoch time (also known as Unix time or POSIX time) represents the number of seconds that have elapsed since January 1, 1970, 00:00:00 UTC.
                     </p>
                     <p className="text-sm text-gray-600">
-                      It's widely used in computer systems and programming as a standardized way to track time.
+                      This point in time is known as the Unix Epoch, and it serves as a reference date for Unix and many other operating systems and file formats.
                     </p>
                   </div>
                   
                   <div className="bg-cyan-50 rounded-xl p-4 border border-cyan-100">
                     <h3 className="font-medium text-gray-900 mb-2">Seconds vs. Milliseconds</h3>
                     <p className="text-sm text-gray-600 mb-2">
-                      The traditional Unix timestamp is in seconds (10 digits for current dates).
+                      The traditional Epoch timestamp is in seconds (10 digits for current dates).
                     </p>
                     <p className="text-sm text-gray-600">
                       JavaScript and some modern systems use milliseconds (13 digits), which is the seconds multiplied by 1000.
@@ -516,28 +516,28 @@ export default function UnixTimestampConverterPage() {
           
           {/* More information section */}
           <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Understanding Unix Timestamps</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Understanding Epoch Timestamps</h2>
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-teal-100/60">
               <div className="prose prose-teal max-w-none">
                 <p>
-                  A Unix timestamp is a way to track time as a running total of seconds since January 1, 1970, at 00:00:00 UTC.
+                  An Epoch timestamp is a way to track time as a running total of seconds since January 1, 1970, at 00:00:00 UTC.
                   This point in time is known as the Unix Epoch, and it serves as a reference date for Unix and many other operating systems and file formats.
                 </p>
                 
-                <h3>Why Use Unix Timestamps?</h3>
+                <h3>Why Use Epoch Timestamps?</h3>
                 <p>
-                  Unix timestamps offer several advantages for computing systems:
+                  Epoch timestamps offer several advantages for computing systems:
                 </p>
                 <ul>
                   <li><strong>Simplicity:</strong> They represent time as a single number, making storage and calculations straightforward.</li>
-                  <li><strong>Language Agnostic:</strong> Almost all programming languages can work with Unix timestamps.</li>
+                  <li><strong>Language Agnostic:</strong> Almost all programming languages can work with Epoch timestamps.</li>
                   <li><strong>Time Zone Independence:</strong> They are based on UTC, avoiding complications with daylight saving time and time zones.</li>
                   <li><strong>Efficiency:</strong> They require less storage space than formatted date strings.</li>
                 </ul>
                 
-                <h3>Unix Time in Different Programming Languages</h3>
+                <h3>Epoch Time in Different Programming Languages</h3>
                 <p>
-                  Different programming languages use Unix time slightly differently:
+                  Different programming languages use Epoch time slightly differently:
                 </p>
                 <ul>
                   <li><strong>JavaScript:</strong> Uses milliseconds (<code>Date.now()</code> returns milliseconds since Epoch)</li>
@@ -546,16 +546,16 @@ export default function UnixTimestampConverterPage() {
                   <li><strong>Java:</strong> <code>System.currentTimeMillis()</code> returns milliseconds since Epoch</li>
                 </ul>
                 
-                <h3>Limitations of Unix Time</h3>
+                <h3>Limitations of Epoch Time</h3>
                 <p>
-                  Unix time stored as a 32-bit signed integer will overflow on January 19, 2038 (known as the Year 2038 problem).
+                  Epoch time stored as a 32-bit signed integer will overflow on January 19, 2038 (known as the Year 2038 problem).
                   Most modern systems use 64-bit integers, which will not overflow for billions of years.
                 </p>
                 
-                <h3>Unix Time Variations</h3>
+                <h3>Epoch Time Variations</h3>
                 <p>
-                  While standard Unix time doesn't account for leap seconds, some systems use variations that do. 
-                  Additionally, when higher precision is needed, Unix time may be extended to include milliseconds, 
+                  While standard Epoch time doesn't account for leap seconds, some systems use variations that do. 
+                  Additionally, when higher precision is needed, Epoch time may be extended to include milliseconds, 
                   microseconds, or even nanoseconds.
                 </p>
               </div>
@@ -567,4 +567,5 @@ export default function UnixTimestampConverterPage() {
       <Footer />
     </div>
   );
-} 
+}
+

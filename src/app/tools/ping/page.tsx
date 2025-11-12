@@ -137,7 +137,7 @@ export default function PingPage() {
                         id="protocol"
                         value={protocol}
                         onChange={(e) => setProtocol(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm appearance-none"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm appearance-none text-gray-900 bg-white"
                       >
                         <option value="HTTP(s)">HTTP(s)</option>
                         <option value="TCP">TCP</option>
@@ -157,7 +157,7 @@ export default function PingPage() {
                         placeholder="https://example.com/"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm text-gray-900 bg-white"
                         required
                       />
                     </div>

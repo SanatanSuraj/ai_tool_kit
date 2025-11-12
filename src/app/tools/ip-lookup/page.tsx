@@ -121,7 +121,7 @@ export default function IPLookupPage() {
                           value={ipAddress}
                           onChange={(e) => setIpAddress(e.target.value)}
                           placeholder="192.168.1.1 or 2001:db8::"
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors shadow-sm"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors shadow-sm text-gray-900 bg-white"
                         />
                       </div>
                       {error && (

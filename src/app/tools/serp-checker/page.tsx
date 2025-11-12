@@ -142,7 +142,7 @@ export default function SerpCheckerPage() {
                       name="location"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                     >
                       {countries.map((country) => (
                         <option key={country.code} value={country.code}>

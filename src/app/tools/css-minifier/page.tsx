@@ -367,7 +367,7 @@ nav a:hover {
                           id="cssInput"
                           value={input}
                           onChange={(e) => setInput(e.target.value)}
-                          className="w-full h-96 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                          className="w-full h-96 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-gray-900 bg-white"
                           placeholder="Paste your CSS here..."
                         ></textarea>
                         {inputLines > 0 && (

@@ -296,7 +296,7 @@ export default function NumberBaseConverterPage() {
                             onChange={handleInputChange}
                             className={`w-full px-4 py-3 rounded-xl border ${
                               error ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-teal-500 focus:border-teal-500'
-                            } shadow-sm transition-colors focus:outline-none focus:ring-2`}
+                            } shadow-sm transition-colors focus:outline-none focus:ring-2 text-gray-900 bg-white`}
                             placeholder={`Enter a ${numberSystems.find(sys => sys.base === parseInt(fromBase, 10))?.name.toLowerCase()} number...`}
                           />
                           {error && (

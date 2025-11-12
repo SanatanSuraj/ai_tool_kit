@@ -159,7 +159,7 @@ export default function QRCodeGeneratorPage() {
                         id="contentType"
                         value={contentType}
                         onChange={(e) => setContentType(e.target.value as ContentType)}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm text-gray-900 bg-white"
                       >
                         <option value="url">Website URL</option>
                         <option value="text">Plain Text</option>
@@ -182,7 +182,7 @@ export default function QRCodeGeneratorPage() {
                         onChange={(e) => setContent(e.target.value)}
                         placeholder={getPlaceholderText()}
                         rows={3}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm text-gray-900 bg-white"
                       />
                       {error && (
                         <p className="mt-2 text-red-600 text-sm">
@@ -209,7 +209,7 @@ export default function QRCodeGeneratorPage() {
                             type="text"
                             value={qrColor}
                             onChange={(e) => setQrColor(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm text-gray-900 bg-white"
                           />
                         </div>
                       </div>
@@ -231,7 +231,7 @@ export default function QRCodeGeneratorPage() {
                             type="text"
                             value={bgColor}
                             onChange={(e) => setBgColor(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm text-gray-900 bg-white"
                           />
                         </div>
                       </div>
@@ -246,7 +246,7 @@ export default function QRCodeGeneratorPage() {
                           id="errorCorrectionLevel"
                           value={errorCorrectionLevel}
                           onChange={(e) => setErrorCorrectionLevel(e.target.value as QRCodeErrorCorrectionLevel)}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm text-gray-900 bg-white"
                         >
                           <option value="L">Low (7%)</option>
                           <option value="M">Medium (15%)</option>
@@ -268,7 +268,7 @@ export default function QRCodeGeneratorPage() {
                           min={100}
                           max={1000}
                           step={50}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm text-gray-900 bg-white"
                         />
                       </div>
                     </div>

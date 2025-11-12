@@ -391,7 +391,7 @@ export default function RegexTesterPage() {
                       id="testStringInput"
                       value={testString}
                       onChange={(e) => setTestString(e.target.value)}
-                      className="w-full h-40 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full h-40 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 bg-white"
                       placeholder="Enter text to test against your regex..."
                     ></textarea>
                   </div>

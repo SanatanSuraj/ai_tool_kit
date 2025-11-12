@@ -303,7 +303,7 @@ function greet() {
                         id="indentSize"
                         value={indentSize}
                         onChange={(e) => setIndentSize(Number(e.target.value))}
-                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 bg-white"
                       >
                         <option value={2}>2 spaces</option>
                         <option value={4}>4 spaces</option>
@@ -319,7 +319,7 @@ function greet() {
                         id="wrapLength"
                         value={wrapLength}
                         onChange={(e) => setWrapLength(Number(e.target.value))}
-                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 bg-white"
                       >
                         <option value={0}>No wrapping</option>
                         <option value={80}>80 characters</option>
@@ -338,7 +338,7 @@ function greet() {
                         value={unformatted}
                         onChange={(e) => setUnformatted(e.target.value)}
                         placeholder="e.g., pre,code,textarea"
-                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 bg-white"
                       />
                     </div>
                     
@@ -369,7 +369,7 @@ function greet() {
                         value={maxPreserveNewlines}
                         onChange={(e) => setMaxPreserveNewlines(Number(e.target.value))}
                         disabled={!preserveNewlines}
-                        className={`w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${!preserveNewlines ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 bg-white ${!preserveNewlines ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         <option value={1}>1 line</option>
                         <option value={2}>2 lines</option>
@@ -406,7 +406,7 @@ function greet() {
                           id="htmlInput"
                           value={input}
                           onChange={(e) => setInput(e.target.value)}
-                          className="w-full h-96 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                          className="w-full h-96 font-mono text-sm p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 bg-white"
                           placeholder="Paste your HTML here..."
                         ></textarea>
                         {inputLines > 0 && (

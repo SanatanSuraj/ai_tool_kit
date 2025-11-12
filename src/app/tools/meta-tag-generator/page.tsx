@@ -261,7 +261,7 @@ export default function MetaTagGeneratorPage() {
                               value={title}
                               onChange={(e) => setTitle(e.target.value)}
                               placeholder="Page Title (50-60 characters)"
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                             />
                             <p className="text-xs text-gray-500 mt-1">
                               {title.length} / 60 characters
@@ -278,7 +278,7 @@ export default function MetaTagGeneratorPage() {
                               onChange={(e) => setDescription(e.target.value)}
                               placeholder="Brief description (150-160 characters)"
                               rows={3}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                             />
                             <p className="text-xs text-gray-500 mt-1">
                               {description.length} / 160 characters
@@ -295,7 +295,7 @@ export default function MetaTagGeneratorPage() {
                               value={keywords}
                               onChange={(e) => setKeywords(e.target.value)}
                               placeholder="keyword1, keyword2, keyword3"
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                             />
                           </div>
                           
@@ -309,7 +309,7 @@ export default function MetaTagGeneratorPage() {
                               value={author}
                               onChange={(e) => setAuthor(e.target.value)}
                               placeholder="Author or organization name"
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                             />
                           </div>
                           
@@ -321,7 +321,7 @@ export default function MetaTagGeneratorPage() {
                               id="robots"
                               value={robots}
                               onChange={(e) => setRobots(e.target.value)}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                             >
                               {robotsOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -340,7 +340,7 @@ export default function MetaTagGeneratorPage() {
                               id="viewport"
                               value={viewport}
                               onChange={(e) => setViewport(e.target.value)}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                             />
                           </div>
                         </div>
@@ -382,7 +382,7 @@ export default function MetaTagGeneratorPage() {
                                   value={ogTitle}
                                   onChange={(e) => setOgTitle(e.target.value)}
                                   placeholder="Title for social media sharing"
-                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                                 />
                               </div>
                               
@@ -396,7 +396,7 @@ export default function MetaTagGeneratorPage() {
                                   onChange={(e) => setOgDescription(e.target.value)}
                                   placeholder="Description for social media sharing"
                                   rows={3}
-                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                                 />
                               </div>
                               
@@ -410,7 +410,7 @@ export default function MetaTagGeneratorPage() {
                                   value={ogUrl}
                                   onChange={(e) => setOgUrl(e.target.value)}
                                   placeholder="https://yourwebsite.com/page"
-                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                                 />
                               </div>
                               
@@ -424,7 +424,7 @@ export default function MetaTagGeneratorPage() {
                                   value={ogImage}
                                   onChange={(e) => setOgImage(e.target.value)}
                                   placeholder="https://yourwebsite.com/image.jpg"
-                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                                 />
                                 <p className="text-xs text-gray-500 mt-1">
                                   Recommended size: 1200x630 pixels
@@ -459,7 +459,7 @@ export default function MetaTagGeneratorPage() {
                                 id="twitterCard"
                                 value={twitterCard}
                                 onChange={(e) => setTwitterCard(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                               >
                                 {twitterCardOptions.map((option) => (
                                   <option key={option.value} value={option.value}>
@@ -479,7 +479,7 @@ export default function MetaTagGeneratorPage() {
                                 value={twitterSite}
                                 onChange={(e) => setTwitterSite(e.target.value)}
                                 placeholder="@yourwebsite"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                               />
                             </div>
                             
@@ -493,7 +493,7 @@ export default function MetaTagGeneratorPage() {
                                 value={twitterCreator}
                                 onChange={(e) => setTwitterCreator(e.target.value)}
                                 placeholder="@contentcreator"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                               />
                             </div>
                           </div>
@@ -513,7 +513,7 @@ export default function MetaTagGeneratorPage() {
                               value={favicon}
                               onChange={(e) => setFavicon(e.target.value)}
                               placeholder="/favicon.ico"
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
                             />
                           </div>
                           

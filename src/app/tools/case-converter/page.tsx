@@ -230,7 +230,7 @@ export default function CaseConverterPage() {
                   </div>
                   
                   <textarea
-                    className="w-full h-40 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors"
+                    className="w-full h-40 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors text-gray-900 bg-white"
                     placeholder="Type or paste your text here..."
                     value={text}
                     onChange={handleInputChange}
@@ -244,7 +244,7 @@ export default function CaseConverterPage() {
                       id="caseType"
                       value={selectedCase}
                       onChange={handleCaseChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors shadow-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors shadow-sm text-gray-900 bg-white"
                     >
                       <option value="lowercase">lowercase</option>
                       <option value="uppercase">UPPERCASE</option>
