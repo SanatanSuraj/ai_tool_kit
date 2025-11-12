@@ -292,7 +292,7 @@ export default function ImageCropperPage() {
                                   aspect={getAspectRatio(options.aspectRatio)}
                                   className="max-h-[500px] w-full object-contain"
                                 >
-                                  <Image
+                                  <img
                                     ref={imgRef}
                                     alt="Crop me"
                                     src={originalImage}
