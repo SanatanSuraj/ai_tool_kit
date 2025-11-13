@@ -81,7 +81,7 @@ export default function SerpCheckerPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center">
             <Link
-              href="/categories/seo-tools"
+              href="/categories/misc-tools"
               className="mr-4 text-gray-500 hover:text-green-600 transition-colors p-2 hover:bg-green-50 rounded-full"
             >
               <ArrowLeftIcon className="h-5 w-5" />

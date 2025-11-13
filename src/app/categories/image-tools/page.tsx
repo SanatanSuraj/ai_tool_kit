@@ -51,20 +51,11 @@ export default function ImageToolsPage() {
     },
     {
       id: 'image-background-remover',
-      name: 'Background Remover',
-      description: 'Automatically remove backgrounds from images with AI technology for transparent backgrounds.',
+      name: 'Image Background Remover',
+      description: 'Remove backgrounds from images with one click using AI technology.',
       icon: 'EyeSlashIcon',
       color: 'amber',
       url: '/tools/image-background-remover',
-      popular: false,
-    },
-    {
-      id: 'image-filters',
-      name: 'Image Filters & Effects',
-      description: 'Apply professional-looking filters and effects to enhance your images with one click.',
-      icon: 'AdjustmentsHorizontalIcon',
-      color: 'teal',
-      url: '/tools/image-filters',
       popular: false,
     },
   ];

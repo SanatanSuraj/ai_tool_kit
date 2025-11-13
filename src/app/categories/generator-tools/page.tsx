@@ -66,6 +66,15 @@ export default function GeneratorToolsPage() {
       url: '/tools/css-gradient-generator',
       popular: false,
     },
+    {
+      id: 'cron-expression-generator',
+      name: 'Cron Expression Generator',
+      description: 'Create and validate cron expressions for scheduled tasks and jobs with human-readable explanations.',
+      icon: 'ClockIcon',
+      color: 'purple',
+      url: '/tools/cron-expression-generator',
+      popular: false,
+    },
   ];
 
   // Filter tools based on search term
