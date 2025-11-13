@@ -13,24 +13,6 @@ export default function ConverterToolsPage() {
   // Mock data for converter tools
   const converterTools = [
     {
-      id: 'length-converter',
-      name: 'Length Converter',
-      description: 'Convert between different units of length and distance with precision.',
-      icon: 'ArrowsUpDownIcon',
-      color: 'green',
-      url: '/tools/length-converter',
-      popular: true,
-    },
-    {
-      id: 'weight-converter',
-      name: 'Weight Converter',
-      description: 'Convert between grams, kilograms, pounds, ounces, and other weight units.',
-      icon: 'ScaleIcon',
-      color: 'blue',
-      url: '/tools/weight-converter',
-      popular: true,
-    },
-    {
       id: 'temperature-converter',
       name: 'Temperature Converter',
       description: 'Convert between Celsius, Fahrenheit, and Kelvin temperature scales.',
@@ -60,10 +42,19 @@ export default function ConverterToolsPage() {
     {
       id: 'color-converter',
       name: 'Color Converter',
-      description: 'Convert between HEX, RGB, HSL, and CMYK color formats for web and print.',
+      description: 'Convert colors between different formats like HEX, RGB, HSL, and more.',
       icon: 'SwatchIcon',
-      color: 'amber',
+      color: 'pink',
       url: '/tools/color-converter',
+      popular: true,
+    },
+    {
+      id: 'text-case-converter',
+      name: 'Text Case Converter',
+      description: 'Transform text between different letter cases like camelCase, snake_case, kebab-case and more.',
+      icon: 'DocumentTextIcon',
+      color: 'blue',
+      url: '/tools/text-case-converter',
       popular: false,
     },
   ];
