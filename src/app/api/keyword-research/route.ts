@@ -1,5 +1,8 @@
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { trackApiUsage } from "@/utils/api-helpers";
+import { checkSubscriptionLimits } from "@/utils/api-middleware";
 
 // Map country codes to Google Autocomplete gl parameter
 function getGoogleCountryCode(countryCode: string): string {
@@ -117,8 +120,14 @@ async function generateKeywordData(keyword: string, country: string) {
   });
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Check subscription limits for authenticated users
+    const limitCheck = await checkSubscriptionLimits(request);
+    if (!limitCheck.allowed && limitCheck.response) {
+      return limitCheck.response;
+    }
+
     const { keyword, country = "us" } = await request.json();
 
     if (!keyword) {
@@ -127,6 +136,12 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // Track API usage
+    await trackApiUsage(request, 'keyword-research', '/api/keyword-research', {
+      keyword,
+      country,
+    });
 
     // Use free Google Autocomplete API - No API key needed!
     return await generateKeywordData(keyword, country);

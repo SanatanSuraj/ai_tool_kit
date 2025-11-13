@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  /* config options here */
+  serverExternalPackages: ['mongoose'],
 };
 
 export default nextConfig;
