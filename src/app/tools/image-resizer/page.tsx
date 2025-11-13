@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import NextImage from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
@@ -159,18 +159,118 @@ export default function ImageResizerPage() {
     setIsResizing(true);
     setError(null);
     
-    // In a real implementation, we would use canvas or a server-side API to resize the image
-    // For this demo, we'll simulate resizing with a timeout
-    setTimeout(() => {
-      try {
-        // Simulate resizing - in a real app, you would actually resize the image
-        setResizedImage(originalImage);
-        setIsResizing(false);
-      } catch (err) {
-        setError('Error resizing image');
-        setIsResizing(false);
+    try {
+      const img = new Image();
+      
+      // Only set crossOrigin for non-data URLs to avoid CORS issues
+      if (!originalImage.startsWith('data:')) {
+        img.crossOrigin = 'anonymous';
       }
-    }, 1500);
+      
+      img.onload = () => {
+        try {
+          // Create canvas
+          const canvas = document.createElement('canvas');
+          canvas.width = options.width;
+          canvas.height = options.height;
+          const ctx = canvas.getContext('2d');
+          
+          if (!ctx) {
+            setError('Error: Could not get canvas context');
+            setIsResizing(false);
+            return;
+          }
+          
+          // Set image smoothing for better quality
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          
+          // Draw resized image
+          ctx.drawImage(img, 0, 0, options.width, options.height);
+          
+          // Convert to desired format with quality
+          let mimeType = 'image/png';
+          let quality = 1.0;
+          
+          if (options.format === 'jpeg') {
+            mimeType = 'image/jpeg';
+            quality = options.quality / 100;
+          } else if (options.format === 'webp') {
+            mimeType = 'image/webp';
+            quality = options.quality / 100;
+          }
+          
+          // Try toBlob first (better for large images)
+          if (canvas.toBlob) {
+            canvas.toBlob(
+              (blob) => {
+                if (!blob) {
+                  // Fallback to toDataURL if toBlob fails
+                  try {
+                    const dataUrl = canvas.toDataURL(mimeType, quality);
+                    setResizedImage(dataUrl);
+                    setIsResizing(false);
+                  } catch (fallbackErr) {
+                    console.error('Fallback error:', fallbackErr);
+                    setError('Error: Could not convert image. Please try a different format.');
+                    setIsResizing(false);
+                  }
+                  return;
+                }
+                
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setResizedImage(reader.result as string);
+                  setIsResizing(false);
+                };
+                reader.onerror = () => {
+                  // Fallback to toDataURL if FileReader fails
+                  try {
+                    const dataUrl = canvas.toDataURL(mimeType, quality);
+                    setResizedImage(dataUrl);
+                    setIsResizing(false);
+                  } catch (fallbackErr) {
+                    console.error('Fallback error:', fallbackErr);
+                    setError('Error reading resized image');
+                    setIsResizing(false);
+                  }
+                };
+                reader.readAsDataURL(blob);
+              },
+              mimeType,
+              quality
+            );
+          } else {
+            // Fallback for browsers that don't support toBlob
+            try {
+              const dataUrl = canvas.toDataURL(mimeType, quality);
+              setResizedImage(dataUrl);
+              setIsResizing(false);
+            } catch (fallbackErr) {
+              console.error('toDataURL error:', fallbackErr);
+              setError('Error: Could not convert image. Please try a different format.');
+              setIsResizing(false);
+            }
+          }
+        } catch (err) {
+          console.error('Resize error:', err);
+          setError(`Error resizing image: ${err instanceof Error ? err.message : 'Unknown error'}`);
+          setIsResizing(false);
+        }
+      };
+      
+      img.onerror = (err) => {
+        console.error('Image load error:', err);
+        setError('Error loading image. Please try uploading the image again.');
+        setIsResizing(false);
+      };
+      
+      img.src = originalImage;
+    } catch (err) {
+      console.error('Resize function error:', err);
+      setError(`Error resizing image: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      setIsResizing(false);
+    }
   };
 
   // Trigger file input click
@@ -287,7 +387,7 @@ export default function ImageResizerPage() {
                             <h3 className="text-sm font-medium text-gray-700">Original Image</h3>
                             <div className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
                               <div className="relative aspect-square w-full overflow-hidden rounded-md bg-gray-100">
-                                <Image
+                                <NextImage
                                   src={originalImage}
                                   alt="Original image"
                                   fill
@@ -323,7 +423,8 @@ export default function ImageResizerPage() {
                                     type="number"
                                     value={options.width || ''}
                                     onChange={(e) => handleDimensionChange('width', parseInt(e.target.value) || 0)}
-                                    className="w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:border-orange-500 focus:ring-orange-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 shadow-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                    placeholder="Width"
                                   />
                                 </div>
                                 <div>
@@ -334,7 +435,8 @@ export default function ImageResizerPage() {
                                     type="number"
                                     value={options.height || ''}
                                     onChange={(e) => handleDimensionChange('height', parseInt(e.target.value) || 0)}
-                                    className="w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:border-orange-500 focus:ring-orange-500"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 shadow-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                                    placeholder="Height"
                                   />
                                 </div>
                               </div>
@@ -457,7 +559,7 @@ export default function ImageResizerPage() {
                               
                               <div className="bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
                                 <div className="relative aspect-square max-h-64 w-full overflow-hidden rounded-md bg-gray-100">
-                                  <Image
+                                  <NextImage
                                     src={resizedImage}
                                     alt="Resized image"
                                     fill
