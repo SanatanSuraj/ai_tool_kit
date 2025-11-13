@@ -5,6 +5,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import Navbar from '@/components/Navbar';
 
 export default function SignUpPage() {
   const [name, setName] = useState('');
@@ -71,7 +72,7 @@ export default function SignUpPage() {
     }
   };
 
-  const handleOAuthSignIn = async (provider: 'google' | 'github') => {
+  const handleOAuthSignIn = async (provider: 'google') => {
     setIsLoading(true);
     setError('');
     try {
@@ -84,10 +85,31 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <div className="flex justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50">
+      {/* Background decoration */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-blue-50/50"></div>
+        <div className="absolute inset-0" style={{ 
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zm20.97 0l9.315 9.314-1.414 1.414L34.828 0h2.83zM22.344 0L13.03 9.314l1.414 1.414L25.172 0h-2.83zM32 0l12.142 12.142-1.414 1.414L30 .828 17.272 13.556l-1.414-1.414L28 0h4zM.284 0l28 28-1.414 1.414L0 2.544V0h.284zM0 5.373l25.456 25.455-1.414 1.415L0 8.2V5.374zm0 5.656l22.627 22.627-1.414 1.414L0 13.86v-2.83zm0 5.656l19.8 19.8-1.415 1.413L0 19.514v-2.83zm0 5.657l16.97 16.97-1.414 1.415L0 25.172v-2.83zM60 28L45.858 42.142l1.414 1.414L60 30.828V28zm0 5.657L48.686 44.97l1.415 1.415 9.9-9.9v-2.828zm0 5.657L51.515 47.8l1.414 1.413 7.07-7.07v-2.83zm0 5.657l-5.657 5.657 1.414 1.415L60 47.8v-2.83zm0 5.657l-2.828 2.83 1.414 1.413L60 53.456v-2.83zM39.9 16.385l1.414-1.414L30 3.658 18.686 14.97l1.415 1.415 9.9-9.9 9.9 9.9zm-2.83 2.828l1.415-1.414L30 9.313 21.515 17.8l1.414 1.413 7.07-7.07 7.07 7.07zm-2.827 2.83l1.414-1.416L30 14.97l-5.657 5.657 1.414 1.415L30 17.8l4.243 4.242zm-2.83 2.827l1.415-1.414L30 20.626l-2.828 2.83 1.414 1.414L30 23.456l1.414 1.414zM56.87 59.414L58.284 58 30 29.716 1.716 58l1.414 1.414L30 32.544l26.87 26.87z' fill='%234338ca' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+          backgroundSize: '60px 60px'
+        }}></div>
+      </div>
+
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-80 h-80 bg-gradient-to-br from-blue-400/10 to-indigo-400/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tr from-purple-400/10 to-pink-400/10 rounded-full blur-3xl"></div>
+
+      <Navbar />
+      
+      <div className="flex items-center justify-center min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="w-full max-w-md">
+          <div className="relative bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            {/* Highlight strip */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500"></div>
+            
+            <div className="p-8 space-y-6">
+              <div className="text-center">
+                <div className="flex justify-center mb-4">
             <div className="relative h-16 w-16">
               <Image
                 src="/logo.svg"
@@ -97,20 +119,20 @@ export default function SignUpPage() {
               />
             </div>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+                <p className="text-sm text-gray-600">
             Or{' '}
-            <Link href="/auth/signin" className="font-medium text-blue-600 hover:text-blue-500">
+                  <Link href="/auth/signin" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
               sign in to your existing account
             </Link>
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+              <form className="space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="rounded-md bg-red-50 p-4">
+                  <div className="rounded-lg bg-red-50 border border-red-100 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -124,10 +146,10 @@ export default function SignUpPage() {
             </div>
           )}
 
-          <div className="rounded-md shadow-sm space-y-4">
+                <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="sr-only">
-                Full Name
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Full Name <span className="text-gray-400 font-normal">(optional)</span>
               </label>
               <input
                 id="name"
@@ -136,12 +158,12 @@ export default function SignUpPage() {
                 autoComplete="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Full Name (optional)"
+                      className="block w-full px-4 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm"
+                      placeholder="Enter your full name"
               />
             </div>
             <div>
-              <label htmlFor="email" className="sr-only">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Email address
               </label>
               <input
@@ -152,12 +174,12 @@ export default function SignUpPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                      className="block w-full px-4 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm"
+                      placeholder="Enter your email"
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Password
               </label>
               <input
@@ -168,12 +190,12 @@ export default function SignUpPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                      className="block w-full px-4 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm"
                 placeholder="Password (min 6 characters)"
               />
             </div>
             <div>
-              <label htmlFor="confirmPassword" className="sr-only">
+                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Confirm Password
               </label>
               <input
@@ -184,8 +206,8 @@ export default function SignUpPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Confirm Password"
+                      className="block w-full px-4 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm"
+                      placeholder="Confirm your password"
               />
             </div>
           </div>
@@ -194,49 +216,51 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-blue-500/20"
             >
-              {isLoading ? 'Creating account...' : 'Create account'}
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Creating account...
+                      </>
+                    ) : (
+                      'Create account'
+                    )}
             </button>
           </div>
 
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                      <div className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                      <span className="px-3 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+                  <div className="mt-6">
               <button
                 type="button"
                 onClick={() => handleOAuthSignIn('google')}
                 disabled={isLoading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-200 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 48 48">
+                      <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 48 48">
                   <path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/>
                 </svg>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleOAuthSignIn('github')}
-                disabled={isLoading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.137 20.107 22 16.373 22 11.969 22 6.463 17.522 0 10 0z" clipRule="evenodd" />
-                </svg>
+                      Continue with Google
               </button>
             </div>
           </div>
         </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-

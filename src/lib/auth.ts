@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import GitHubProvider from 'next-auth/providers/github';
 
 // Lazy load Mongoose models to avoid Edge runtime issues
 async function getUserModel() {
@@ -67,15 +66,6 @@ function getProviders() {
     );
   }
 
-  if (process.env.GITHUB_ID && process.env.GITHUB_SECRET) {
-    providers.push(
-      GitHubProvider({
-        clientId: process.env.GITHUB_ID,
-        clientSecret: process.env.GITHUB_SECRET,
-      })
-    );
-  }
-
   return providers;
 }
 
@@ -112,8 +102,29 @@ export const authOptions = {
       return true;
     },
     async jwt({ token, user, account }: any) {
+      // Initial sign in - set user ID from database
       if (user) {
-        token.id = user.id;
+        try {
+          await connectDB();
+          const User = await getUserModel();
+          
+          // For OAuth providers, fetch user by email to get database ID
+          if (account?.provider !== 'credentials' && user.email) {
+            const dbUser = await User.findOne({ email: user.email });
+            if (dbUser) {
+              token.id = dbUser._id.toString();
+            } else {
+              // Fallback to user.id if database user not found
+              token.id = user.id;
+            }
+          } else {
+            // For credentials provider, use the user.id directly
+            token.id = user.id;
+          }
+        } catch (error) {
+          console.error('Error fetching user in jwt callback:', error);
+          token.id = user.id;
+        }
       }
 
       if (account) {
