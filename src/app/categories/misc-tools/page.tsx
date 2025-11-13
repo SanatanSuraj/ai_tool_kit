@@ -6,32 +6,8 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
 
-// SEO tools data
-const seoTools = [
-  {
-    id: "dns-lookup",
-    name: "DNS Lookup",
-    description: "Check DNS records and verify domain name system configurations for any domain.",
-    url: "/tools/dns-lookup",
-    color: "blue",
-    popular: true
-  },
-  {
-    id: "ip-lookup",
-    name: "IP Lookup",
-    description: "Get detailed information about any IP address including location and network details.",
-    url: "/tools/ip-lookup",
-    color: "indigo",
-    popular: true
-  },
-  {
-    id: "ssl-checker",
-    name: "SSL Checker",
-    description: "Verify SSL certificates and check the security status of any website.",
-    url: "/tools/ssl-checker",
-    color: "green",
-    popular: true
-  },
+// Misc tools data
+const miscTools = [
   {
     id: "serp-checker",
     name: "SERP Checker",
@@ -49,37 +25,29 @@ const seoTools = [
     popular: true
   },
   {
-    id: "meta-tag-generator",
-    name: "Meta Tag Generator",
-    description: "Generate optimized meta tags for better search engine visibility.",
-    url: "/tools/meta-tag-generator",
-    color: "yellow",
-    popular: false
+    id: "youtube-thumbnail-downloader",
+    name: "YouTube Thumbnail Downloader",
+    description: "Download high-quality thumbnails from any YouTube video in multiple resolutions.",
+    url: "/tools/youtube-thumbnail-downloader",
+    color: "red",
+    popular: true
   },
   {
-    id: "website-hosting-checker",
-    name: "Website Hosting Checker",
-    description: "Find out where any website is hosted and get detailed hosting information.",
-    url: "/tools/website-hosting-checker",
-    color: "sky",
-    popular: false
-  },
-  {
-    id: "whois-lookup",
-    name: "WHOIS Lookup",
-    description: "Look up domain registration details and ownership information.",
-    url: "/tools/whois-lookup",
-    color: "orange",
+    id: "exif-reader",
+    name: "EXIF Reader",
+    description: "Extract and view EXIF metadata from your images including camera settings, GPS data, and more.",
+    url: "/tools/exif-reader",
+    color: "indigo",
     popular: false
   }
 ];
 
-export default function SeoToolsPage() {
+export default function MiscToolsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Filter tools based on search term
-  const filteredTools = seoTools.filter(tool =>
+  const filteredTools = miscTools.filter(tool =>
     tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     tool.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -96,10 +64,10 @@ export default function SeoToolsPage() {
               </div>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 fade-in-bottom">SEO Tools</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 fade-in-bottom">Misc Tools</h1>
             
             <p className="text-xl text-gray-600 mb-8 fade-in-bottom [animation-delay:200ms]">
-              Powerful tools to analyze, optimize, and improve your website's search engine visibility and performance.
+              A collection of miscellaneous tools to help you with various tasks and utilities.
             </p>
             
             <div className="flex justify-center fade-in-bottom [animation-delay:300ms]">
@@ -125,7 +93,7 @@ export default function SeoToolsPage() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                placeholder="Search SEO tools..."
+                placeholder="Search misc tools..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -144,11 +112,11 @@ export default function SeoToolsPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
               </span>
-              Popular SEO Tools
+              Popular Misc Tools
             </h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {seoTools.filter(tool => tool.popular).map((tool) => (
+              {miscTools.filter(tool => tool.popular).map((tool) => (
                 <Link key={tool.id} href={tool.url} className="group">
                   <div className="bg-white rounded-xl shadow-sm hover:shadow-md p-6 border border-gray-100 h-full transition-all duration-200 group-hover:-translate-y-1 transform-gpu">
                     <div className={`bg-${tool.color}-100 w-12 h-12 rounded-lg mb-4 flex items-center justify-center`}>
@@ -191,7 +159,7 @@ export default function SeoToolsPage() {
               <span className="bg-blue-100 p-1.5 rounded-md mr-2">
                 <MagnifyingGlassIcon className="h-4 w-4 text-blue-600" />
               </span>
-              All SEO Tools
+              All Misc Tools
             </h2>
           )}
           
@@ -264,4 +232,5 @@ export default function SeoToolsPage() {
       <Footer />
     </div>
   );
-} 
+}
+
