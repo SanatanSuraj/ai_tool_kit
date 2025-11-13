@@ -10,6 +10,11 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
+    // Skip Stripe webhook endpoint (Stripe handles rate limiting)
+    if (request.nextUrl.pathname.startsWith("/api/stripe/webhook")) {
+      return NextResponse.next();
+    }
+
     try {
       // IP-based rate limiting for anonymous users
       // Subscription-based limits are checked in individual API routes

@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
-  const { data: session } = useSession();
+  const { data: session } = useSession({ required: false });
 
   // Handle scroll behavior
   useEffect(() => {

@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CheckIcon, XMarkIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import Footer from '@/components/Footer';
@@ -18,6 +21,8 @@ interface Plan {
   features: Feature[];
   buttonText: string;
   buttonLink: string;
+  planType?: string; // For Stripe integration
+  priceId?: string; // Stripe price ID
 }
 
 const plans: Plan[] = [
@@ -47,6 +52,7 @@ const plans: Plan[] = [
   {
     name: 'GOLDEN',
     price: '$4.99',
+    subtitle: 'per month',
     features: [
       { name: 'Checker tools', count: 6, included: true },
       { name: 'Text tools', count: 4, included: true },
@@ -66,6 +72,7 @@ const plans: Plan[] = [
     ],
     buttonText: 'Choose plan',
     buttonLink: '/auth/signup',
+    planType: 'golden',
   },
   {
     name: 'CUSTOM',
@@ -94,6 +101,65 @@ const plans: Plan[] = [
 ];
 
 export default function PricingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const handleCheckout = async (plan: Plan) => {
+    if (!plan.planType) {
+      // For plans without Stripe integration, redirect to signup
+      router.push(plan.buttonLink);
+      return;
+    }
+
+    // If not logged in, redirect to signup
+    if (status !== 'authenticated') {
+      router.push('/auth/signup?redirect=/pricing');
+      return;
+    }
+
+    setLoadingPlan(plan.name);
+
+    try {
+      const response = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          planType: plan.planType,
+          priceId: plan.priceId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error: any) {
+      console.error('Error creating checkout session:', error);
+      
+      // Show user-friendly error message
+      let errorMessage = 'Something went wrong. Please try again.';
+      if (error.message?.includes('Stripe API key')) {
+        errorMessage = 'Payment system configuration error. Please contact support.';
+      } else if (error.message?.includes('Invalid price')) {
+        errorMessage = 'Payment plan configuration error. Please contact support.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
+      setLoadingPlan(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -134,21 +200,21 @@ export default function PricingPage() {
               </div>
 
               {/* Features List */}
-              <div className="p-6 flex-1">
-                <ul className="space-y-4">
+              <div className="px-6 py-4 flex-1">
+                <ul className="space-y-2">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start justify-between">
                       <div className="flex items-start flex-1">
-                        <div className="flex-shrink-0 mt-0.5 mr-3">
+                        <div className="flex-shrink-0 mt-0.5 mr-2">
                           {feature.included ? (
-                            <CheckIcon className="h-5 w-5 text-green-500 group-hover:scale-110 transition-transform duration-300" />
+                            <CheckIcon className="h-4 w-4 text-green-500 group-hover:scale-110 transition-transform duration-300" />
                           ) : (
-                            <XMarkIcon className="h-5 w-5 text-red-500 opacity-60" />
+                            <XMarkIcon className="h-4 w-4 text-red-500 opacity-60" />
                           )}
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-gray-700 group-hover:text-gray-900 text-sm transition-colors duration-300">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-gray-700 group-hover:text-gray-900 text-xs transition-colors duration-300">
                               {typeof feature.count === 'number' && feature.count > 0
                                 ? `${feature.count} ${feature.name}`
                                 : feature.count === 0
@@ -156,7 +222,7 @@ export default function PricingPage() {
                                 : feature.name}
                             </span>
                             {feature.hasInfo && (
-                              <InformationCircleIcon className="h-4 w-4 text-gray-400 group-hover:text-purple-500 transition-colors duration-300" />
+                              <InformationCircleIcon className="h-3.5 w-3.5 text-gray-400 group-hover:text-purple-500 transition-colors duration-300 flex-shrink-0" />
                             )}
                           </div>
                         </div>
@@ -180,6 +246,31 @@ export default function PricingPage() {
                       </svg>
                     </span>
                   </a>
+                ) : plan.planType ? (
+                  <button
+                    onClick={() => handleCheckout(plan)}
+                    disabled={loadingPlan === plan.name}
+                    className="group/btn w-full text-center bg-gradient-to-r from-purple-500 to-fuchsia-600 text-white font-medium py-3 px-6 rounded-lg hover:from-purple-600 hover:to-fuchsia-700 transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-purple-500/30 hover:-translate-y-0.5 transform-gpu disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      {loadingPlan === plan.name ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          {plan.buttonText}
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </>
+                      )}
+                    </span>
+                  </button>
                 ) : (
                   <Link
                     href={plan.buttonLink}

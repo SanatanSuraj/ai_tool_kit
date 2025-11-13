@@ -184,5 +184,5 @@ export const authOptions = {
 };
 
 // Export handlers for Next.js 15 route handlers
-export const { handlers } = NextAuth(authOptions);
+export const { handlers, auth } = NextAuth(authOptions);
 

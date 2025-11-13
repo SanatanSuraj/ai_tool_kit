@@ -7,6 +7,14 @@ export default function SessionProvider({
 }: {
   children: React.ReactNode;
 }) {
-  return <NextAuthSessionProvider>{children}</NextAuthSessionProvider>;
+  return (
+    <NextAuthSessionProvider
+      refetchInterval={0} // Disable automatic polling
+      refetchOnWindowFocus={false} // Disable refetch on window focus
+      basePath="/api/auth" // Ensure correct base path
+    >
+      {children}
+    </NextAuthSessionProvider>
+  );
 }
 
