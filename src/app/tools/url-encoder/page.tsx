@@ -346,9 +346,9 @@ export default function UrlEncoderPage() {
                 </div>
                 
                 <div className="relative">
-                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-gray-50 shadow-inner">
+                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-white shadow-inner text-gray-900">
                     {output 
-                      ? <div className="whitespace-pre-wrap break-all">{output}</div> 
+                      ? <div className="whitespace-pre-wrap break-all text-gray-900">{output}</div> 
                       : <span className="text-gray-400 italic">{mode === "encode" ? "Encoded URL will appear here..." : "Decoded text will appear here..."}</span>
                     }
                   </pre>
@@ -375,49 +375,49 @@ export default function UrlEncoderPage() {
               About URL Encoding
             </h2>
             <div className="prose max-w-none">
-              <p>URL encoding (also known as percent encoding) is a mechanism to convert characters into a format that can be transmitted over the Internet. URLs can only contain a certain set of characters from the ASCII character set.</p>
+              <p className="text-gray-700">URL encoding (also known as percent encoding) is a mechanism to convert characters into a format that can be transmitted over the Internet. URLs can only contain a certain set of characters from the ASCII character set.</p>
               
-              <p className="mt-4">Characters that need to be encoded:</p>
-              <ul className="mt-2 space-y-1 ml-5 list-disc">
-                <li>Reserved characters (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm">:, /, ?, #, [, ], @, !</code>)</li>
-                <li>Unsafe characters (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm">space, ", &lt;, &gt;, {"," }, |, \, ^, ~</code>)</li>
-                <li>Characters outside the ASCII set (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm">é, ö, ñ, 漢字</code>)</li>
+              <p className="mt-4 text-gray-700">Characters that need to be encoded:</p>
+              <ul className="mt-2 space-y-1 ml-5 list-disc text-gray-700">
+                <li>Reserved characters (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm text-gray-900">:, /, ?, #, [, ], @, !</code>)</li>
+                <li>Unsafe characters (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm text-gray-900">space, ", &lt;, &gt;, {"," }, |, \, ^, ~</code>)</li>
+                <li>Characters outside the ASCII set (e.g., <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm text-gray-900">é, ö, ñ, 漢字</code>)</li>
               </ul>
               
-              <p className="mt-4">The encoding replaces unsafe characters with a "%" followed by two hexadecimal digits that represent the ASCII code of the character.</p>
+              <p className="mt-4 text-gray-700">The encoding replaces unsafe characters with a "%" followed by two hexadecimal digits that represent the ASCII code of the character.</p>
               
               <div className="mt-4 bg-gray-50 p-5 rounded-lg border border-gray-200">
                 <p className="font-medium text-gray-700">Common Examples:</p>
                 <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                   <div className="flex items-center p-2 bg-white rounded border border-gray-200">
-                    <code className="text-sm">Space</code>
+                    <code className="text-sm text-gray-900">Space</code>
                     <span className="mx-2 text-gray-400">→</span>
                     <code className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-sm">%20</code>
                     <span className="mx-1 text-gray-400">or</span>
                     <code className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-sm">+</code>
                   </div>
                   <div className="flex items-center p-2 bg-white rounded border border-gray-200">
-                    <code className="text-sm">!</code>
+                    <code className="text-sm text-gray-900">!</code>
                     <span className="mx-2 text-gray-400">→</span>
                     <code className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-sm">%21</code>
                   </div>
                   <div className="flex items-center p-2 bg-white rounded border border-gray-200">
-                    <code className="text-sm">"</code>
+                    <code className="text-sm text-gray-900">"</code>
                     <span className="mx-2 text-gray-400">→</span>
                     <code className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-sm">%22</code>
                   </div>
                   <div className="flex items-center p-2 bg-white rounded border border-gray-200">
-                    <code className="text-sm">#</code>
+                    <code className="text-sm text-gray-900">#</code>
                     <span className="mx-2 text-gray-400">→</span>
                     <code className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-sm">%23</code>
                   </div>
                   <div className="flex items-center p-2 bg-white rounded border border-gray-200">
-                    <code className="text-sm">$</code>
+                    <code className="text-sm text-gray-900">$</code>
                     <span className="mx-2 text-gray-400">→</span>
                     <code className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-sm">%24</code>
                   </div>
                   <div className="flex items-center p-2 bg-white rounded border border-gray-200">
-                    <code className="text-sm">&</code>
+                    <code className="text-sm text-gray-900">&</code>
                     <span className="mx-2 text-gray-400">→</span>
                     <code className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-sm">%26</code>
                   </div>

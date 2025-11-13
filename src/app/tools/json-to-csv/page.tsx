@@ -461,13 +461,13 @@ export default function JsonToCsvPage() {
                       <select
                         value={separator}
                         onChange={(e) => setSeparator(e.target.value)}
-                        className="w-32 md:w-40 rounded-md border-gray-300 shadow-sm text-sm focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50 bg-white"
+                        className="w-32 md:w-40 rounded-md border-gray-300 shadow-sm text-sm text-gray-900 bg-white focus:border-purple-500 focus:ring focus:ring-purple-500 focus:ring-opacity-50"
                         aria-label="Select field separator"
                       >
-                        <option value=",">Comma (,)</option>
-                        <option value=";">Semicolon (;)</option>
-                        <option value="\t">Tab (\t)</option>
-                        <option value="|">Pipe (|)</option>
+                        <option value="," className="text-gray-900">Comma (,)</option>
+                        <option value=";" className="text-gray-900">Semicolon (;)</option>
+                        <option value="\t" className="text-gray-900">Tab (\t)</option>
+                        <option value="|" className="text-gray-900">Pipe (|)</option>
                       </select>
                     </div>
                     
@@ -602,12 +602,12 @@ export default function JsonToCsvPage() {
                 <div className="relative">
                   <pre 
                     ref={csvOutputRef}
-                    className="w-full h-[350px] md:h-[450px] p-3 md:p-4 border-2 border-gray-300 rounded-xl font-mono text-xs md:text-sm overflow-auto bg-gray-50 shadow-inner"
+                    className="w-full h-[350px] md:h-[450px] p-3 md:p-4 border-2 border-gray-300 rounded-xl font-mono text-xs md:text-sm overflow-auto bg-white shadow-inner text-gray-900"
                     tabIndex={0}
                     aria-label="CSV output"
                   >
                     {csvOutput 
-                      ? <div className="whitespace-pre-wrap">{csvOutput}</div> 
+                      ? <div className="whitespace-pre-wrap text-gray-900">{csvOutput}</div> 
                       : <span className="text-gray-400 italic">Converted CSV will appear here...</span>
                     }
                   </pre>

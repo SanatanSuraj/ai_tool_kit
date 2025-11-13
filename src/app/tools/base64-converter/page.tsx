@@ -366,9 +366,9 @@ export default function Base64ConverterPage() {
                 </div>
                 
                 <div className="relative">
-                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-gray-50 shadow-inner">
+                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-white shadow-inner text-gray-900">
                     {output 
-                      ? <div className="whitespace-pre-wrap break-all">{output}</div> 
+                      ? <div className="whitespace-pre-wrap break-all text-gray-900">{output}</div> 
                       : <span className="text-gray-400 italic">{mode === "encode" ? "Encoded Base64 will appear here..." : "Decoded text will appear here..."}</span>
                     }
                   </pre>
@@ -395,12 +395,12 @@ export default function Base64ConverterPage() {
               About Base64 Encoding
             </h2>
             <div className="prose max-w-none">
-              <p>Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It's commonly used to transmit binary data over text-based protocols like HTTP and email.</p>
+              <p className="text-gray-700">Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It's commonly used to transmit binary data over text-based protocols like HTTP and email.</p>
               
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <h3 className="font-medium text-gray-800 mb-2">Common Uses:</h3>
-                  <ul className="ml-5 list-disc space-y-1">
+                  <ul className="ml-5 list-disc space-y-1 text-gray-700">
                     <li>Email attachments (MIME)</li>
                     <li>Data URIs for embedding images in HTML/CSS</li>
                     <li>Storing binary data in JSON</li>
@@ -411,7 +411,7 @@ export default function Base64ConverterPage() {
                 
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <h3 className="font-medium text-gray-800 mb-2">Key Features:</h3>
-                  <ul className="ml-5 list-disc space-y-1">
+                  <ul className="ml-5 list-disc space-y-1 text-gray-700">
                     <li>Encodes binary data using only 64 ASCII characters</li>
                     <li>Uses A-Z, a-z, 0-9, + and / for encoding</li>
                     <li>= characters at the end provide padding</li>

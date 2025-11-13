@@ -368,7 +368,7 @@ export default function XmlToJsonPage() {
                         id="attributePrefix"
                         value={attributePrefix}
                         onChange={(e) => setAttributePrefix(e.target.value)}
-                        className="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 bg-white"
+                        className="w-32 rounded-md border-gray-300 shadow-sm text-sm text-gray-900 bg-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                       />
                     </div>
                   )}
@@ -382,7 +382,7 @@ export default function XmlToJsonPage() {
                       id="textNodeName"
                       value={textNodeName}
                       onChange={(e) => setTextNodeName(e.target.value)}
-                      className="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 bg-white"
+                      className="w-32 rounded-md border-gray-300 shadow-sm text-sm text-gray-900 bg-white focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                     />
                   </div>
                 </div>
@@ -450,9 +450,9 @@ export default function XmlToJsonPage() {
                 </div>
                 
                 <div className="relative">
-                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-gray-50 shadow-inner">
+                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-white shadow-inner text-gray-900">
                     {jsonOutput 
-                      ? <div className="whitespace-pre-wrap">{jsonOutput}</div> 
+                      ? <div className="whitespace-pre-wrap text-gray-900">{jsonOutput}</div> 
                       : <span className="text-gray-400 italic">Converted JSON will appear here...</span>
                     }
                   </pre>
@@ -479,7 +479,7 @@ export default function XmlToJsonPage() {
               About XML to JSON Conversion
             </h2>
             <div className="prose max-w-none">
-              <p>XML (eXtensible Markup Language) and JSON (JavaScript Object Notation) are two popular data formats used for storing and transferring structured data. While XML has been around longer and is more verbose, JSON has become increasingly popular due to its simplicity and ease of use with JavaScript.</p>
+              <p className="text-gray-700">XML (eXtensible Markup Language) and JSON (JavaScript Object Notation) are two popular data formats used for storing and transferring structured data. While XML has been around longer and is more verbose, JSON has become increasingly popular due to its simplicity and ease of use with JavaScript.</p>
               
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-200">

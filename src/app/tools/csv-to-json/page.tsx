@@ -248,7 +248,7 @@ export default function CsvToJsonPage() {
                       value={csvInput}
                       onChange={(e) => setCsvInput(e.target.value)}
                       placeholder="Paste your CSV data here..."
-                      className={`w-full h-72 p-4 border-2 rounded-xl font-mono text-base ${!isCsvValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-inner bg-white`}
+                      className={`w-full h-72 p-4 border-2 rounded-xl font-mono text-base text-gray-900 ${!isCsvValid ? 'border-red-300' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-inner bg-white`}
                       style={{resize: 'vertical'}}
                     />
                     {csvInput && (
@@ -276,12 +276,12 @@ export default function CsvToJsonPage() {
                     <select
                       value={separator}
                       onChange={(e) => setSeparator(e.target.value)}
-                      className="block w-40 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 bg-white"
+                      className="block w-40 rounded-md border-gray-300 shadow-sm text-sm text-gray-900 bg-white focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     >
-                      <option value=",">Comma (,)</option>
-                      <option value=";">Semicolon (;)</option>
-                      <option value="\t">Tab (\t)</option>
-                      <option value="|">Pipe (|)</option>
+                      <option value="," className="text-gray-900">Comma (,)</option>
+                      <option value=";" className="text-gray-900">Semicolon (;)</option>
+                      <option value="\t" className="text-gray-900">Tab (\t)</option>
+                      <option value="|" className="text-gray-900">Pipe (|)</option>
                     </select>
                   </div>
                   
@@ -390,9 +390,9 @@ export default function CsvToJsonPage() {
                 </div>
                 
                 <div className="relative">
-                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-gray-50 shadow-inner">
+                  <pre className="w-full h-[450px] p-4 border-2 border-gray-300 rounded-xl font-mono text-base overflow-auto bg-white shadow-inner text-gray-900">
                     {jsonOutput 
-                      ? <div className="whitespace-pre-wrap">{jsonOutput}</div> 
+                      ? <div className="whitespace-pre-wrap text-gray-900">{jsonOutput}</div> 
                       : <span className="text-gray-400 italic">Converted JSON will appear here...</span>
                     }
                   </pre>
