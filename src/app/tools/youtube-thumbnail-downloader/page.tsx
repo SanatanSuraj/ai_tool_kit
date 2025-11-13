@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PlayIcon, LinkIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
@@ -315,12 +314,11 @@ export default function YouTubeThumbnailDownloaderPage() {
                             className="bg-gray-50 rounded-xl p-4 border border-gray-200 hover:shadow-md transition-shadow"
                           >
                             <div className="mb-3">
-                              <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-gray-200">
-                                <Image
+                              <div className="aspect-video w-full overflow-hidden rounded-lg bg-gray-200">
+                                <img
                                   src={thumbnail.url}
                                   alt={thumbnail.name}
-                                  fill
-                                  className="object-cover"
+                                  className="w-full h-full object-cover"
                                   onError={(e) => {
                                     // If maxresdefault fails, it might not exist for some videos
                                     const target = e.target as HTMLImageElement;
