@@ -323,8 +323,7 @@ export default function ImageConverterPage() {
                                     type="number"
                                     value={options.width}
                                     onChange={(e) => handleDimensionChange('width', parseInt(e.target.value) || 0)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 shadow-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                                    placeholder="Width"
+                                    className="w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                   />
                                 </div>
                                 <div>
@@ -335,8 +334,7 @@ export default function ImageConverterPage() {
                                     type="number"
                                     value={options.height}
                                     onChange={(e) => handleDimensionChange('height', parseInt(e.target.value) || 0)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 shadow-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                                    placeholder="Height"
+                                    className="w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:border-emerald-500 focus:ring-emerald-500"
                                   />
                                 </div>
                               </div>
