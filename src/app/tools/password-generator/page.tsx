@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeftIcon, CheckIcon, ClipboardDocumentIcon, KeyIcon, EyeIcon, EyeSlashIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 // Define password character sets
 const LOWERCASE_CHARS = 'abcdefghijklmnopqrstuvwxyz';
@@ -15,6 +17,8 @@ const SIMILAR_CHARS = 'il1Lo0O';
 const AMBIGUOUS_CHARS = '{}[]()/\\\'"`~,;:.<>';
 
 export default function PasswordGeneratorPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   // State for password options
   const [passwordLength, setPasswordLength] = useState<number>(16);
   const [includeLowercase, setIncludeLowercase] = useState<boolean>(true);
@@ -179,11 +183,11 @@ export default function PasswordGeneratorPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-emerald-600 hover:text-emerald-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

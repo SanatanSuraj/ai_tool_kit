@@ -2,10 +2,12 @@
 
 import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 interface CompressionOptions {
   quality: number;
@@ -15,6 +17,8 @@ interface CompressionOptions {
 }
 
 export default function ImageCompressorPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [compressedImage, setCompressedImage] = useState<string | null>(null);
   const [originalSize, setOriginalSize] = useState<number>(0);
@@ -139,7 +143,7 @@ export default function ImageCompressorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-rose-50">
       {/* Header Section */}
       <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
         {/* Background decorations */}
@@ -152,11 +156,11 @@ export default function ImageCompressorPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

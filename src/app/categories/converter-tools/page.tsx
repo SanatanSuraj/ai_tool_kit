@@ -127,7 +127,7 @@ export default function ConverterToolsPage() {
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm text-gray-900"
                 placeholder="Search converter tools..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

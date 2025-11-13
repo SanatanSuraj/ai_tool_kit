@@ -337,47 +337,64 @@ export default function JsonToCsvPage() {
   }, [isInputFocused, convertJsonToCsv, copyToClipboard, csvOutput]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-16">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-blue-50">
       {/* Header Section */}
-      <section className="bg-white border-b shadow-sm mt-2">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Link 
-                href="/categories/data-converter" 
-                className="mr-4 text-gray-500 hover:text-purple-600 transition-colors p-2 hover:bg-purple-50 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                aria-label="Back to data converters"
-              >
-                <ArrowLeftIcon className="h-5 w-5" />
-              </Link>
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+        {/* Background decorations */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-sky-50/50 to-blue-50/50"></div>
+          <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[500px] h-[500px] rounded-full bg-sky-50 blur-3xl opacity-30"></div>
+          <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[400px] h-[400px] rounded-full bg-blue-50 blur-3xl opacity-20"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="mb-2">
+            <Link 
+              href="/categories/data-converter" 
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
+            >
+              <ArrowLeftIcon className="h-4 w-4 mr-1" />
+              Back
+            </Link>
+          </div>
+          
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl p-3 w-14 h-14 flex items-center justify-center shadow-md shadow-sky-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">JSON to CSV Converter</h1>
-                <p className="text-gray-600 text-sm">Convert JSON data to CSV format with support for nested objects and custom field separators</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">JSON to CSV Converter</h1>
+                <p className="text-gray-600 text-sm md:text-base mt-1">Convert JSON data to CSV format with support for nested objects and custom field separators</p>
               </div>
             </div>
-            <div className="hidden md:flex md:items-center md:space-x-2">
-              <Tooltip content="Keyboard shortcut: Ctrl/Cmd + Enter">
-                <div className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
-                  Ctrl+Enter: Convert
-                </div>
-              </Tooltip>
-              {csvOutput && (
-                <Tooltip content="Keyboard shortcut: Ctrl/Cmd + Shift + C">
+            
+            <div className="flex items-center gap-2">
+              <div className="inline-flex px-4 py-2 rounded-full bg-sky-50 border border-sky-100 text-sky-600 text-sm font-medium shadow-sm">
+                <span>Data Converter</span>
+              </div>
+              <div className="hidden md:flex md:items-center md:space-x-2">
+                <Tooltip content="Keyboard shortcut: Ctrl/Cmd + Enter">
                   <div className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
-                    Ctrl+Shift+C: Copy
+                    Ctrl+Enter: Convert
                   </div>
                 </Tooltip>
-              )}
+                {csvOutput && (
+                  <Tooltip content="Keyboard shortcut: Ctrl/Cmd + Shift + C">
+                    <div className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
+                      Ctrl+Shift+C: Copy
+                    </div>
+                  </Tooltip>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Main Content Section */}
-      <ErrorBoundary>
-        <section className="py-6 md:py-10">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
+          
+          {/* Main Content */}
+          <ErrorBoundary>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Input Panel */}
               <div className="bg-white rounded-xl shadow p-4 md:p-6 border border-gray-200 hover:shadow-md transition-all duration-300">
                 <div className="flex justify-between items-center mb-3 md:mb-4">
@@ -621,9 +638,9 @@ export default function JsonToCsvPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </ErrorBoundary>
+          </ErrorBoundary>
+        </div>
+      </section>
       
       {/* Information Section */}
       <section className="py-8">
@@ -635,8 +652,8 @@ export default function JsonToCsvPage() {
               </svg>
               About JSON to CSV Conversion
             </h2>
-            <div className="prose max-w-none text-sm md:text-base">
-              <p>JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and write, while CSV (Comma-Separated Values) is a simple file format used to store tabular data.</p>
+            <div className="text-sm md:text-base">
+              <p className="text-gray-700 mb-4">JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and write, while CSV (Comma-Separated Values) is a simple file format used to store tabular data.</p>
               
               <div className="mt-3 md:mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="bg-purple-50 p-3 md:p-4 rounded-lg border border-purple-200 transform transition-transform duration-300 hover:scale-[1.01]">
@@ -653,11 +670,11 @@ export default function JsonToCsvPage() {
                 <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200 transform transition-transform duration-300 hover:scale-[1.01]">
                   <h3 className="font-medium text-green-800 mb-1 md:mb-2">Conversion Features</h3>
                   <ul className="ml-5 list-disc space-y-0.5 md:space-y-1 text-xs md:text-sm text-gray-700">
-                    <li><strong>Field separator options</strong>: Choose between comma, semicolon, tab, or pipe</li>
-                    <li><strong>Header inclusion</strong>: Include object keys as column headers</li>
-                    <li><strong>Flatten nested objects</strong>: Convert nested structures using dot notation</li>
-                    <li><strong>Array handling</strong>: Arrays are properly escaped in CSV cells</li>
-                    <li><strong>Special character handling</strong>: Quotes and delimiters are properly escaped</li>
+                    <li><strong className="font-semibold text-gray-900">Field separator options</strong>: Choose between comma, semicolon, tab, or pipe</li>
+                    <li><strong className="font-semibold text-gray-900">Header inclusion</strong>: Include object keys as column headers</li>
+                    <li><strong className="font-semibold text-gray-900">Flatten nested objects</strong>: Convert nested structures using dot notation</li>
+                    <li><strong className="font-semibold text-gray-900">Array handling</strong>: Arrays are properly escaped in CSV cells</li>
+                    <li><strong className="font-semibold text-gray-900">Special character handling</strong>: Quotes and delimiters are properly escaped</li>
                   </ul>
                 </div>
               </div>
@@ -681,7 +698,7 @@ export default function JsonToCsvPage() {
       </section>
       
       {/* Related Tools Section */}
-      <section className="py-8 md:py-12">
+      <section className="py-12">
         <div className="container mx-auto px-4 max-w-6xl">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-8 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6 mr-2 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

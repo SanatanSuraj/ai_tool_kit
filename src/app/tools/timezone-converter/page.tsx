@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { 
   ArrowLeftIcon, 
   ArrowPathIcon, 
@@ -13,8 +14,11 @@ import {
 } from "@heroicons/react/24/outline";
 import Footer from '@/components/Footer';
 import { getLocalDateTimeString } from "@/utils/getLocalDateTimeString";
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 export default function TimeZoneConverterPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [sourceTime, setSourceTime] = useState<string>("");
   const [sourceTimezone, setSourceTimezone] = useState<string>("UTC");
   const [targetTimezone, setTargetTimezone] = useState<string>("America/New_York");
@@ -182,11 +186,11 @@ export default function TimeZoneConverterPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-4">
             <Link 
-              href="/"
-              className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors group"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors group"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1 group-hover:-translate-x-1 transition-transform" />
-              <span>Back to Home</span>
+              <span>Back</span>
             </Link>
           </div>
           

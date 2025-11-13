@@ -2,14 +2,18 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeftIcon, QrCodeIcon, CameraIcon, LinkIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
 import { generateQRCode } from "@/utils/generateQRCode";
 import { QRCodeErrorCorrectionLevel } from "qrcode";
 import { ContentType } from "@/types";
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 export default function QRCodeGeneratorPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [content, setContent] = useState("");
   const [contentType, setContentType] = useState<ContentType>("url");
   const [qrColor, setQrColor] = useState("#000000");
@@ -111,11 +115,11 @@ export default function QRCodeGeneratorPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

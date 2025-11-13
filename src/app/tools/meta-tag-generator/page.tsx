@@ -2,11 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeftIcon, CheckIcon, ClipboardDocumentIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 export default function MetaTagGeneratorPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   // Form state
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -188,11 +192,11 @@ export default function MetaTagGeneratorPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

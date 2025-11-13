@@ -134,7 +134,7 @@ export default function AgeCalculatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-indigo-50">
       {/* Header Section */}
       <section className="relative pt-20 pb-8 sm:pt-24 md:pt-28">
         {/* Background decorations */}
@@ -156,7 +156,7 @@ export default function AgeCalculatorPage() {
               className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors group"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1 group-hover:-translate-x-1 transition-transform" />
-              <span>Back to Time Tools</span>
+              <span>Back</span>
             </Link>
           </div>
           

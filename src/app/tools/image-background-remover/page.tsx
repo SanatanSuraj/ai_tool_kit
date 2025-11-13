@@ -2,13 +2,17 @@
 
 import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
 import { ImageService } from '@/services/image.service';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 export default function BackgroundRemoverPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>('');
@@ -93,30 +97,30 @@ export default function BackgroundRemoverPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-rose-50">
       {/* Header Section */}
       <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
         {/* Background decorations */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-purple-50/50"></div>
-          <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[500px] h-[500px] rounded-full bg-indigo-50 blur-3xl opacity-30"></div>
-          <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[400px] h-[400px] rounded-full bg-purple-50 blur-3xl opacity-20"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 to-pink-50/50"></div>
+          <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[500px] h-[500px] rounded-full bg-rose-50 blur-3xl opacity-30"></div>
+          <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[400px] h-[400px] rounded-full bg-pink-50 blur-3xl opacity-20"></div>
         </div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-rose-600 hover:text-rose-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-3 w-14 h-14 flex items-center justify-center shadow-md shadow-indigo-500/20">
+              <div className="bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl p-3 w-14 h-14 flex items-center justify-center shadow-md shadow-rose-500/20">
                 <PhotoIcon className="h-8 w-8 text-white" />
               </div>
               <div>
@@ -125,7 +129,7 @@ export default function BackgroundRemoverPage() {
               </div>
             </div>
             
-            <div className="inline-flex px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-sm font-medium shadow-sm">
+            <div className="inline-flex px-4 py-2 rounded-full bg-rose-50 border border-rose-100 text-rose-600 text-sm font-medium shadow-sm">
               <span>Design tool</span>
             </div>
           </div>
@@ -134,7 +138,7 @@ export default function BackgroundRemoverPage() {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
                 {/* Card accent */}
-                <div className="h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+                <div className="h-1 w-full bg-gradient-to-r from-rose-500 to-pink-600"></div>
                 
                 <div className="p-6 md:p-8">
                   {/* Upload area */}
@@ -142,7 +146,7 @@ export default function BackgroundRemoverPage() {
                     className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
                       originalImage 
                         ? 'border-gray-200 bg-gray-50' 
-                        : 'border-indigo-200 bg-indigo-50 hover:bg-indigo-100/50 hover:border-indigo-300'
+                        : 'border-rose-200 bg-rose-50 hover:bg-rose-100/50 hover:border-rose-300'
                     }`}
                     onClick={!originalImage ? triggerFileInput : undefined}
                   >
@@ -156,12 +160,12 @@ export default function BackgroundRemoverPage() {
                     
                     {!originalImage ? (
                       <div className="cursor-pointer">
-                        <div className="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-indigo-100 mb-4">
-                          <PhotoIcon className="h-8 w-8 text-indigo-500" />
+                        <div className="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-rose-100 mb-4">
+                          <PhotoIcon className="h-8 w-8 text-rose-500" />
                         </div>
                         <h3 className="text-lg font-medium text-gray-900 mb-1">Upload an image</h3>
                         <p className="text-sm text-gray-500 mb-4">Click to browse or drag and drop</p>
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white font-medium shadow-sm hover:bg-indigo-700 transition-colors">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 text-white font-medium shadow-sm hover:bg-rose-700 transition-colors">
                           <span>Select Image</span>
                         </div>
                         <p className="mt-4 text-xs text-gray-400">
@@ -228,7 +232,7 @@ export default function BackgroundRemoverPage() {
                               className={`w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium ${
                                 !originalImage || isProcessing
                                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                  : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                  : 'bg-rose-600 text-white hover:bg-rose-700'
                               }`}
                             >
                               {isProcessing ? (
@@ -264,7 +268,7 @@ export default function BackgroundRemoverPage() {
                                     onClick={() => setDownloadFormat('png')}
                                     className={`px-3 py-2 rounded text-sm font-medium ${
                                       downloadFormat === 'png'
-                                        ? 'bg-indigo-100 text-indigo-700 border border-indigo-200'
+                                        ? 'bg-rose-100 text-rose-700 border border-rose-200'
                                         : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
                                     }`}
                                   >
@@ -274,7 +278,7 @@ export default function BackgroundRemoverPage() {
                                     onClick={() => setDownloadFormat('jpeg')}
                                     className={`px-3 py-2 rounded text-sm font-medium ${
                                       downloadFormat === 'jpeg'
-                                        ? 'bg-indigo-100 text-indigo-700 border border-indigo-200'
+                                        ? 'bg-rose-100 text-rose-700 border border-rose-200'
                                         : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
                                     }`}
                                   >
@@ -285,7 +289,7 @@ export default function BackgroundRemoverPage() {
                               
                               <button
                                 onClick={downloadImage}
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-indigo-600 text-white font-medium shadow-sm hover:bg-indigo-700 transition-colors"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-rose-600 text-white font-medium shadow-sm hover:bg-rose-700 transition-colors"
                               >
                                 <ArrowDownTrayIcon className="h-5 w-5" />
                                 <span>Download Image</span>
@@ -307,20 +311,20 @@ export default function BackgroundRemoverPage() {
                   <div className="mt-10">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">How It Works</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-semibold mb-3">1</div>
+                      <div className="bg-rose-50 rounded-xl p-5 border border-rose-100">
+                        <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 font-semibold mb-3">1</div>
                         <h4 className="font-medium text-gray-900 mb-1">Upload</h4>
                         <p className="text-sm text-gray-600">Upload any image with a clear subject and background.</p>
                       </div>
                       
-                      <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-semibold mb-3">2</div>
+                      <div className="bg-rose-50 rounded-xl p-5 border border-rose-100">
+                        <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 font-semibold mb-3">2</div>
                         <h4 className="font-medium text-gray-900 mb-1">Process</h4>
                         <p className="text-sm text-gray-600">Our AI identifies and removes the background automatically.</p>
                       </div>
                       
-                      <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-semibold mb-3">3</div>
+                      <div className="bg-rose-50 rounded-xl p-5 border border-rose-100">
+                        <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 font-semibold mb-3">3</div>
                         <h4 className="font-medium text-gray-900 mb-1">Download</h4>
                         <p className="text-sm text-gray-600">Download your image with a transparent background.</p>
                       </div>
@@ -331,9 +335,9 @@ export default function BackgroundRemoverPage() {
             </div>
             
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-lg border border-indigo-100">
+              <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl p-6 shadow-lg border border-rose-100">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-rose-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
                   About This Tool
@@ -345,7 +349,7 @@ export default function BackgroundRemoverPage() {
                     giving you transparent PNG images that you can use in designs, product listings, social media posts, and more.
                   </p>
                   
-                  <div className="bg-white rounded-lg p-4 border border-indigo-100">
+                  <div className="bg-white rounded-lg p-4 border border-rose-100">
                     <h3 className="font-medium text-gray-900 mb-2">Perfect for:</h3>
                     <ul className="text-sm space-y-2 text-gray-600 ml-4">
                       <li>• E-commerce product photography</li>
@@ -360,7 +364,7 @@ export default function BackgroundRemoverPage() {
               
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mt-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   Pro Tips
@@ -368,25 +372,25 @@ export default function BackgroundRemoverPage() {
                 
                 <ul className="space-y-3 text-sm text-gray-600">
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>
                       <strong>Use good lighting:</strong> Well-lit images with clear contrast between subject and background work best.
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>
                       <strong>Clear subject:</strong> Photos with a distinct subject and simple background yield better results.
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>
                       <strong>Choose PNG format:</strong> For images with transparency, PNG preserves the transparent areas.
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>
                       <strong>Check edges:</strong> Examine the edges of your subject after processing for any imperfections.
                     </div>
@@ -394,23 +398,23 @@ export default function BackgroundRemoverPage() {
                 </ul>
               </div>
               
-              <div className="bg-indigo-50 rounded-2xl p-6 shadow-lg border border-indigo-100 mt-6">
+              <div className="bg-rose-50 rounded-2xl p-6 shadow-lg border border-rose-100 mt-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">Creative Use Cases</h2>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>Change backgrounds in product photos to match seasonal themes</div>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>Create cutout images for digital collages and mood boards</div>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>Prepare portraits for professional headshots with custom backgrounds</div>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-indigo-500 mr-2 font-bold">•</span>
+                    <span className="text-rose-500 mr-2 font-bold">•</span>
                     <div>Design multilayered graphics with overlapping transparent elements</div>
                   </li>
                 </ul>

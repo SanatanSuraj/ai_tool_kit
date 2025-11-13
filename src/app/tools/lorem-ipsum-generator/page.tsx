@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeftIcon, DocumentTextIcon, ClipboardIcon, CheckIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 export default function LoremIpsumGeneratorPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [type, setType] = useState("paragraphs");
   const [count, setCount] = useState(3);
   const [minWordsPerSentence, setMinWordsPerSentence] = useState(5);
@@ -168,11 +172,11 @@ export default function LoremIpsumGeneratorPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-amber-600 hover:text-amber-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

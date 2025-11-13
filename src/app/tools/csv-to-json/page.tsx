@@ -195,29 +195,47 @@ export default function CsvToJsonPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-16">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-blue-50">
       {/* Header Section */}
-      <section className="bg-white border-b shadow-sm mt-2">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+        {/* Background decorations */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-sky-50/50 to-blue-50/50"></div>
+          <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[500px] h-[500px] rounded-full bg-sky-50 blur-3xl opacity-30"></div>
+          <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[400px] h-[400px] rounded-full bg-blue-50 blur-3xl opacity-20"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="mb-2">
             <Link 
               href="/categories/data-converter" 
-              className="mr-4 text-gray-500 hover:text-blue-600 transition-colors p-2 hover:bg-blue-50 rounded-full"
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
-              <ArrowLeftIcon className="h-5 w-5" />
+              <ArrowLeftIcon className="h-4 w-4 mr-1" />
+              Back
             </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">CSV to JSON Converter</h1>
-              <p className="text-gray-600 text-sm">Convert CSV data to structured JSON with support for nested objects and arrays</p>
+          </div>
+          
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl p-3 w-14 h-14 flex items-center justify-center shadow-md shadow-sky-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">CSV to JSON Converter</h1>
+                <p className="text-gray-600 text-sm md:text-base mt-1">Convert CSV data to structured JSON with support for nested objects and arrays</p>
+              </div>
+            </div>
+            
+            <div className="inline-flex px-4 py-2 rounded-full bg-sky-50 border border-sky-100 text-sky-600 text-sm font-medium shadow-sm">
+              <span>Data Converter</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Main Content Section */}
-      <ErrorBoundary>
-        <section className="py-10">
-          <div className="container mx-auto px-4 max-w-6xl">
+          
+          {/* Main Content */}
+          <ErrorBoundary>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Input Panel */}
               <div className="bg-white rounded-xl shadow p-6 border border-gray-200 hover:shadow-md transition-all duration-300">
@@ -411,9 +429,9 @@ export default function CsvToJsonPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </ErrorBoundary>
+          </ErrorBoundary>
+        </div>
+      </section>
       
       {/* Information Section */}
       <section className="py-8">

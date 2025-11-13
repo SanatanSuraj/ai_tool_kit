@@ -121,7 +121,7 @@ export default function DateCalculatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-indigo-50">
       {/* Header Section */}
       <section className="relative pt-20 pb-8 sm:pt-24 md:pt-28">
         {/* Background decorations */}
@@ -140,10 +140,10 @@ export default function DateCalculatorPage() {
           <div className="mb-4">
             <Link 
               href="/categories/calculator"
-              className="inline-flex items-center text-sm text-green-600 hover:text-green-800 font-medium transition-colors group"
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors group"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1 group-hover:-translate-x-1 transition-transform" />
-              <span>Back to Time Tools</span>
+              <span>Back</span>
             </Link>
           </div>
           

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
@@ -9,6 +10,7 @@ import Footer from '@/components/Footer';
 import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { centerAspectCrop, getAspectRatio } from "@/utils/imageCropService";
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 interface CropOptions {
   aspectRatio: string;
@@ -17,6 +19,8 @@ interface CropOptions {
 }
 
 export default function ImageCropperPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>('');
@@ -202,7 +206,7 @@ export default function ImageCropperPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-rose-50">
       {/* Header Section */}
       <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
         {/* Background decorations */}
@@ -215,11 +219,11 @@ export default function ImageCropperPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-green-600 hover:text-green-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

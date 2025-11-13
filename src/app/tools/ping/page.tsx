@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeftIcon, InformationCircleIcon, ArrowPathIcon, LinkIcon } from "@heroicons/react/24/outline";
 import Footer from '@/components/Footer';
 import PopularTools from '@/components/PopularTools';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 export default function PingPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [url, setUrl] = useState<string>("");
   const [protocol, setProtocol] = useState<string>("HTTP(s)");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -65,11 +69,11 @@ export default function PingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

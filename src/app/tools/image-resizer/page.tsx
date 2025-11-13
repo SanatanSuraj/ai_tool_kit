@@ -2,10 +2,12 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import NextImage from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 interface ResizeOptions {
   width: number;
@@ -21,6 +23,8 @@ interface ImageDimensions {
 }
 
 export default function ImageResizerPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [resizedImage, setResizedImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>('');
@@ -304,7 +308,7 @@ export default function ImageResizerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-amber-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-rose-50">
       {/* Header Section */}
       <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
         {/* Background decorations */}
@@ -317,11 +321,11 @@ export default function ImageResizerPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm text-orange-600 hover:text-orange-800 font-medium transition-colors"
+              href={categoryPath}
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

@@ -11,6 +11,19 @@ interface ExifData {
   [key: string]: string | number | undefined;
 }
 
+// Type declarations for EXIF.js library
+interface ExifLibrary {
+  getData: (file: File | HTMLImageElement, callback: (this: HTMLImageElement) => void) => void;
+  getAllTags: (img: HTMLImageElement) => Record<string, unknown> | null;
+  getTag: (img: HTMLImageElement, tag: string) => unknown;
+}
+
+declare global {
+  interface Window {
+    EXIF?: ExifLibrary;
+  }
+}
+
 export default function ExifReaderPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [exifData, setExifData] = useState<ExifData | null>(null);
@@ -19,12 +32,12 @@ export default function ExifReaderPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load EXIF.js library dynamically
-  const loadExifLibrary = async () => {
-    if (typeof window !== 'undefined' && !(window as any).EXIF) {
+  const loadExifLibrary = async (): Promise<boolean> => {
+    if (typeof window !== 'undefined' && !window.EXIF) {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/exif-js@2.3.0/exif.js';
       script.async = true;
-      return new Promise((resolve, reject) => {
+      return new Promise<boolean>((resolve, reject) => {
         script.onload = () => resolve(true);
         script.onerror = () => reject(new Error('Failed to load EXIF library'));
         document.head.appendChild(script);
@@ -42,7 +55,7 @@ export default function ExifReaderPage() {
       
       await loadExifLibrary();
       
-      const EXIF = (window as any).EXIF;
+      const EXIF = window.EXIF;
       if (!EXIF) {
         throw new Error('EXIF library not loaded');
       }
@@ -66,7 +79,7 @@ export default function ExifReaderPage() {
           };
 
           // Read EXIF data with timeout
-          let timeoutId: NodeJS.Timeout;
+          let timeoutId: NodeJS.Timeout | undefined;
           let exifReadComplete = false;
 
           try {
@@ -78,9 +91,10 @@ export default function ExifReaderPage() {
               }
             }, 3000);
 
-            EXIF.getData(file, function() {
+            // Use the img element for EXIF reading instead of file
+            EXIF.getData(img, function(this: HTMLImageElement) {
               exifReadComplete = true;
-              if (timeoutId) clearTimeout(timeoutId);
+              if (timeoutId !== undefined) clearTimeout(timeoutId);
               const allExifData: ExifData = { ...basicInfo };
               
               let hasExifData = false;
@@ -89,108 +103,127 @@ export default function ExifReaderPage() {
               const allTags = EXIF.getAllTags(this);
               
               // Camera information
-              if (EXIF.getTag(this, "Make")) {
-                allExifData["Camera Make"] = EXIF.getTag(this, "Make");
+              const make = EXIF.getTag(this, "Make");
+              if (make) {
+                allExifData["Camera Make"] = String(make);
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "Model")) {
-                allExifData["Camera Model"] = EXIF.getTag(this, "Model");
+              const model = EXIF.getTag(this, "Model");
+              if (model) {
+                allExifData["Camera Model"] = String(model);
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "LensModel")) {
-                allExifData["Lens Model"] = EXIF.getTag(this, "LensModel");
+              const lensModel = EXIF.getTag(this, "LensModel");
+              if (lensModel) {
+                allExifData["Lens Model"] = String(lensModel);
                 hasExifData = true;
               }
               
               // Image settings
-              if (EXIF.getTag(this, "DateTime")) {
-                allExifData["Date/Time"] = EXIF.getTag(this, "DateTime");
+              const dateTime = EXIF.getTag(this, "DateTime");
+              if (dateTime) {
+                allExifData["Date/Time"] = String(dateTime);
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "DateTimeOriginal")) {
-                allExifData["Date/Time Original"] = EXIF.getTag(this, "DateTimeOriginal");
+              const dateTimeOriginal = EXIF.getTag(this, "DateTimeOriginal");
+              if (dateTimeOriginal) {
+                allExifData["Date/Time Original"] = String(dateTimeOriginal);
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "DateTimeDigitized")) {
-                allExifData["Date/Time Digitized"] = EXIF.getTag(this, "DateTimeDigitized");
+              const dateTimeDigitized = EXIF.getTag(this, "DateTimeDigitized");
+              if (dateTimeDigitized) {
+                allExifData["Date/Time Digitized"] = String(dateTimeDigitized);
                 hasExifData = true;
               }
               
               // Exposure settings
-              if (EXIF.getTag(this, "ExposureTime")) {
-                allExifData["Exposure Time"] = `${EXIF.getTag(this, "ExposureTime")}s`;
+              const exposureTime = EXIF.getTag(this, "ExposureTime");
+              if (exposureTime) {
+                allExifData["Exposure Time"] = `${exposureTime}s`;
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "FNumber")) {
-                allExifData["Aperture"] = `f/${EXIF.getTag(this, "FNumber")}`;
+              const fNumber = EXIF.getTag(this, "FNumber");
+              if (fNumber) {
+                allExifData["Aperture"] = `f/${fNumber}`;
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "ISO")) {
-                allExifData["ISO"] = EXIF.getTag(this, "ISO");
+              const iso = EXIF.getTag(this, "ISO");
+              if (iso) {
+                allExifData["ISO"] = Number(iso);
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "ExposureProgram")) {
+              const exposureProgram = EXIF.getTag(this, "ExposureProgram");
+              if (exposureProgram !== undefined && exposureProgram !== null) {
                 const programs = ["Not defined", "Manual", "Normal program", "Aperture priority", "Shutter priority", "Creative program", "Action program", "Portrait mode", "Landscape mode"];
-                allExifData["Exposure Program"] = programs[EXIF.getTag(this, "ExposureProgram")] || EXIF.getTag(this, "ExposureProgram");
+                const programIndex = Number(exposureProgram);
+                allExifData["Exposure Program"] = programs[programIndex] || String(exposureProgram);
                 hasExifData = true;
               }
               
               // Focal length
-              if (EXIF.getTag(this, "FocalLength")) {
-                allExifData["Focal Length"] = `${EXIF.getTag(this, "FocalLength")}mm`;
+              const focalLength = EXIF.getTag(this, "FocalLength");
+              if (focalLength) {
+                allExifData["Focal Length"] = `${focalLength}mm`;
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "FocalLengthIn35mmFilm")) {
-                allExifData["Focal Length (35mm)"] = `${EXIF.getTag(this, "FocalLengthIn35mmFilm")}mm`;
+              const focalLength35mm = EXIF.getTag(this, "FocalLengthIn35mmFilm");
+              if (focalLength35mm) {
+                allExifData["Focal Length (35mm)"] = `${focalLength35mm}mm`;
                 hasExifData = true;
               }
               
               // Flash
-              if (EXIF.getTag(this, "Flash") !== undefined) {
-                const flash = EXIF.getTag(this, "Flash");
+              const flash = EXIF.getTag(this, "Flash");
+              if (flash !== undefined && flash !== null) {
                 const flashModes = ["No Flash", "Flash", "Flash, no strobe return", "Flash, strobe return"];
-                allExifData["Flash"] = flashModes[flash] || flash;
+                const flashIndex = Number(flash);
+                allExifData["Flash"] = flashModes[flashIndex] || String(flash);
                 hasExifData = true;
               }
               
               // Orientation
-              if (EXIF.getTag(this, "Orientation")) {
+              const orientation = EXIF.getTag(this, "Orientation");
+              if (orientation !== undefined && orientation !== null) {
                 const orientations = ["", "Normal", "Mirrored", "Rotated 180°", "Mirrored and rotated 180°", "Mirrored and rotated 90° CCW", "Rotated 90° CCW", "Mirrored and rotated 90° CW", "Rotated 90° CW"];
-                allExifData["Orientation"] = orientations[EXIF.getTag(this, "Orientation")] || EXIF.getTag(this, "Orientation");
+                const orientationIndex = Number(orientation);
+                allExifData["Orientation"] = orientations[orientationIndex] || String(orientation);
                 hasExifData = true;
               }
               
               // GPS information
-              if (EXIF.getTag(this, "GPSLatitude") && EXIF.getTag(this, "GPSLatitudeRef")) {
-                const lat = EXIF.getTag(this, "GPSLatitude");
-                const latRef = EXIF.getTag(this, "GPSLatitudeRef");
-                if (Array.isArray(lat) && lat.length >= 3) {
-                  const latDecimal = lat[0] + lat[1]/60 + lat[2]/(60*60);
-                  allExifData["GPS Latitude"] = `${latDecimal.toFixed(6)}° ${latRef}`;
+              const gpsLatitude = EXIF.getTag(this, "GPSLatitude");
+              const gpsLatitudeRef = EXIF.getTag(this, "GPSLatitudeRef");
+              if (gpsLatitude && gpsLatitudeRef) {
+                if (Array.isArray(gpsLatitude) && gpsLatitude.length >= 3) {
+                  const latDecimal = Number(gpsLatitude[0]) + Number(gpsLatitude[1])/60 + Number(gpsLatitude[2])/(60*60);
+                  allExifData["GPS Latitude"] = `${latDecimal.toFixed(6)}° ${String(gpsLatitudeRef)}`;
                   hasExifData = true;
                 }
               }
-              if (EXIF.getTag(this, "GPSLongitude") && EXIF.getTag(this, "GPSLongitudeRef")) {
-                const lon = EXIF.getTag(this, "GPSLongitude");
-                const lonRef = EXIF.getTag(this, "GPSLongitudeRef");
-                if (Array.isArray(lon) && lon.length >= 3) {
-                  const lonDecimal = lon[0] + lon[1]/60 + lon[2]/(60*60);
-                  allExifData["GPS Longitude"] = `${lonDecimal.toFixed(6)}° ${lonRef}`;
+              const gpsLongitude = EXIF.getTag(this, "GPSLongitude");
+              const gpsLongitudeRef = EXIF.getTag(this, "GPSLongitudeRef");
+              if (gpsLongitude && gpsLongitudeRef) {
+                if (Array.isArray(gpsLongitude) && gpsLongitude.length >= 3) {
+                  const lonDecimal = Number(gpsLongitude[0]) + Number(gpsLongitude[1])/60 + Number(gpsLongitude[2])/(60*60);
+                  allExifData["GPS Longitude"] = `${lonDecimal.toFixed(6)}° ${String(gpsLongitudeRef)}`;
                   hasExifData = true;
                 }
               }
               
               // Software
-              if (EXIF.getTag(this, "Software")) {
-                allExifData["Software"] = EXIF.getTag(this, "Software");
+              const software = EXIF.getTag(this, "Software");
+              if (software) {
+                allExifData["Software"] = String(software);
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "Artist")) {
-                allExifData["Artist"] = EXIF.getTag(this, "Artist");
+              const artist = EXIF.getTag(this, "Artist");
+              if (artist) {
+                allExifData["Artist"] = String(artist);
                 hasExifData = true;
               }
-              if (EXIF.getTag(this, "Copyright")) {
-                allExifData["Copyright"] = EXIF.getTag(this, "Copyright");
+              const copyright = EXIF.getTag(this, "Copyright");
+              if (copyright) {
+                allExifData["Copyright"] = String(copyright);
                 hasExifData = true;
               }
 
@@ -227,9 +260,9 @@ export default function ExifReaderPage() {
               
               setIsProcessing(false);
             });
-          } catch (exifError) {
+          } catch {
             exifReadComplete = true;
-            if (timeoutId) clearTimeout(timeoutId);
+            if (timeoutId !== undefined) clearTimeout(timeoutId);
             // If EXIF reading fails, still show basic info
             setExifData(basicInfo);
             setError("Could not read EXIF data. This image may have been edited or compressed. Showing basic image information instead.");
@@ -283,49 +316,66 @@ export default function ExifReaderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-16">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-purple-50">
       {/* Header Section */}
-      <section className="bg-white border-b shadow-sm mt-2">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+        {/* Background decorations */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-purple-50/50"></div>
+          <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[500px] h-[500px] rounded-full bg-indigo-50 blur-3xl opacity-30"></div>
+          <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[400px] h-[400px] rounded-full bg-purple-50 blur-3xl opacity-20"></div>
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="mb-2">
             <Link 
               href="/categories/misc-tools" 
-              className="mr-4 text-gray-500 hover:text-indigo-600 transition-colors p-2 hover:bg-indigo-50 rounded-full"
-              aria-label="Back to misc tools"
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
-              <ArrowLeftIcon className="h-5 w-5" />
+              <ArrowLeftIcon className="h-4 w-4 mr-1" />
+              Back
             </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">EXIF Reader</h1>
-              <p className="text-gray-600 text-sm">Extract and view EXIF metadata from your images including camera settings, GPS data, and more</p>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-3 w-14 h-14 flex items-center justify-center shadow-md shadow-indigo-500/20">
+                <PhotoIcon className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">EXIF Reader</h1>
+                <p className="text-gray-600 text-sm md:text-base mt-1">
+                  Extract and view EXIF metadata from your images including camera settings, GPS data, and more
+                </p>
+              </div>
+            </div>
+
+            <div className="inline-flex px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-sm font-medium shadow-sm">
+              <span>Image tool</span>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Main Content Section */}
-      <ErrorBoundary>
-        <section className="py-10">
-          <div className="container mx-auto px-4 max-w-6xl">
+          <ErrorBoundary>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Image Upload Panel */}
-              <div className="bg-white rounded-xl shadow p-6 border border-gray-200 hover:shadow-md transition-all duration-300">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="inline-block w-3 h-3 bg-indigo-500 rounded-full mr-2"></span>
-                    Image Upload
-                  </h2>
-                  {imagePreview && (
-                    <button 
-                      onClick={clearAll}
-                      className="text-sm font-medium text-gray-600 hover:text-gray-800 py-1 px-2 hover:bg-gray-50 rounded transition-colors"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                {/* Card accent */}
+                <div className="h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-600"></div>
                 
-                <div className="mb-6">
+                <div className="p-6 md:p-8">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-gray-900">Image Upload</h2>
+                    {imagePreview && (
+                      <button 
+                        onClick={clearAll}
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-800 py-1 px-2 hover:bg-indigo-50 rounded transition-colors"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                
+                  <div className="mb-6">
                   {!imagePreview ? (
                     <div 
                       onClick={triggerFileUpload}
@@ -337,6 +387,7 @@ export default function ExifReaderPage() {
                     </div>
                   ) : (
                     <div className="relative w-full h-72 border-2 border-gray-300 rounded-xl overflow-hidden bg-gray-50">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img 
                         src={imagePreview} 
                         alt="Preview" 
@@ -355,39 +406,41 @@ export default function ExifReaderPage() {
                       </p>
                     </div>
                   )}
-                </div>
-                
-                <button
-                  onClick={triggerFileUpload}
-                  className="w-full px-5 py-2.5 rounded-lg font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-all duration-200 shadow-sm hover:shadow"
-                >
-                  <ArrowUpTrayIcon className="h-5 w-5 mr-1.5 inline-block" />
-                  {imagePreview ? 'Change Image' : 'Upload Image'}
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                
-                {isProcessing && (
-                  <div className="mt-4 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                    <span className="ml-3 text-gray-600">Reading EXIF data...</span>
                   </div>
-                )}
+                  
+                  <button
+                    onClick={triggerFileUpload}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-0.5 active:shadow-md active:translate-y-0 transition-all duration-300"
+                  >
+                    <ArrowUpTrayIcon className="h-5 w-5" />
+                    {imagePreview ? 'Change Image' : 'Upload Image'}
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  
+                  {isProcessing && (
+                    <div className="mt-4 flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                      <span className="ml-3 text-gray-600">Reading EXIF data...</span>
+                    </div>
+                  )}
+                </div>
               </div>
               
               {/* EXIF Data Panel */}
-              <div className="bg-white rounded-xl shadow p-6 border border-gray-200 hover:shadow-md transition-all duration-300">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                    <span className="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                    EXIF Metadata
-                  </h2>
-                </div>
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                {/* Card accent */}
+                <div className="h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+                
+                <div className="p-6 md:p-8">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-gray-900">EXIF Metadata</h2>
+                  </div>
                 
                 <div className="relative">
                   {error && !isProcessing && (
@@ -423,11 +476,12 @@ export default function ExifReaderPage() {
                     )}
                   </div>
                 </div>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      </ErrorBoundary>
+          </ErrorBoundary>
+        </div>
+      </section>
       
       {/* Information Section */}
       <section className="py-8">
@@ -471,16 +525,16 @@ export default function ExifReaderPage() {
               </div>
               
               <div className="mt-4 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                <h3 className="font-medium text-yellow-800 mb-2">Why Some Images Don't Have EXIF Data</h3>
+                <h3 className="font-medium text-yellow-800 mb-2">Why Some Images Don&apos;t Have EXIF Data</h3>
                 <p className="text-sm text-gray-700 mb-2">Some images may not contain EXIF metadata for several reasons:</p>
                 <ul className="ml-5 list-disc space-y-1 text-sm text-gray-700">
                   <li><strong>Messaging apps</strong> (WhatsApp, Telegram, etc.) often strip EXIF data to reduce file size and protect privacy</li>
                   <li><strong>Image editing software</strong> may remove EXIF data when saving images</li>
                   <li><strong>Social media platforms</strong> typically remove EXIF data when images are uploaded</li>
                   <li><strong>Image compression</strong> or conversion can strip metadata</li>
-                  <li><strong>Screenshots</strong> and <strong>downloaded images</strong> usually don't contain camera EXIF data</li>
+                  <li><strong>Screenshots</strong> and <strong>downloaded images</strong> usually don&apos;t contain camera EXIF data</li>
                 </ul>
-                <p className="text-sm text-gray-700 mt-2">Even when EXIF data is missing, we'll still show basic image information like dimensions, file size, and format.</p>
+                <p className="text-sm text-gray-700 mt-2">Even when EXIF data is missing, we&apos;ll still show basic image information like dimensions, file size, and format.</p>
               </div>
             </div>
           </div>

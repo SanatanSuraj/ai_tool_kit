@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeftIcon, ClockIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import { getCategoryPath } from '@/utils/getCategoryPath';
 
 // Type definitions for timezone data
 type TimeZone = {
@@ -15,6 +17,8 @@ type TimeZone = {
 };
 
 export default function TimeZoneConverterPage() {
+  const pathname = usePathname();
+  const categoryPath = getCategoryPath(pathname);
   // Define time zones with their offsets and representative cities
   const timeZones: TimeZone[] = [
     { name: "UTC (Coordinated Universal Time)", offset: 0, abbr: "UTC", cities: ["London (during winter)", "Reykjavik", "Accra"] },
@@ -177,11 +181,11 @@ export default function TimeZoneConverterPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="mb-2">
             <Link 
-              href="/" 
+              href={categoryPath}
               className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Home
+              Back
             </Link>
           </div>
           

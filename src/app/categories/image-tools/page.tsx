@@ -128,7 +128,7 @@ export default function ImageToolsPage() {
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-sm text-gray-900"
                 placeholder="Search image tools..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

@@ -171,7 +171,7 @@ export default function YouTubeThumbnailDownloaderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 via-white to-red-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-purple-50">
       {/* Header Section */}
       <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
         {/* Background decorations */}
@@ -185,10 +185,10 @@ export default function YouTubeThumbnailDownloaderPage() {
           <div className="mb-2">
             <Link
               href="/categories/misc-tools"
-              className="inline-flex items-center text-sm text-red-600 hover:text-red-800 font-medium transition-colors"
+              className="inline-flex items-center text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors"
             >
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to Misc Tools
+              Back
             </Link>
           </div>
 
