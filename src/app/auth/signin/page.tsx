@@ -43,7 +43,7 @@ export default function SignInPage() {
           setError('Invalid email or password');
         }
       } else if (result?.ok) {
-        router.push('/dashboard');
+        router.push('/');
         router.refresh();
       }
     } catch (error) {
@@ -58,7 +58,7 @@ export default function SignInPage() {
     setIsLoading(true);
     setError('');
     try {
-      await signIn(provider, { callbackUrl: '/dashboard' });
+      await signIn(provider, { callbackUrl: '/' });
     } catch (error) {
       console.error(`${provider} sign in failed:`, error);
       setError(`Failed to sign in with ${provider}. Please try again.`);

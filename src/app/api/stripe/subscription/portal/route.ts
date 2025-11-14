@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       // Create billing portal session
       const portalSession = await stripe.billingPortal.sessions.create({
         customer: customerId,
-        return_url: `${request.nextUrl.origin}/dashboard`,
+        return_url: `${request.nextUrl.origin}/`,
       });
 
       return NextResponse.json({ url: portalSession.url });
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     // Create billing portal session
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: subscription.stripeCustomerId,
-      return_url: `${request.nextUrl.origin}/dashboard`,
+      return_url: `${request.nextUrl.origin}/`,
     });
 
     return NextResponse.json({ url: portalSession.url });

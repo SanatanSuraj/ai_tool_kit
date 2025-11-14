@@ -61,7 +61,7 @@ export default function SignUpPage() {
       if (result?.error) {
         setError('Account created but sign in failed. Please try signing in.');
       } else if (result?.ok) {
-        router.push('/dashboard');
+        router.push('/');
         router.refresh();
       }
     } catch (error) {
@@ -76,7 +76,7 @@ export default function SignUpPage() {
     setIsLoading(true);
     setError('');
     try {
-      await signIn(provider, { callbackUrl: '/dashboard' });
+      await signIn(provider, { callbackUrl: '/' });
     } catch (error) {
       console.error(`${provider} sign in failed:`, error);
       setError(`Failed to sign in with ${provider}. Please try again.`);

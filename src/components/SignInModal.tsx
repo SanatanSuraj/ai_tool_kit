@@ -50,7 +50,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         }
       } else if (result?.ok) {
         onClose();
-        router.push('/dashboard');
+        router.push('/');
         router.refresh();
       }
     } catch (error) {
@@ -65,7 +65,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     setIsLoading(true);
     setError('');
     try {
-      await signIn(provider, { callbackUrl: '/dashboard' });
+      await signIn(provider, { callbackUrl: '/' });
     } catch (error) {
       console.error(`${provider} sign in failed:`, error);
       setError(`Failed to sign in with ${provider}. Please try again.`);

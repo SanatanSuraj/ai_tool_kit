@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { UserIcon, Bars3Icon, XMarkIcon, SparklesIcon, ArrowRightOnRectangleIcon, UserPlusIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
-import { useState, useEffect } from 'react';
+import { UserIcon, Bars3Icon, XMarkIcon, SparklesIcon, ArrowRightOnRectangleIcon, UserPlusIcon, ChevronDownIcon, CreditCardIcon } from '@heroicons/react/24/outline';
+import { useState, useEffect, useRef } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import SignInModal from './SignInModal';
 import { useSubscriptionSync } from '@/hooks/useSubscriptionSync';
@@ -12,10 +12,18 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const { data: session } = useSession({ required: false });
+  const userDropdownRef = useRef<HTMLDivElement>(null);
   
   // Sync subscription updates across tabs (runs on all pages)
   useSubscriptionSync();
+
+  // Helper function to get first name
+  const getFirstName = (name: string | null | undefined): string => {
+    if (!name) return '';
+    return name.split(' ')[0];
+  };
 
   // Handle scroll behavior
   useEffect(() => {
@@ -33,6 +41,17 @@ const Navbar = () => {
       const button = document.getElementById('mobile-menu-button');
       if (menu && button && !menu.contains(event.target as Node) && !button.contains(event.target as Node)) {
         setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setIsUserDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -77,21 +96,73 @@ const Navbar = () => {
                   Pricing
                 </Link>
                 {session ? (
-                  <>
-                    <Link 
-                      href="/dashboard" 
-                      className="text-fuchsia-600 hover:text-fuchsia-700 text-sm font-medium flex items-center space-x-1.5 transition-colors"
+                  <div className="relative" ref={userDropdownRef}>
+                    <button
+                      onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                      className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors focus:outline-none"
                     >
-                      <Squares2X2Icon className="h-5 w-5" />
-                      <span>Dashboard</span>
-                    </Link>
-                    <button 
-                      onClick={() => signOut({ callbackUrl: '/' })}
-                      className="text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors"
-                    >
-                      Sign out
+                      <div className="flex items-center space-x-2">
+                        {session.user?.image ? (
+                          <Image
+                            src={session.user.image}
+                            alt={session.user.name || 'User'}
+                            width={32}
+                            height={32}
+                            className="rounded-full"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold">
+                            {session.user?.name?.charAt(0).toUpperCase() || session.user?.email?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                        )}
+                        <span className="max-w-[120px] truncate">
+                          {session.user?.name ? getFirstName(session.user.name) : session.user?.email?.split('@')[0] || 'User'}
+                        </span>
+                        <ChevronDownIcon className={`h-4 w-4 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
+                      </div>
                     </button>
-                  </>
+                    
+                    {/* Dropdown Menu */}
+                    {isUserDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg border border-gray-100 py-2 z-50">
+                        <div className="px-4 py-3 border-b border-gray-100">
+                          <p className="text-sm font-semibold text-gray-900 truncate">
+                            {session.user?.name || 'User'}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate mt-0.5">
+                            {session.user?.email}
+                          </p>
+                        </div>
+                        <Link
+                          href="/account"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                          className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                          <UserIcon className="h-5 w-5 text-gray-400" />
+                          <span>Account</span>
+                        </Link>
+                        <Link
+                          href="/payment"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                          className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                          <CreditCardIcon className="h-5 w-5 text-gray-400" />
+                          <span>Payment</span>
+                        </Link>
+                        <div className="h-px bg-gray-100 my-1" />
+                        <button
+                          onClick={() => {
+                            setIsUserDropdownOpen(false);
+                            signOut({ callbackUrl: '/' });
+                          }}
+                          className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors w-full text-left"
+                        >
+                          <ArrowRightOnRectangleIcon className="h-5 w-5 text-gray-400" />
+                          <span>Sign out</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <>
                     <button 
@@ -152,14 +223,48 @@ const Navbar = () => {
                 <div className="h-px bg-gray-200 mx-2" />
                 {session ? (
                   <>
+                    <div className="px-4 py-3 border-b border-gray-200">
+                      <div className="flex items-center space-x-3">
+                        {session.user?.image ? (
+                          <Image
+                            src={session.user.image}
+                            alt={session.user.name || 'User'}
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold">
+                            {session.user?.name?.charAt(0).toUpperCase() || session.user?.email?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">
+                            {session.user?.name || 'User'}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {session.user?.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                     <Link
-                      href="/dashboard"
-                      className="text-fuchsia-600 hover:text-fuchsia-700 flex items-center space-x-2 px-4 py-2 rounded-lg text-base font-medium transition-colors w-full"
+                      href="/account"
                       onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-gray-700 hover:text-gray-900 flex items-center space-x-2 px-4 py-2 rounded-lg text-base font-medium transition-colors w-full"
                     >
-                      <Squares2X2Icon className="h-5 w-5" />
-                      <span>Dashboard</span>
+                      <UserIcon className="h-5 w-5" />
+                      <span>Account</span>
                     </Link>
+                    <Link
+                      href="/payment"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-gray-700 hover:text-gray-900 flex items-center space-x-2 px-4 py-2 rounded-lg text-base font-medium transition-colors w-full"
+                    >
+                      <CreditCardIcon className="h-5 w-5" />
+                      <span>Payment</span>
+                    </Link>
+                    <div className="h-px bg-gray-200 mx-2" />
                     <button
                       onClick={() => {
                         setIsMobileMenuOpen(false);
@@ -167,6 +272,7 @@ const Navbar = () => {
                       }}
                       className="text-gray-700 hover:text-gray-900 flex items-center space-x-2 px-4 py-2 rounded-lg text-base font-medium transition-colors w-full"
                     >
+                      <ArrowRightOnRectangleIcon className="h-5 w-5" />
                       <span>Sign out</span>
                     </button>
                   </>

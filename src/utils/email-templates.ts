@@ -22,9 +22,9 @@ export async function sendWelcomeEmail(userEmail: string, userName: string) {
         <p>Thank you for signing up! We're excited to have you on board.</p>
         <p>Get started by exploring our wide range of tools and utilities.</p>
         <p style="margin-top: 30px;">
-          <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/dashboard" 
+          <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/" 
              style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">
-            Go to Dashboard
+            Go to Homepage
           </a>
         </p>
         <p style="margin-top: 30px; font-size: 12px; color: #666;">
@@ -42,7 +42,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string) {
     Thank you for signing up! We're excited to have you on board.
     Get started by exploring our wide range of tools and utilities.
     
-    Visit your dashboard: ${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/dashboard
+    Visit our homepage: ${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/
     
     If you didn't create this account, please ignore this email.
   `;
@@ -117,9 +117,9 @@ export async function sendSubscriptionConfirmationEmail(
         <p>Your subscription to the <strong>${tier}</strong> plan has been confirmed.</p>
         <p>You now have access to all premium features.</p>
         <p style="margin-top: 30px;">
-          <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/dashboard" 
+          <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/" 
              style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">
-            View Dashboard
+            View Homepage
           </a>
         </p>
       </body>
@@ -134,7 +134,7 @@ export async function sendSubscriptionConfirmationEmail(
     Your subscription to the ${tier} plan has been confirmed.
     You now have access to all premium features.
     
-    View your dashboard: ${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/dashboard
+    View our homepage: ${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/
   `;
 
   return sendHtmlEmail(userEmail, `Subscription Confirmed - ${tier} Plan`, html, text);

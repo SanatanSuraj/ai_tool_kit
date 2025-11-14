@@ -185,7 +185,7 @@ export const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl }: any) {
-      // After sign in, redirect to dashboard
+      // After sign in, redirect to homepage
       if (url.startsWith(baseUrl)) {
         return url;
       }
@@ -193,7 +193,7 @@ export const authOptions = {
       if (url.startsWith('/')) {
         return `${baseUrl}${url}`;
       }
-      return `${baseUrl}/dashboard`;
+      return `${baseUrl}/`;
     },
   },
   pages: {

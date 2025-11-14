@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${request.nextUrl.origin}/dashboard?success=true`,
+      success_url: `${request.nextUrl.origin}/?success=true`,
       cancel_url: `${request.nextUrl.origin}/pricing?canceled=true`,
       metadata: {
         userId: session.user.id,

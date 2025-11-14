@@ -21,14 +21,14 @@ export const SUBSCRIPTION_LIMITS: Record<SubscriptionTier, SubscriptionLimits> =
     apiCallsPerDay: 500,
     apiCallsPerHour: 50,
     maxFileSize: 50 * 1024 * 1024, // 50MB
-    features: ['basic_tools', 'advanced_tools', 'priority_support', 'api_access'],
+    features: ['basic_tools', 'advanced_tools', 'priority_support'],
   },
   enterprise: {
     apiCallsPerMonth: 100000,
     apiCallsPerDay: 10000,
     apiCallsPerHour: 1000,
     maxFileSize: 500 * 1024 * 1024, // 500MB
-    features: ['basic_tools', 'advanced_tools', 'priority_support', 'api_access', 'custom_integrations', 'dedicated_support'],
+    features: ['basic_tools', 'advanced_tools', 'priority_support', 'custom_integrations', 'dedicated_support'],
   },
 };
 

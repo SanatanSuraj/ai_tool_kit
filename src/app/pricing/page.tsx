@@ -42,7 +42,6 @@ const plans: Plan[] = [
       { name: 'Color converter tools', count: 1, included: true }, // Color Converter
       { name: 'Calculator tools', count: 5, included: true }, // Date, Time Duration, Age, Business Days, Epoch
       { name: 'Misc tools', count: 4, included: true }, // SERP Checker, Keyword Research, YouTube Thumbnail, EXIF Reader
-      { name: 'API access', count: '', included: false, hasInfo: true },
       { name: 'Export features', count: 0, included: false, hasInfo: true },
       { name: 'No ads', count: '', included: false, hasInfo: true },
     ],
@@ -66,7 +65,6 @@ const plans: Plan[] = [
       { name: 'Color converter tools', count: 1, included: true },
       { name: 'Calculator tools', count: 5, included: true },
       { name: 'Misc tools', count: 4, included: true },
-      { name: 'API access', count: '', included: true, hasInfo: true },
       { name: 'Export features', count: 0, included: false, hasInfo: true },
       { name: 'No ads', count: '', included: true, hasInfo: true },
     ],
@@ -91,7 +89,6 @@ const plans: Plan[] = [
       { name: 'Color converter tools', count: 1, included: true },
       { name: 'Calculator tools', count: 5, included: true },
       { name: 'Misc tools', count: 4, included: true },
-      { name: 'API access', count: '', included: true, hasInfo: true },
       { name: 'Export features', count: 0, included: false, hasInfo: true },
       { name: 'No ads', count: '', included: true, hasInfo: true },
     ],
