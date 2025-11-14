@@ -152,7 +152,7 @@ export default function LoremIpsumGeneratorPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-amber-50">
       {/* Header Section */}
-      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16 overflow-visible">
         {/* Background decorations */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-yellow-50/50"></div>
@@ -169,7 +169,7 @@ export default function LoremIpsumGeneratorPage() {
           <div className="absolute bottom-1/4 left-1/3 w-32 h-32 rounded-full bg-gradient-to-r from-amber-200/10 to-yellow-200/10 blur-xl"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
           <div className="mb-2">
             <Link 
               href={categoryPath}
@@ -196,7 +196,7 @@ export default function LoremIpsumGeneratorPage() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-gray-100 relative overflow-hidden">
                 {/* Card accent */}
@@ -273,7 +273,7 @@ export default function LoremIpsumGeneratorPage() {
                                 max={maxWordsPerSentence}
                                 value={minWordsPerSentence}
                                 onChange={(e) => setMinWordsPerSentence(parseInt(e.target.value, 10))}
-                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-gray-900 bg-white"
                               />
                             </div>
                             
@@ -288,7 +288,7 @@ export default function LoremIpsumGeneratorPage() {
                                 max={30}
                                 value={maxWordsPerSentence}
                                 onChange={(e) => setMaxWordsPerSentence(parseInt(e.target.value, 10))}
-                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-gray-900 bg-white"
                               />
                             </div>
                           </div>
@@ -307,7 +307,7 @@ export default function LoremIpsumGeneratorPage() {
                                 max={maxSentencesPerParagraph}
                                 value={minSentencesPerParagraph}
                                 onChange={(e) => setMinSentencesPerParagraph(parseInt(e.target.value, 10))}
-                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-gray-900 bg-white"
                               />
                             </div>
                             
@@ -322,7 +322,7 @@ export default function LoremIpsumGeneratorPage() {
                                 max={15}
                                 value={maxSentencesPerParagraph}
                                 onChange={(e) => setMaxSentencesPerParagraph(parseInt(e.target.value, 10))}
-                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors text-gray-900 bg-white"
                               />
                             </div>
                           </div>
@@ -364,13 +364,13 @@ export default function LoremIpsumGeneratorPage() {
                       
                       <div className="bg-white border border-gray-200 rounded-xl p-4 max-h-80 overflow-y-auto">
                         {type === "list" ? (
-                          <ul className="space-y-2 list-none">
+                          <ul className="space-y-2 list-none text-gray-900">
                             {result.split("\n").map((item, index) => (
-                              <li key={index} className="pl-4">{item}</li>
+                              <li key={index} className="pl-4 text-gray-900">{item}</li>
                             ))}
                           </ul>
                         ) : (
-                          <p className="whitespace-pre-wrap break-words">{result}</p>
+                          <p className="whitespace-pre-wrap break-words text-gray-900">{result}</p>
                         )}
                       </div>
                     </div>
@@ -380,7 +380,7 @@ export default function LoremIpsumGeneratorPage() {
             </div>
             
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-6 shadow-lg border border-amber-100">
+              <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-6 shadow-lg border border-amber-100 relative">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />

@@ -10,8 +10,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Skip Stripe webhook endpoint (Stripe handles rate limiting)
-    if (request.nextUrl.pathname.startsWith("/api/stripe/webhook")) {
+    // Skip Stripe endpoints (Stripe handles rate limiting, and checkout is authenticated)
+    if (request.nextUrl.pathname.startsWith("/api/stripe/")) {
       return NextResponse.next();
     }
 

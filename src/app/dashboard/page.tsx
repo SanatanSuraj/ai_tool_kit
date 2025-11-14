@@ -5,9 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Footer from '@/components/Footer';
+import { useSubscriptionSync } from '@/hooks/useSubscriptionSync';
 import {
-  ChartBarIcon,
-  ClockIcon,
   CheckCircleIcon,
   XCircleIcon,
   ArrowRightIcon,
@@ -23,69 +22,13 @@ export default function DashboardPage() {
     required: true
   });
   const router = useRouter();
-  const [usageStats, setUsageStats] = useState({
-    monthly: 0,
-    daily: 0,
-    hourly: 0,
-  });
-  const [limits, setLimits] = useState({
-    monthly: 100,
-    daily: 10,
-    hourly: 5,
-  });
-  const [loading, setLoading] = useState(true);
   const [subscription, setSubscription] = useState<any>(null);
   const [subscriptionLoading, setSubscriptionLoading] = useState(false);
   const [currentTier, setCurrentTier] = useState<string>('free');
   const [hasFetchedData, setHasFetchedData] = useState(false);
   const [hasHandledPaymentSuccess, setHasHandledPaymentSuccess] = useState(false);
   const isUpdatingSessionRef = useRef(false);
-
-  const fetchUsageStats = useCallback(async () => {
-    try {
-      const response = await fetch('/api/dashboard/usage');
-      if (response.ok) {
-        const data = await response.json();
-        setUsageStats({
-          monthly: data.usage.monthly,
-          daily: data.usage.daily,
-          hourly: data.usage.hourly,
-        });
-        setLimits({
-          monthly: data.limits.monthly,
-          daily: data.limits.daily,
-          hourly: data.limits.hourly,
-        });
-      } else {
-        // Fallback to mock data if API fails
-        setUsageStats({
-          monthly: 0,
-          daily: 0,
-          hourly: 0,
-        });
-        setLimits({
-          monthly: 100,
-          daily: 10,
-          hourly: 5,
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching usage stats:', error);
-      // Fallback to mock data
-      setUsageStats({
-        monthly: 0,
-        daily: 0,
-        hourly: 0,
-      });
-      setLimits({
-        monthly: 100,
-        daily: 10,
-        hourly: 5,
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { broadcastUpdate } = useSubscriptionSync();
 
   const fetchSubscription = useCallback(async () => {
     try {
@@ -108,6 +51,8 @@ export default function DashboardPage() {
           isUpdatingSessionRef.current = true;
           await update();
           isUpdatingSessionRef.current = false;
+          // Broadcast update to other tabs
+          broadcastUpdate();
         }
       } else {
         const errorData = await response.json();
@@ -132,7 +77,10 @@ export default function DashboardPage() {
           isUpdatingSessionRef.current = false;
           // Fetch latest subscription data after session update
           setTimeout(() => {
-            fetchSubscription();
+            fetchSubscription().then(() => {
+              // Broadcast update to other tabs after confirming subscription change
+              broadcastUpdate();
+            });
           }, 1000);
         });
         // Clean up URL
@@ -145,12 +93,10 @@ export default function DashboardPage() {
   useEffect(() => {
     if (session?.user?.id && !hasFetchedData && status === 'authenticated') {
       setHasFetchedData(true);
-      // Fetch usage stats
-      fetchUsageStats();
       // Fetch subscription details
       fetchSubscription();
     }
-  }, [session?.user?.id, status, hasFetchedData, fetchUsageStats, fetchSubscription]);
+  }, [session?.user?.id, status, hasFetchedData, fetchSubscription]);
 
   const handleManageBilling = async () => {
     try {
@@ -213,7 +159,7 @@ export default function DashboardPage() {
     }
   };
 
-  if (status === 'loading' || loading) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
@@ -228,9 +174,6 @@ export default function DashboardPage() {
   // Use subscription from API if available, otherwise fall back to session
   const subscriptionTier = subscription?.tier || currentTier || session.user.subscriptionTier || 'free';
   const subscriptionStatus = subscription?.status || session.user.subscriptionStatus || 'active';
-  const monthlyPercentage = (usageStats.monthly / limits.monthly) * 100;
-  const dailyPercentage = (usageStats.daily / limits.daily) * 100;
-  const hourlyPercentage = (usageStats.hourly / limits.hourly) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50">
@@ -241,7 +184,7 @@ export default function DashboardPage() {
             Welcome back, {session.user.name || session.user.email?.split('@')[0]}!
           </h1>
           <p className="text-gray-600 text-base md:text-lg">
-            Manage your account, track usage, and explore our tools
+            Manage your account and explore our tools
           </p>
         </div>
 
@@ -339,99 +282,6 @@ export default function DashboardPage() {
                 </>
               )}
             </div>
-          </div>
-        </div>
-
-        {/* Usage Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {/* Monthly Usage */}
-          <div className="group bg-white rounded-xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-200 relative overflow-hidden">
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <ChartBarIcon className="h-5 w-5 text-blue-600" />
-                <h3 className="text-sm font-medium text-gray-700">Monthly Usage</h3>
-              </div>
-            </div>
-            <div className="mb-3">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-gray-900">{usageStats.monthly}</span>
-                <span className="text-sm text-gray-500">/ {limits.monthly}</span>
-              </div>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-              <div
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  monthlyPercentage >= 90 ? 'bg-red-500' :
-                  monthlyPercentage >= 70 ? 'bg-yellow-500' :
-                  'bg-blue-500'
-                }`}
-                style={{ width: `${Math.min(monthlyPercentage, 100)}%` }}
-              ></div>
-            </div>
-            <p className="text-xs text-gray-500">
-              {limits.monthly - usageStats.monthly} calls remaining
-            </p>
-          </div>
-
-          {/* Daily Usage */}
-          <div className="group bg-white rounded-xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-200 relative overflow-hidden">
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <ClockIcon className="h-5 w-5 text-green-600" />
-                <h3 className="text-sm font-medium text-gray-700">Daily Usage</h3>
-              </div>
-            </div>
-            <div className="mb-3">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-gray-900">{usageStats.daily}</span>
-                <span className="text-sm text-gray-500">/ {limits.daily}</span>
-              </div>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-              <div
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  dailyPercentage >= 90 ? 'bg-red-500' :
-                  dailyPercentage >= 70 ? 'bg-yellow-500' :
-                  'bg-green-500'
-                }`}
-                style={{ width: `${Math.min(dailyPercentage, 100)}%` }}
-              ></div>
-            </div>
-            <p className="text-xs text-gray-500">
-              {limits.daily - usageStats.daily} calls remaining
-            </p>
-          </div>
-
-          {/* Hourly Usage */}
-          <div className="group bg-white rounded-xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-200 relative overflow-hidden">
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-fuchsia-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <ClockIcon className="h-5 w-5 text-purple-600" />
-                <h3 className="text-sm font-medium text-gray-700">Hourly Usage</h3>
-              </div>
-            </div>
-            <div className="mb-3">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-gray-900">{usageStats.hourly}</span>
-                <span className="text-sm text-gray-500">/ {limits.hourly}</span>
-              </div>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-              <div
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  hourlyPercentage >= 90 ? 'bg-red-500' :
-                  hourlyPercentage >= 70 ? 'bg-yellow-500' :
-                  'bg-purple-500'
-                }`}
-                style={{ width: `${Math.min(hourlyPercentage, 100)}%` }}
-              ></div>
-            </div>
-            <p className="text-xs text-gray-500">
-              {limits.hourly - usageStats.hourly} calls remaining
-            </p>
           </div>
         </div>
 

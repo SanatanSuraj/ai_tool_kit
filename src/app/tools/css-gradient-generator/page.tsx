@@ -215,7 +215,7 @@ export default function CssGradientGeneratorPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-indigo-50">
       {/* Header Section */}
-      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16 overflow-visible">
         {/* Background decorations */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-purple-50/50"></div>
@@ -228,7 +228,7 @@ export default function CssGradientGeneratorPage() {
           <div className="absolute bottom-20 left-1/4 w-2 h-2 rounded-full bg-indigo-400 opacity-40 animate-pulse [animation-delay:2s]"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
           <div className="mb-2">
             <Link 
               href={categoryPath}
@@ -255,7 +255,7 @@ export default function CssGradientGeneratorPage() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-gray-100 relative overflow-hidden">
                 {/* Card accent */}
@@ -309,7 +309,7 @@ export default function CssGradientGeneratorPage() {
                           id="gradientType"
                           value={gradientType}
                           onChange={(e) => setGradientType(e.target.value as GradientType)}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 bg-white"
                         >
                           {gradientTypes.map((type) => (
                             <option key={type.value} value={type.value}>
@@ -328,7 +328,7 @@ export default function CssGradientGeneratorPage() {
                             id="linearDirection"
                             value={linearDirection}
                             onChange={(e) => setLinearDirection(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 bg-white"
                           >
                             {linearDirections.map((direction) => (
                               <option key={direction.value} value={direction.value}>
@@ -349,7 +349,7 @@ export default function CssGradientGeneratorPage() {
                               id="radialShape"
                               value={radialShape}
                               onChange={(e) => setRadialShape(e.target.value)}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 bg-white"
                             >
                               {radialShapes.map((shape) => (
                                 <option key={shape.value} value={shape.value}>
@@ -366,7 +366,7 @@ export default function CssGradientGeneratorPage() {
                               id="radialPosition"
                               value={radialPosition}
                               onChange={(e) => setRadialPosition(e.target.value)}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 bg-white"
                             >
                               {radialPositions.map((position) => (
                                 <option key={position.value} value={position.value}>
@@ -465,7 +465,7 @@ export default function CssGradientGeneratorPage() {
             </div>
             
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-lg border border-indigo-100">
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-lg border border-indigo-100 relative">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />

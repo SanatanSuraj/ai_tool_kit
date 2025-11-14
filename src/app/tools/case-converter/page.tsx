@@ -168,7 +168,7 @@ export default function CaseConverterPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-pink-50">
       {/* Header Section */}
-      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16 overflow-visible">
         {/* Background decorations */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-rose-50/50"></div>
@@ -185,7 +185,7 @@ export default function CaseConverterPage() {
           <div className="absolute bottom-1/4 left-1/3 w-32 h-32 rounded-full bg-gradient-to-r from-pink-200/10 to-rose-200/10 blur-xl"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
           <div className="mb-2">
             <Link 
               href={categoryPath}
@@ -291,7 +291,11 @@ export default function CaseConverterPage() {
                     </div>
                     
                     <div className="border border-gray-200 rounded-xl p-4 min-h-20 bg-white">
-                      <p className="whitespace-pre-wrap break-words">{result}</p>
+                      {result ? (
+                        <p className="whitespace-pre-wrap break-words text-gray-900">{result}</p>
+                      ) : (
+                        <p className="text-gray-400">Converted text will appear here...</p>
+                      )}
                     </div>
                   </div>
                   

@@ -6,12 +6,16 @@ import { UserIcon, Bars3Icon, XMarkIcon, SparklesIcon, ArrowRightOnRectangleIcon
 import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import SignInModal from './SignInModal';
+import { useSubscriptionSync } from '@/hooks/useSubscriptionSync';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const { data: session } = useSession({ required: false });
+  
+  // Sync subscription updates across tabs (runs on all pages)
+  useSubscriptionSync();
 
   // Handle scroll behavior
   useEffect(() => {

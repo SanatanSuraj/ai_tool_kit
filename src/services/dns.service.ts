@@ -13,19 +13,66 @@ export class DNSService {
         body: JSON.stringify(request)
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || 'Unknown error');
+        const errorMessage = data.error || 'Unknown error';
+        console.error('DNS API error:', errorMessage, data);
+        throw new Error(errorMessage);
       }
 
-      const data = await response.json();
+      console.log('DNS API response:', { 
+        type: request.type, 
+        domain: request.domain, 
+        recordsCount: data.records?.length || 0,
+        recordsType: Array.isArray(data.records) ? 'array' : typeof data.records,
+        sampleRecord: data.records?.[0]
+      });
       
       // Normalize records based on their structure
       let records: DNSRecord[] = [];
       
       if (Array.isArray(data.records)) {
         records = data.records.map((record: any) => {
-          // Handle string records (A, AAAA, CNAME, NS, PTR)
+          // Handle SRV records first (objects with name, port, priority, weight)
+          if (request.type === 'SRV') {
+            if (record && typeof record === 'object' && (record.name || record.port !== undefined)) {
+              return { 
+                type: request.type, 
+                name: record.name || '',
+                port: record.port ?? 0,
+                priority: record.priority ?? 0,
+                weight: record.weight ?? 0,
+                value: `${record.name || 'N/A'}:${record.port ?? 'N/A'} (Priority: ${record.priority ?? 'N/A'}, Weight: ${record.weight ?? 'N/A'})`,
+                ...record 
+              };
+            }
+            // Fallback for SRV if structure is unexpected
+            return { 
+              type: request.type, 
+              value: JSON.stringify(record),
+              ...record 
+            };
+          }
+          
+          // Handle CNAME records (strings)
+          if (request.type === 'CNAME') {
+            if (typeof record === 'string') {
+              return { type: request.type, value: record };
+            }
+            // If CNAME comes as object with value property
+            if (record && typeof record === 'object' && record.value) {
+              return { type: request.type, value: record.value, ...record };
+            }
+            // Fallback
+            return { 
+              type: request.type, 
+              value: typeof record === 'string' ? record : JSON.stringify(record),
+              ...record 
+            };
+          }
+          
+          // Handle string records (A, AAAA, NS, PTR)
           if (typeof record === 'string') {
             return { type: request.type, value: record };
           }
@@ -40,15 +87,6 @@ export class DNSService {
             return { 
               type: request.type, 
               value: `${record.exchange} (Priority: ${record.priority})`,
-              ...record 
-            };
-          }
-          
-          // Handle SRV records
-          if (request.type === 'SRV' && record.name && record.port !== undefined) {
-            return { 
-              type: request.type, 
-              value: `${record.name}:${record.port} (Priority: ${record.priority ?? 'N/A'}, Weight: ${record.weight ?? 'N/A'})`,
               ...record 
             };
           }
@@ -69,7 +107,7 @@ export class DNSService {
           }
           
           // Default: try to extract value or stringify
-          if (record.value) {
+          if (record && typeof record === 'object' && record.value) {
             return { ...record, type: request.type };
           }
           

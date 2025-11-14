@@ -137,7 +137,7 @@ export default function TextDifferencePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-cyan-50">
       {/* Header Section */}
-      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16 overflow-visible">
         {/* Background decorations */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/50 to-blue-50/50"></div>
@@ -154,7 +154,7 @@ export default function TextDifferencePage() {
           <div className="absolute bottom-1/4 left-1/3 w-32 h-32 rounded-full bg-gradient-to-r from-cyan-200/10 to-blue-200/10 blur-xl"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <div className="mb-2">
             <Link 
               href={categoryPath}
@@ -332,13 +332,15 @@ export default function TextDifferencePage() {
                   </div>
                   
                   <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 overflow-auto max-h-96">
-                    <pre className="text-sm whitespace-pre-wrap">
+                    <pre className="text-sm whitespace-pre-wrap text-gray-900">
                       {diffResult.map((part, index) => {
                         let className = "";
                         if (part.type === "addition") {
                           className = "bg-green-100 text-green-800 px-0.5 rounded";
                         } else if (part.type === "deletion") {
                           className = "bg-red-100 text-red-800 px-0.5 rounded line-through";
+                        } else {
+                          className = "text-gray-900";
                         }
                         return <span key={index} className={className}>{part.text}</span>;
                       })}
@@ -352,7 +354,7 @@ export default function TextDifferencePage() {
                         Content Removed
                       </h4>
                       <div className="max-h-40 overflow-auto">
-                        <pre className="text-xs bg-red-50 text-red-800 p-3 rounded whitespace-pre-wrap">
+                        <pre className="text-xs bg-red-50 text-red-800 p-3 rounded whitespace-pre-wrap font-sans">
                           {diffResult
                             .filter(part => part.type === "deletion")
                             .map(part => part.text)
@@ -367,7 +369,7 @@ export default function TextDifferencePage() {
                         Content Added
                       </h4>
                       <div className="max-h-40 overflow-auto">
-                        <pre className="text-xs bg-green-50 text-green-800 p-3 rounded whitespace-pre-wrap">
+                        <pre className="text-xs bg-green-50 text-green-800 p-3 rounded whitespace-pre-wrap font-sans">
                           {diffResult
                             .filter(part => part.type === "addition")
                             .map(part => part.text)
@@ -381,9 +383,9 @@ export default function TextDifferencePage() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 relative">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">How to Compare Texts</h2>
                 
                 <div className="space-y-6">
@@ -392,23 +394,23 @@ export default function TextDifferencePage() {
                     <p className="text-sm text-gray-600">
                       Choose the right comparison mode for your needs:
                     </p>
-                    <ul className="mt-2 space-y-1 text-sm">
+                    <ul className="mt-2 space-y-1 text-sm text-gray-700">
                       <li className="flex items-start">
                         <span className="text-cyan-500 mr-2 font-bold">•</span>
                         <div>
-                          <span className="font-medium text-gray-800">Character-by-character:</span> Best for detailed comparison, shows every single difference
+                          <span className="font-medium text-gray-900">Character-by-character:</span> <span className="text-gray-700">Best for detailed comparison, shows every single difference</span>
                         </div>
                       </li>
                       <li className="flex items-start">
                         <span className="text-cyan-500 mr-2 font-bold">•</span>
                         <div>
-                          <span className="font-medium text-gray-800">Word-by-word:</span> Good balance, shows which words were changed, added, or removed
+                          <span className="font-medium text-gray-900">Word-by-word:</span> <span className="text-gray-700">Good balance, shows which words were changed, added, or removed</span>
                         </div>
                       </li>
                       <li className="flex items-start">
                         <span className="text-cyan-500 mr-2 font-bold">•</span>
                         <div>
-                          <span className="font-medium text-gray-800">Line-by-line:</span> Best for code or structured text, shows which lines differ
+                          <span className="font-medium text-gray-900">Line-by-line:</span> <span className="text-gray-700">Best for code or structured text, shows which lines differ</span>
                         </div>
                       </li>
                     </ul>
@@ -417,17 +419,17 @@ export default function TextDifferencePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                       <h3 className="font-medium text-gray-900 mb-2">Comparison Options</h3>
-                      <ul className="space-y-1 text-sm text-gray-600">
+                      <ul className="space-y-1 text-sm text-gray-700">
                         <li className="flex items-start">
                           <span className="text-cyan-500 mr-2 font-bold">•</span>
                           <div>
-                            <span className="font-medium text-gray-800">Ignore Case:</span> Treat upper and lowercase letters as the same
+                            <span className="font-medium text-gray-900">Ignore Case:</span> <span className="text-gray-700">Treat upper and lowercase letters as the same</span>
                           </div>
                         </li>
                         <li className="flex items-start">
                           <span className="text-cyan-500 mr-2 font-bold">•</span>
                           <div>
-                            <span className="font-medium text-gray-800">Ignore Whitespace:</span> Disregard spaces, tabs, and line breaks
+                            <span className="font-medium text-gray-900">Ignore Whitespace:</span> <span className="text-gray-700">Disregard spaces, tabs, and line breaks</span>
                           </div>
                         </li>
                       </ul>
@@ -435,18 +437,18 @@ export default function TextDifferencePage() {
                     
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                       <h3 className="font-medium text-gray-900 mb-2">Reading the Results</h3>
-                      <ul className="space-y-1 text-sm text-gray-600">
+                      <ul className="space-y-1 text-sm text-gray-700">
                         <li className="flex items-center">
                           <span className="w-3 h-3 rounded-full bg-green-500 mr-2"></span>
-                          <span>Green text shows additions (in the second text)</span>
+                          <span className="text-gray-700">Green text shows additions (in the second text)</span>
                         </li>
                         <li className="flex items-center">
                           <span className="w-3 h-3 rounded-full bg-red-500 mr-2"></span>
-                          <span>Red strikethrough text shows deletions (from the first text)</span>
+                          <span className="text-gray-700">Red strikethrough text shows deletions (from the first text)</span>
                         </li>
                         <li className="flex items-center">
                           <span className="w-3 h-3 rounded-full bg-gray-300 mr-2"></span>
-                          <span>Plain text shows unchanged content</span>
+                          <span className="text-gray-700">Plain text shows unchanged content</span>
                         </li>
                       </ul>
                     </div>
@@ -456,7 +458,7 @@ export default function TextDifferencePage() {
             </div>
             
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 shadow-lg border border-cyan-100">
+              <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 shadow-lg border border-cyan-100 relative">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />

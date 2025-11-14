@@ -197,7 +197,7 @@ function sayHello() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-indigo-50">
       {/* Header Section */}
-      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16 overflow-visible">
         {/* Background decorations */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-violet-50/50"></div>
@@ -214,7 +214,7 @@ function sayHello() {
           <div className="absolute bottom-1/4 left-1/3 w-32 h-32 rounded-full bg-gradient-to-r from-indigo-200/10 to-violet-200/10 blur-xl"></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <div className="mb-2">
             <Link 
               href={categoryPath}
@@ -305,84 +305,84 @@ function sayHello() {
                 <button
                   onClick={() => insertMarkdown("# placeholder", "placeholder")}
                   title="Heading 1"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700"
                 >
                   H1
                 </button>
                 <button
                   onClick={() => insertMarkdown("## placeholder", "placeholder")}
                   title="Heading 2"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700"
                 >
                   H2
                 </button>
                 <button
                   onClick={() => insertMarkdown("**placeholder**", "placeholder")}
                   title="Bold"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors font-bold"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors font-bold text-gray-700"
                 >
                   B
                 </button>
                 <button
                   onClick={() => insertMarkdown("*placeholder*", "placeholder")}
                   title="Italic"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors italic"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors italic text-gray-700"
                 >
                   I
                 </button>
                 <button
                   onClick={() => insertMarkdown("[placeholder](url)", "placeholder")}
                   title="Link"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors underline"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors underline text-gray-700"
                 >
                   Link
                 </button>
                 <button
                   onClick={() => insertMarkdown("![alt text](image-url)", "alt text")}
                   title="Image"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700"
                 >
                   Img
                 </button>
                 <button
                   onClick={() => insertMarkdown("`placeholder`", "placeholder")}
                   title="Inline Code"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors font-mono"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors font-mono text-gray-700"
                 >
                   Code
                 </button>
                 <button
                   onClick={() => insertMarkdown("```\nplaceholder\n```", "placeholder")}
                   title="Code Block"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors font-mono"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors font-mono text-gray-700"
                 >
                   {'</>'}
                 </button>
                 <button
                   onClick={() => insertMarkdown("* placeholder", "placeholder")}
                   title="Unordered List"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700"
                 >
                   • List
                 </button>
                 <button
                   onClick={() => insertMarkdown("1. placeholder", "placeholder")}
                   title="Ordered List"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700"
                 >
                   1. List
                 </button>
                 <button
                   onClick={() => insertMarkdown("> placeholder", "placeholder")}
                   title="Blockquote"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700"
                 >
                   "Quote"
                 </button>
                 <button
                   onClick={() => insertMarkdown("\n---\n")}
                   title="Horizontal Rule"
-                  className="p-1.5 rounded hover:bg-gray-200 transition-colors"
+                  className="p-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700"
                 >
                   HR
                 </button>
@@ -393,12 +393,12 @@ function sayHello() {
                 {/* Markdown Editor */}
                 {(activeTab === "edit" || activeTab === "split") && (
                   <div className={`${activeTab === "split" ? "w-1/2 border-r border-gray-200" : "w-full"}`}>
-                    <textarea
+                      <textarea
                       id="markdown-editor"
                       value={markdown}
                       onChange={(e) => setMarkdown(e.target.value)}
                       placeholder="Write your markdown here..."
-                      className="w-full h-80 p-4 font-mono text-gray-800 outline-none resize-none rounded-bl-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full h-80 p-4 font-mono text-gray-900 bg-white outline-none resize-none rounded-bl-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     ></textarea>
                   </div>
                 )}
@@ -471,9 +471,9 @@ function sayHello() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 relative">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">Markdown Syntax Guide</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -482,7 +482,7 @@ function sayHello() {
                     <div className="space-y-4">
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-700 mb-1">Headings</p>
-                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded">
+                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded text-gray-900">
                           # Heading 1
                           <br />
                           ## Heading 2
@@ -493,7 +493,7 @@ function sayHello() {
                       
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-700 mb-1">Emphasis</p>
-                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded">
+                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded text-gray-900">
                           **Bold Text**
                           <br />
                           *Italic Text*
@@ -504,7 +504,7 @@ function sayHello() {
                       
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-700 mb-1">Lists</p>
-                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded">
+                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded text-gray-900">
                           * Unordered item
                           <br />
                           * Unordered item
@@ -523,7 +523,7 @@ function sayHello() {
                     <div className="space-y-4">
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-700 mb-1">Links & Images</p>
-                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded">
+                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded text-gray-900">
                           [Link Text](https://example.com)
                           <br />
                           ![Alt Text](image-url.jpg)
@@ -532,7 +532,7 @@ function sayHello() {
                       
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-700 mb-1">Code</p>
-                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded">
+                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded text-gray-900">
                           `Inline code`
                           <br />
                           <br />
@@ -546,7 +546,7 @@ function sayHello() {
                       
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-700 mb-1">Other Elements</p>
-                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded">
+                        <pre className="text-xs font-mono bg-gray-100 p-2 rounded text-gray-900">
                           {">"} Blockquote
                           <br />
                           <br />
@@ -567,7 +567,7 @@ function sayHello() {
             </div>
             
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-2xl p-6 shadow-lg border border-indigo-100">
+              <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-2xl p-6 shadow-lg border border-indigo-100 relative">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />

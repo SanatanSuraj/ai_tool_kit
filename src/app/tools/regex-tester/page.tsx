@@ -208,7 +208,7 @@ export default function RegexTesterPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-green-50">
       {/* Header Section */}
-      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16">
+      <section className="relative pt-24 pb-10 md:pt-32 md:pb-16 overflow-visible">
         {/* Background decorations */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-teal-50/50"></div>
@@ -221,7 +221,7 @@ export default function RegexTesterPage() {
           <div className="absolute bottom-20 left-1/4 w-2 h-2 rounded-full bg-green-400 opacity-40 animate-pulse [animation-delay:2s]"></div>
         </div>
         
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
           <div className="mb-2">
             <Link 
               href={categoryPath}
@@ -248,9 +248,9 @@ export default function RegexTesterPage() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden relative">
                 {/* Card accent */}
                 <div className="h-1 w-full bg-gradient-to-r from-green-500 to-teal-600"></div>
                 
@@ -294,7 +294,7 @@ export default function RegexTesterPage() {
                         type="text"
                         value={pattern}
                         onChange={(e) => setPattern(e.target.value)}
-                        className="flex-1 border-0 bg-transparent focus:ring-0 font-mono text-sm py-2 px-0"
+                        className="flex-1 border-0 bg-transparent focus:ring-0 font-mono text-sm py-2 px-0 text-gray-900"
                         placeholder="Enter your regex pattern..."
                       />
                       <span className="text-gray-500 mr-1">/</span>
@@ -306,7 +306,7 @@ export default function RegexTesterPage() {
                             className={`px-1.5 py-0.5 rounded ${
                               flags[flag.flag]
                                 ? 'bg-green-100 text-green-800 font-medium'
-                                : 'bg-gray-100 text-gray-500'
+                                : 'bg-gray-100 text-gray-700'
                             }`}
                             title={flag.description}
                           >
@@ -328,11 +328,11 @@ export default function RegexTesterPage() {
                   {/* Regex cheat sheet (collapsible) */}
                   {showCheatSheet && (
                     <div className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200 text-sm overflow-auto max-h-60">
-                      <h3 className="font-medium text-gray-800 mb-2">Regex Cheat Sheet</h3>
+                      <h3 className="font-medium text-gray-900 mb-2">Regex Cheat Sheet</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                          <p className="font-medium text-gray-700 mb-1">Character Classes</p>
-                          <ul className="space-y-1">
+                          <p className="font-medium text-gray-900 mb-1">Character Classes</p>
+                          <ul className="space-y-1 text-gray-700">
                             <li><span className="font-mono text-green-600">.</span> - Any character except newline</li>
                             <li><span className="font-mono text-green-600">\w</span> - Word character [a-zA-Z0-9_]</li>
                             <li><span className="font-mono text-green-600">\d</span> - Digit [0-9]</li>
@@ -343,16 +343,16 @@ export default function RegexTesterPage() {
                           </ul>
                         </div>
                         <div>
-                          <p className="font-medium text-gray-700 mb-1">Anchors & Boundaries</p>
-                          <ul className="space-y-1">
+                          <p className="font-medium text-gray-900 mb-1">Anchors & Boundaries</p>
+                          <ul className="space-y-1 text-gray-700">
                             <li><span className="font-mono text-green-600">^</span> - Start of string or line</li>
                             <li><span className="font-mono text-green-600">$</span> - End of string or line</li>
                             <li><span className="font-mono text-green-600">\b</span> - Word boundary</li>
                             <li><span className="font-mono text-green-600">\B</span> - Not word boundary</li>
                           </ul>
                           
-                          <p className="font-medium text-gray-700 mt-3 mb-1">Quantifiers</p>
-                          <ul className="space-y-1">
+                          <p className="font-medium text-gray-900 mt-3 mb-1">Quantifiers</p>
+                          <ul className="space-y-1 text-gray-700">
                             <li><span className="font-mono text-green-600">*</span> - 0 or more</li>
                             <li><span className="font-mono text-green-600">+</span> - 1 or more</li>
                             <li><span className="font-mono text-green-600">?</span> - 0 or 1</li>
@@ -414,10 +414,10 @@ export default function RegexTesterPage() {
                       {pattern && testString ? (
                         <div 
                           dangerouslySetInnerHTML={{ __html: highlightMatches() }} 
-                          className="whitespace-pre-wrap"
+                          className="whitespace-pre-wrap text-gray-900"
                         />
                       ) : (
-                        <div className="text-gray-400 italic">
+                        <div className="text-gray-500 italic">
                           Enter a pattern and test string to see matches
                         </div>
                       )}
@@ -436,15 +436,15 @@ export default function RegexTesterPage() {
                       type="text"
                       value={replacement}
                       onChange={(e) => setReplacement(e.target.value)}
-                      className="w-full font-mono text-sm p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2"
+                      className="w-full font-mono text-sm p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2 text-gray-900 bg-white"
                       placeholder="Enter replacement text ($1, $2, etc. for capture groups)..."
                     />
                     
                     {replacement && (
                       <div className="mt-2">
                         <h4 className="text-xs font-medium text-gray-700 mb-1">Replacement Result:</h4>
-                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-200 font-mono text-sm overflow-auto max-h-40 whitespace-pre-wrap">
-                          {replacementResult || <span className="text-gray-400 italic">No replacement result</span>}
+                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-200 font-mono text-sm overflow-auto max-h-40 whitespace-pre-wrap text-gray-900">
+                          {replacementResult || <span className="text-gray-500 italic">No replacement result</span>}
                         </div>
                       </div>
                     )}
@@ -487,7 +487,7 @@ export default function RegexTesterPage() {
             </div>
             
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-6 shadow-lg border border-green-100">
+              <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-6 shadow-lg border border-green-100 relative">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />

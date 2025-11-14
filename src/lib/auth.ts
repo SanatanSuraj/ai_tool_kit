@@ -101,7 +101,7 @@ export const authOptions = {
 
       return true;
     },
-    async jwt({ token, user, account }: any) {
+    async jwt({ token, user, account, trigger }: any) {
       // Initial sign in - set user ID from database
       if (user) {
         try {
@@ -131,7 +131,9 @@ export const authOptions = {
         token.accessToken = account.access_token;
       }
 
-      // Fetch user subscription (only if we have a valid token.id)
+      // Always fetch fresh subscription data from database
+      // This ensures subscription changes are reflected immediately
+      // The trigger === 'update' happens when session.update() is called
       if (token.id && typeof token.id === 'string') {
         try {
           await connectDB();
@@ -140,8 +142,29 @@ export const authOptions = {
           const dbUser = await User.findById(token.id);
           if (dbUser) {
             const subscription = await Subscription.findOne({ userId: dbUser._id });
-            token.subscriptionTier = subscription?.tier || 'free';
-            token.subscriptionStatus = subscription?.status || 'active';
+            const currentTier = subscription?.tier || 'free';
+            const currentStatus = subscription?.status || 'active';
+            
+            // Store old tier for comparison
+            const oldTier = token.subscriptionTier;
+            
+            // Always update token with fresh subscription data
+            token.subscriptionTier = currentTier;
+            token.subscriptionStatus = currentStatus;
+            
+            // Log when subscription tier changes (for debugging)
+            if (oldTier && oldTier !== currentTier) {
+              console.log('Subscription tier updated:', {
+                userId: token.id,
+                oldTier,
+                newTier: currentTier,
+                trigger,
+              });
+            }
+          } else {
+            // Fallback if user not found
+            token.subscriptionTier = 'free';
+            token.subscriptionStatus = 'active';
           }
         } catch (error) {
           // If database query fails, use defaults

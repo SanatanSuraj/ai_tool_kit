@@ -83,10 +83,20 @@ export default function DNSLookupPage() {
     
     try {
       const { records } = await DNSService.lookup({ domain, type: recordType });
-      setResults(records || []);
-    } catch (err) {
-      setError("Failed to perform DNS lookup. Please try again.");
+      const recordsArray = records || [];
+      setResults(recordsArray);
+      // Clear any previous errors if we got results (even if empty)
+      if (recordsArray.length === 0) {
+        // Don't set error for empty results - let the empty state UI handle it
+        setError("");
+      } else {
+        setError(""); // Clear any previous errors
+      }
+    } catch (err: any) {
+      const errorMessage = err?.message || "Failed to perform DNS lookup. Please try again.";
+      setError(errorMessage);
       console.error("DNS lookup error:", err);
+      setResults([]);
     } finally {
       setIsLoading(false);
     }
@@ -244,7 +254,7 @@ export default function DNSLookupPage() {
                     </button>
                   </form>
                   
-                  {(Array.isArray(results) && results.length > 0) || (!Array.isArray(results) && currentRecordType === "SOA") ? (
+                  {(Array.isArray(results) && results.length > 0) || (!Array.isArray(results) && currentRecordType === "SOA" && results) ? (
                     <div className="mt-6 p-5 bg-gray-50 rounded-xl border border-gray-100">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">DNS Results for {domain}</h3>
@@ -298,7 +308,6 @@ export default function DNSLookupPage() {
                                 switch (currentRecordType) {
                                   case "A":
                                   case "AAAA":
-                                  case "CNAME":
                                   case "NS":
                                   case "PTR": {
                                     if (typeof record === "string") {
@@ -306,6 +315,19 @@ export default function DNSLookupPage() {
                                     } else if (record?.value) {
                                       valueContent = String(record.value);
                                     } else {
+                                      valueContent = JSON.stringify(record);
+                                    }
+                                    break;
+                                  }
+                                  
+                                  case "CNAME": {
+                                    // CNAME records should be strings or have a value property
+                                    if (typeof record === "string") {
+                                      valueContent = record;
+                                    } else if (record?.value) {
+                                      valueContent = String(record.value);
+                                    } else {
+                                      // Try to extract from object properties
                                       valueContent = JSON.stringify(record);
                                     }
                                     break;
@@ -336,8 +358,13 @@ export default function DNSLookupPage() {
                               
                                   case "SRV": {
                                     const srv = record as SrvRecord;
-                                    if (srv?.name && srv?.port !== undefined) {
+                                    // Check if value is already set (from service layer)
+                                    if (record?.value) {
+                                      valueContent = String(record.value);
+                                    } else if (srv?.name && srv?.port !== undefined) {
                                       valueContent = `${srv.name}:${srv.port} (Priority: ${srv.priority ?? "N/A"}, Weight: ${srv.weight ?? "N/A"})`;
+                                    } else if (srv?.name || srv?.port !== undefined) {
+                                      valueContent = `${srv.name || "N/A"}:${srv.port ?? "N/A"} (Priority: ${srv.priority ?? "N/A"}, Weight: ${srv.weight ?? "N/A"})`;
                                     } else {
                                       valueContent = JSON.stringify(record);
                                     }
@@ -397,6 +424,23 @@ export default function DNSLookupPage() {
                       <div className="mt-6 pt-4 border-t border-gray-200 text-center">
                         <div className="px-5 py-2 rounded-lg bg-blue-50 border border-blue-100 text-blue-700 text-sm inline-block">
                           Tip: Different record types provide different information about a domain's DNS configuration.
+                        </div>
+                      </div>
+                    </div>
+                  ) : !isLoading && domain && Array.isArray(results) && results.length === 0 ? (
+                    <div className="mt-6 p-5 bg-yellow-50 rounded-xl border border-yellow-200">
+                      <div className="flex items-start">
+                        <svg className="h-5 w-5 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        <div>
+                          <h3 className="text-sm font-medium text-yellow-800 mb-1">No {currentRecordType} Records Found</h3>
+                          <p className="text-sm text-yellow-700">
+                            No {currentRecordType} records were found for <span className="font-mono font-semibold">{domain}</span>.
+                            {currentRecordType === "CNAME" && " CNAME records are typically found on subdomains (e.g., www.example.com), not root domains."}
+                            {currentRecordType === "SRV" && " SRV records must be queried with the full service format: _service._protocol.domain.com (e.g., _sip._tcp.example.com)"}
+                            {currentRecordType !== "CNAME" && currentRecordType !== "SRV" && " This is normal if the domain doesn't have this type of record configured."}
+                          </p>
                         </div>
                       </div>
                     </div>
