@@ -35,7 +35,7 @@ const plans: Plan[] = [
       { name: 'Converter tools', count: 5, included: true }, // Temperature, Time Zone, Number Base, Color, Text Case
       { name: 'Generator tools', count: 7, included: true }, // Password, QR Code, Meta Tag, Lorem Ipsum, UUID, CSS Gradient, Cron
       { name: 'Developer tools', count: 6, included: true }, // JSON Formatter, HTML Formatter, Markdown Editor, CSS Minifier, JWT Debugger, Regex Tester
-      { name: 'Image manipulation tools', count: 5, included: true }, // Compressor, Resizer, Cropper, Converter, Background Remover
+      { name: 'Image manipulation tools', count: 5, included: false }, // Compressor, Resizer, Cropper, Converter, Background Remover
       { name: 'Unit converter tools', count: 6, included: true }, // Length, Weight, Area, Volume, Speed, Pressure
       { name: 'Time converter tools', count: 4, included: true }, // Time Zone, Time Duration, Unix Timestamp, Epoch
       { name: 'Data converter tools', count: 6, included: true }, // JSON-CSV, CSV-JSON, XML-JSON, YAML, Base64, URL Encoder

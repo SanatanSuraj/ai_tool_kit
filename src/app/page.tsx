@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from "@/components/Footer";
 import { useRef, useState, useEffect, Suspense } from "react";
 import SignInModal from "@/components/SignInModal";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSubscriptionSync } from "@/hooks/useSubscriptionSync";
@@ -16,6 +16,7 @@ function HomeContent() {
   const popularToolsRef = useRef<HTMLDivElement>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { data: session, update } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -59,6 +60,13 @@ function HomeContent() {
           router.replace('/', { scroll: false });
           
           // Show success message
+          setShowSuccessMessage(true);
+          
+          // Auto-hide after 8 seconds
+          setTimeout(() => {
+            setShowSuccessMessage(false);
+          }, 8000);
+          
           console.log('✅ Subscription updated successfully!');
         } catch (error) {
           console.error('Error refreshing subscription:', error);
@@ -75,8 +83,73 @@ function HomeContent() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50">
+      {/* Success Message Banner */}
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5 }}
+            className="fixed top-0 left-0 right-0 z-50 px-4 pt-4 sm:px-6 lg:px-8"
+          >
+            <div className="mx-auto max-w-7xl">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 shadow-2xl border border-green-400/50">
+                {/* Animated background pattern */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                    backgroundSize: '60px 60px'
+                  }}></div>
+                </div>
+                
+                <div className="relative px-6 py-5 sm:px-8 sm:py-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-shrink-0">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                          className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm"
+                        >
+                          <CheckCircleIcon className="h-7 w-7 text-white" />
+                        </motion.div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-white mb-1">
+                          🎉 Congratulations! You've Upgraded to Pro!
+                        </h3>
+                        <p className="text-green-50 text-sm sm:text-base">
+                          Your subscription is now active. Enjoy unlimited access to all premium features and tools!
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setShowSuccessMessage(false)}
+                      className="ml-4 flex-shrink-0 rounded-lg p-2 text-white/90 hover:bg-white/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
+                      aria-label="Dismiss"
+                    >
+                      <XMarkIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Shine effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '200%' }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section */}
-      <section aria-label="Hero" className="relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24">
+      <section aria-label="Hero" className={`relative overflow-hidden ${showSuccessMessage ? 'pt-36 pb-16 md:pt-44 md:pb-24' : 'pt-28 pb-16 md:pt-36 md:pb-24'}`}>
         {/* Background decoration */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-blue-50/50"></div>
