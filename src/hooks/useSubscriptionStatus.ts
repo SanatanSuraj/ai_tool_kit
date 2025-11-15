@@ -32,12 +32,14 @@ export function useSubscriptionStatus() {
         setSubscriptionTier(data.tier || 'free');
       } else {
         // Default to free if API call fails
-        setSubscriptionTier(session?.user?.subscriptionTier || 'free');
+        const tier = (session?.user?.subscriptionTier as SubscriptionTier) || 'free';
+        setSubscriptionTier(tier);
       }
     } catch (error) {
       console.error('Error fetching subscription:', error);
       // Default to free on error, but use session data if available
-      setSubscriptionTier(session?.user?.subscriptionTier || 'free');
+      const tier = (session?.user?.subscriptionTier as SubscriptionTier) || 'free';
+      setSubscriptionTier(tier);
     } finally {
       setIsLoading(false);
     }

@@ -6,6 +6,7 @@ import { headers } from 'next/headers';
 import { stripe } from '@/lib/stripe';
 import connectDB from '@/lib/mongodb';
 import Subscription from '@/models/Subscription';
+import User from '@/models/User';
 import { getTierFromPriceId } from '@/lib/stripe';
 import Stripe from 'stripe';
 

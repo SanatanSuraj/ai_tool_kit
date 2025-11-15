@@ -192,6 +192,11 @@ async function syncUserSubscription(email: string) {
           { new: true }
         );
 
+        if (!updatedSubscription) {
+          console.error(`\n❌ Failed to update subscription`);
+          process.exit(1);
+        }
+
         // Update user's subscription reference
         await User.findByIdAndUpdate(user._id, {
           subscriptionId: updatedSubscription._id,
