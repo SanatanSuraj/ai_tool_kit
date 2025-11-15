@@ -7,6 +7,8 @@ import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import UpgradeModal from '@/components/UpgradeModal';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { ImageService } from '@/services/image.service';
 import { getCategoryPath } from '@/utils/getCategoryPath';
 
@@ -18,7 +20,9 @@ export default function BackgroundRemoverPage() {
   const [fileName, setFileName] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isPro, isLoading: isSubscriptionLoading } = useSubscriptionStatus();
   const [downloadFormat, setDownloadFormat] = useState<'png' | 'jpeg'>('png');
 
   // Handle file selection
@@ -59,6 +63,14 @@ export default function BackgroundRemoverPage() {
 
   // Trigger file input click
   const triggerFileInput = () => {
+    // Check subscription before allowing file selection
+    if (isSubscriptionLoading) return; // Wait for subscription check
+    
+    if (!isPro) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
+    
     fileInputRef.current?.click();
   };
 
@@ -458,6 +470,11 @@ export default function BackgroundRemoverPage() {
       </section>
       
       <Footer />
+      
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)} 
+      />
     </div>
   );
 }

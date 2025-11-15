@@ -7,6 +7,8 @@ import NextImage from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import UpgradeModal from '@/components/UpgradeModal';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { getCategoryPath } from '@/utils/getCategoryPath';
 
 interface ResizeOptions {
@@ -30,8 +32,10 @@ export default function ImageResizerPage() {
   const [fileName, setFileName] = useState<string>('');
   const [isResizing, setIsResizing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [originalDimensions, setOriginalDimensions] = useState<ImageDimensions>({ width: 0, height: 0 });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isPro, isLoading: isSubscriptionLoading } = useSubscriptionStatus();
   
   const [options, setOptions] = useState<ResizeOptions>({
     width: 0,
@@ -279,6 +283,14 @@ export default function ImageResizerPage() {
 
   // Trigger file input click
   const triggerFileInput = () => {
+    // Check subscription before allowing file selection
+    if (isSubscriptionLoading) return; // Wait for subscription check
+    
+    if (!isPro) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
+    
     fileInputRef.current?.click();
   };
 
@@ -736,6 +748,11 @@ export default function ImageResizerPage() {
       </section>
       
       <Footer />
+      
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)} 
+      />
     </div>
   );
 } 

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ArrowLeftIcon, ArrowUpTrayIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import UpgradeModal from '@/components/UpgradeModal';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 interface ExifData {
@@ -29,7 +31,9 @@ export default function ExifReaderPage() {
   const [exifData, setExifData] = useState<ExifData | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isPro, isLoading: isSubscriptionLoading } = useSubscriptionStatus();
 
   // Load EXIF.js library dynamically
   const loadExifLibrary = async (): Promise<boolean> => {
@@ -278,6 +282,19 @@ export default function ExifReaderPage() {
     }
   };
 
+  // Trigger file input click
+  const triggerFileUpload = () => {
+    // Check subscription before allowing file selection
+    if (isSubscriptionLoading) return; // Wait for subscription check
+    
+    if (!isPro) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
+    
+    fileInputRef.current?.click();
+  };
+
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -296,13 +313,6 @@ export default function ExifReaderPage() {
     }
 
     readExifData(file);
-  };
-
-  // Trigger file input click
-  const triggerFileUpload = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
   };
 
   // Clear all data
@@ -558,6 +568,11 @@ export default function ExifReaderPage() {
       
       {/* Footer */}
       <Footer />
+      
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)} 
+      />
     </div>
   );
 }

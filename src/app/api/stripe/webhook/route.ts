@@ -146,14 +146,61 @@ export async function POST(request: NextRequest) {
         const stripeSubscription = event.data.object as Stripe.Subscription;
         const customerId = typeof stripeSubscription.customer === 'string' ? stripeSubscription.customer : stripeSubscription.customer.id;
 
-        // Find subscription by Stripe customer ID
-        const subscriptionDoc = await Subscription.findOne({
-          stripeCustomerId: customerId,
+        // Find subscription by Stripe customer ID or subscription ID
+        let subscriptionDoc = await Subscription.findOne({
+          $or: [
+            { stripeCustomerId: customerId },
+            { stripeSubscriptionId: stripeSubscription.id },
+          ],
         });
 
+        // If subscription not found, try to find user by customer ID
+        let userDoc = null;
         if (!subscriptionDoc) {
-          console.error(`Subscription not found for customer ${customerId}`);
+          console.log(`Subscription not found for customer ${customerId}, attempting to find user...`);
+          
+          // Try to get customer from Stripe to find user metadata
+          try {
+            const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
+            const userId = customer.metadata?.userId;
+            
+            if (userId) {
+              const User = (await import('@/models/User')).default;
+              userDoc = await User.findById(userId);
+              
+              if (userDoc) {
+                console.log(`Found user ${userId} for customer ${customerId}`);
+                // Check if subscription exists for this user
+                subscriptionDoc = await Subscription.findOne({ userId: userDoc._id });
+              }
+            } else if (customer.email) {
+              // Fallback: try to find user by email
+              const User = (await import('@/models/User')).default;
+              userDoc = await User.findOne({ email: customer.email });
+              
+              if (userDoc) {
+                console.log(`Found user by email ${customer.email} for customer ${customerId}`);
+                subscriptionDoc = await Subscription.findOne({ userId: userDoc._id });
+              }
+            }
+          } catch (error) {
+            console.error(`Error retrieving customer ${customerId}:`, error);
+          }
+        } else {
+          // Get user document from existing subscription
+          const User = (await import('@/models/User')).default;
+          userDoc = await User.findById(subscriptionDoc.userId);
+        }
+
+        // If still no subscription or user found, log error and break
+        if (!userDoc) {
+          console.error(`User not found for customer ${customerId}`);
           break;
+        }
+
+        // If subscription doesn't exist, we'll create it below
+        if (!subscriptionDoc) {
+          console.log(`Creating new subscription for user ${userDoc._id.toString()}`);
         }
 
         const priceId = stripeSubscription.items.data[0]?.price.id;
@@ -174,25 +221,44 @@ export async function POST(request: NextRequest) {
           ? new Date(stripeSubscription.trial_end * 1000)
           : undefined;
 
-        // Update subscription
-        await Subscription.findByIdAndUpdate(subscriptionDoc._id, {
-          tier,
-          status:
-            stripeSubscription.status === 'active'
-              ? 'active'
-              : stripeSubscription.status === 'trialing'
-              ? 'trialing'
-              : stripeSubscription.status === 'past_due'
-              ? 'past_due'
-              : 'canceled',
-          stripePriceId: priceId,
-          currentPeriodStart,
-          currentPeriodEnd,
-          cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-          trialEnd,
-        });
+        // Update subscription - use userId to ensure correct update
+        const updatedSubscription = await Subscription.findOneAndUpdate(
+          { userId: userDoc._id },
+          {
+            tier,
+            status:
+              stripeSubscription.status === 'active'
+                ? 'active'
+                : stripeSubscription.status === 'trialing'
+                ? 'trialing'
+                : stripeSubscription.status === 'past_due'
+                ? 'past_due'
+                : 'canceled',
+            stripeCustomerId: customerId,
+            stripeSubscriptionId: stripeSubscription.id,
+            stripePriceId: priceId,
+            currentPeriodStart,
+            currentPeriodEnd,
+            cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+            trialEnd,
+          },
+          { upsert: true, new: true }
+        );
 
-        console.log(`Subscription updated for customer ${customerId}`);
+        // Ensure user's subscriptionId reference is updated
+        if (updatedSubscription) {
+          const User = (await import('@/models/User')).default;
+          await User.findByIdAndUpdate(userDoc._id, {
+            subscriptionId: updatedSubscription._id,
+          });
+          
+          console.log(`✅ Subscription updated for customer ${customerId}`, {
+            subscriptionId: updatedSubscription._id,
+            tier: updatedSubscription.tier,
+            status: updatedSubscription.status,
+            userId: userDoc._id.toString(),
+          });
+        }
         break;
       }
 
@@ -225,30 +291,120 @@ export async function POST(request: NextRequest) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const subscriptionId = (invoice as any).subscription ? (typeof (invoice as any).subscription === 'string' ? (invoice as any).subscription : (invoice as any).subscription.id) : null;
 
-        // Update subscription period if needed
-        const subscriptionDoc = await Subscription.findOne({
-          stripeCustomerId: customerId,
+        if (!subscriptionId) {
+          console.log('Invoice has no subscription ID, skipping subscription update');
+          break;
+        }
+
+        // Find subscription by Stripe customer ID or subscription ID
+        let subscriptionDoc = await Subscription.findOne({
+          $or: [
+            { stripeCustomerId: customerId },
+            { stripeSubscriptionId: subscriptionId },
+          ],
         });
 
-        if (subscriptionDoc && subscriptionId) {
-          const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId) as Stripe.Subscription;
+        // If subscription not found, try to find user by customer ID
+        let userDoc = null;
+        if (!subscriptionDoc) {
+          console.log(`Subscription not found for customer ${customerId}, attempting to find user...`);
+          
+          try {
+            const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
+            const userId = customer.metadata?.userId;
+            
+            if (userId) {
+              const User = (await import('@/models/User')).default;
+              userDoc = await User.findById(userId);
+              
+              if (userDoc) {
+                console.log(`Found user ${userId} for customer ${customerId}`);
+                subscriptionDoc = await Subscription.findOne({ userId: userDoc._id });
+              }
+            } else if (customer.email) {
+              // Fallback: try to find user by email
+              const User = (await import('@/models/User')).default;
+              userDoc = await User.findOne({ email: customer.email });
+              
+              if (userDoc) {
+                console.log(`Found user by email ${customer.email} for customer ${customerId}`);
+                subscriptionDoc = await Subscription.findOne({ userId: userDoc._id });
+              }
+            }
+          } catch (error) {
+            console.error(`Error retrieving customer ${customerId}:`, error);
+          }
+        } else {
+          // Get user document from existing subscription
+          const User = (await import('@/models/User')).default;
+          userDoc = await User.findById(subscriptionDoc.userId);
+        }
 
-          // Safely convert Unix timestamps to Date objects
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const periodStart = (stripeSubscription as any).current_period_start;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const periodEnd = (stripeSubscription as any).current_period_end;
-          const currentPeriodStart = periodStart 
-            ? new Date(periodStart * 1000)
-            : new Date();
-          const currentPeriodEnd = periodEnd
-            ? new Date(periodEnd * 1000)
-            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        // If user not found, log error and break
+        if (!userDoc) {
+          console.error(`User not found for customer ${customerId}`);
+          break;
+        }
 
-          await Subscription.findByIdAndUpdate(subscriptionDoc._id, {
-            status: 'active',
+        // Retrieve subscription from Stripe to get latest data
+        const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId) as Stripe.Subscription;
+
+        // Get price ID and tier from subscription
+        const priceId = stripeSubscription.items.data[0]?.price.id;
+        const tier = getTierFromPriceId(priceId || '');
+
+        // Safely convert Unix timestamps to Date objects
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const periodStart = (stripeSubscription as any).current_period_start;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const periodEnd = (stripeSubscription as any).current_period_end;
+        const currentPeriodStart = periodStart 
+          ? new Date(periodStart * 1000)
+          : new Date();
+        const currentPeriodEnd = periodEnd
+          ? new Date(periodEnd * 1000)
+          : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        const trialEnd = stripeSubscription.trial_end
+          ? new Date(stripeSubscription.trial_end * 1000)
+          : undefined;
+
+        console.log('Updating subscription on payment success:', {
+          customerId,
+          subscriptionId,
+          priceId,
+          tier,
+          status: stripeSubscription.status,
+          hasSubscriptionDoc: !!subscriptionDoc,
+          userId: userDoc._id.toString(),
+        });
+
+        const updatedSubscription = await Subscription.findOneAndUpdate(
+          { userId: userDoc._id },
+          {
+            tier, // Update tier from subscription price
+            status: stripeSubscription.status === 'active' ? 'active' : 'trialing',
+            stripeCustomerId: customerId,
+            stripeSubscriptionId: subscriptionId,
+            stripePriceId: priceId, // Update price ID
             currentPeriodStart,
             currentPeriodEnd,
+            cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+            trialEnd,
+          },
+          { upsert: true, new: true }
+        );
+
+        // Ensure user's subscriptionId reference is updated
+        if (updatedSubscription) {
+          await User.findByIdAndUpdate(userDoc._id, {
+            subscriptionId: updatedSubscription._id,
+          });
+
+          console.log(`✅ Subscription updated on payment success for customer ${customerId}`, {
+            subscriptionId: updatedSubscription._id,
+            tier: updatedSubscription.tier,
+            status: updatedSubscription.status,
+            userId: userDoc._id.toString(),
           });
         }
         break;

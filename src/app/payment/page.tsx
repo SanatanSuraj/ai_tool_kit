@@ -9,7 +9,23 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ArrowPathIcon,
+  DocumentArrowDownIcon,
+  ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline';
+
+interface Invoice {
+  id: string;
+  number: string | null;
+  status: string;
+  amount: number;
+  currency: string;
+  date: string;
+  periodStart: string | null;
+  periodEnd: string | null;
+  invoicePdf: string | null;
+  hostedInvoiceUrl: string | null;
+  description: string;
+}
 
 export default function PaymentPage() {
   const { data: session, status } = useSession({ 
@@ -17,8 +33,10 @@ export default function PaymentPage() {
   });
   const router = useRouter();
   const [subscription, setSubscription] = useState<any>(null);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [invoicesLoading, setInvoicesLoading] = useState(false);
 
   const fetchSubscription = useCallback(async () => {
     try {
@@ -37,11 +55,39 @@ export default function PaymentPage() {
     }
   }, []);
 
+  const fetchPaymentHistory = useCallback(async () => {
+    if (subscription?.tier === 'free') {
+      setInvoices([]);
+      return;
+    }
+
+    try {
+      setInvoicesLoading(true);
+      const response = await fetch('/api/stripe/payment-history', {
+        cache: 'no-store',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setInvoices(data.invoices || []);
+      }
+    } catch (error) {
+      console.error('Error fetching payment history:', error);
+    } finally {
+      setInvoicesLoading(false);
+    }
+  }, [subscription?.tier]);
+
   useEffect(() => {
     if (session?.user?.id && status === 'authenticated') {
       fetchSubscription();
     }
   }, [session?.user?.id, status, fetchSubscription]);
+
+  useEffect(() => {
+    if (subscription?.tier && subscription.tier !== 'free') {
+      fetchPaymentHistory();
+    }
+  }, [subscription?.tier, fetchPaymentHistory]);
 
   const handleManageBilling = async () => {
     setPortalLoading(true);
@@ -246,9 +292,21 @@ export default function PaymentPage() {
 
             {/* Payment History */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
-              <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6">
-                Payment History
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-gray-900">
+                  Payment History
+                </h2>
+                {subscriptionTier !== 'free' && (
+                  <button
+                    onClick={fetchPaymentHistory}
+                    disabled={invoicesLoading}
+                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 flex items-center gap-2 text-sm disabled:opacity-50"
+                  >
+                    <ArrowPathIcon className={`h-4 w-4 ${invoicesLoading ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline">Refresh</span>
+                  </button>
+                )}
+              </div>
               
               {subscriptionTier === 'free' ? (
                 <div className="text-center py-12">
@@ -261,11 +319,15 @@ export default function PaymentPage() {
                     Upgrade to Premium
                   </a>
                 </div>
-              ) : (
+              ) : invoicesLoading ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-600 mb-4">
-                    View your complete payment history and invoices in the billing portal.
-                  </p>
+                  <ArrowPathIcon className="h-8 w-8 text-gray-400 mx-auto mb-4 animate-spin" />
+                  <p className="text-gray-600">Loading payment history...</p>
+                </div>
+              ) : invoices.length === 0 ? (
+                <div className="text-center py-12">
+                  <CreditCardIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-4">No payment history found</p>
                   <button
                     onClick={handleManageBilling}
                     disabled={portalLoading}
@@ -273,6 +335,112 @@ export default function PaymentPage() {
                   >
                     {portalLoading ? 'Opening...' : 'View Billing Portal'}
                   </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Date</th>
+                          <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Description</th>
+                          <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Amount</th>
+                          <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
+                          <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {invoices.map((invoice) => (
+                          <tr key={invoice.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                            <td className="py-4 px-4 text-sm text-gray-900">
+                              {new Date(invoice.date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                            </td>
+                            <td className="py-4 px-4 text-sm text-gray-600">
+                              <div>
+                                <div className="font-medium">{invoice.description}</div>
+                                {invoice.number && (
+                                  <div className="text-xs text-gray-500 mt-1">Invoice #{invoice.number}</div>
+                                )}
+                              </div>
+                            </td>
+                            <td className="py-4 px-4 text-sm font-medium text-gray-900">
+                              {new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: invoice.currency,
+                              }).format(invoice.amount)}
+                            </td>
+                            <td className="py-4 px-4">
+                              <span
+                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                  invoice.status === 'paid'
+                                    ? 'bg-green-100 text-green-800'
+                                    : invoice.status === 'open'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : invoice.status === 'void'
+                                    ? 'bg-gray-100 text-gray-800'
+                                    : 'bg-red-100 text-red-800'
+                                }`}
+                              >
+                                {invoice.status === 'paid' && <CheckCircleIcon className="h-3 w-3 mr-1" />}
+                                {invoice.status === 'open' && <XCircleIcon className="h-3 w-3 mr-1" />}
+                                {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center justify-end gap-2">
+                                {invoice.hostedInvoiceUrl && (
+                                  <a
+                                    href={invoice.hostedInvoiceUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200"
+                                    title="View invoice"
+                                  >
+                                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                                  </a>
+                                )}
+                                {invoice.invoicePdf && (
+                                  <a
+                                    href={invoice.invoicePdf}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200"
+                                    title="Download PDF"
+                                  >
+                                    <DocumentArrowDownIcon className="h-4 w-4" />
+                                  </a>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  <div className="pt-4 border-t border-gray-100">
+                    <button
+                      onClick={handleManageBilling}
+                      disabled={portalLoading}
+                      className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {portalLoading ? (
+                        <>
+                          <ArrowPathIcon className="h-5 w-5 animate-spin" />
+                          Opening...
+                        </>
+                      ) : (
+                        <>
+                          <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+                          View Complete History in Billing Portal
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

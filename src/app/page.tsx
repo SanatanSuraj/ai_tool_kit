@@ -5,18 +5,69 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from "@/components/Footer";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, Suspense } from "react";
 import SignInModal from "@/components/SignInModal";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useSubscriptionSync } from "@/hooks/useSubscriptionSync";
 
-export default function Home() {
+function HomeContent() {
   const popularToolsRef = useRef<HTMLDivElement>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const { data: session, update } = useSession();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { broadcastUpdate } = useSubscriptionSync();
+  const hasProcessedSuccess = useRef(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  // Handle payment success redirect
+  useEffect(() => {
+    const success = searchParams.get('success');
+    
+    if (success === 'true' && session?.user?.id && !hasProcessedSuccess.current) {
+      hasProcessedSuccess.current = true;
+      
+      // Immediately refresh subscription and session
+      const refreshSubscription = async () => {
+        try {
+          console.log('Payment successful! Refreshing subscription...');
+          
+          // First, sync subscription from Stripe
+          const syncResponse = await fetch('/api/stripe/subscription/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          
+          if (syncResponse.ok) {
+            const syncData = await syncResponse.json();
+            console.log('Subscription sync result:', syncData);
+          }
+          
+          // Update session to get latest subscription data
+          await update();
+          
+          // Broadcast update to other tabs
+          broadcastUpdate();
+          
+          // Remove success parameter from URL
+          router.replace('/', { scroll: false });
+          
+          // Show success message
+          console.log('✅ Subscription updated successfully!');
+        } catch (error) {
+          console.error('Error refreshing subscription:', error);
+        }
+      };
+      
+      refreshSubscription();
+    }
+  }, [searchParams, session, update, broadcastUpdate, router]);
 
   const scrollToTools = () => {
     popularToolsRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -584,5 +635,17 @@ export default function Home() {
         onClose={() => setIsSignInModalOpen(false)} 
       />
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      </main>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

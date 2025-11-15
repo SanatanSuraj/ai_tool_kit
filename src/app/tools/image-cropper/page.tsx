@@ -7,6 +7,8 @@ import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import UpgradeModal from '@/components/UpgradeModal';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { centerAspectCrop, getAspectRatio } from "@/utils/imageCropService";
@@ -26,8 +28,10 @@ export default function ImageCropperPage() {
   const [fileName, setFileName] = useState<string>('');
   const [isCropping, setIsCropping] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const { isPro, isLoading: isSubscriptionLoading } = useSubscriptionStatus();
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   
@@ -189,6 +193,14 @@ export default function ImageCropperPage() {
 
   // Trigger file input click
   const triggerFileInput = () => {
+    // Check subscription before allowing file selection
+    if (isSubscriptionLoading) return; // Wait for subscription check
+    
+    if (!isPro) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
+    
     fileInputRef.current?.click();
   };
 
@@ -620,6 +632,11 @@ export default function ImageCropperPage() {
       </section>
       
       <Footer />
+      
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)} 
+      />
     </div>
   );
 } 

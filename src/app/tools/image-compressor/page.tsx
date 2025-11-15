@@ -7,6 +7,8 @@ import Image from "next/image";
 import { ArrowLeftIcon, ArrowDownTrayIcon, PhotoIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import PopularTools from "@/components/PopularTools";
 import Footer from '@/components/Footer';
+import UpgradeModal from '@/components/UpgradeModal';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { getCategoryPath } from '@/utils/getCategoryPath';
 
 interface CompressionOptions {
@@ -26,7 +28,9 @@ export default function ImageCompressorPage() {
   const [fileName, setFileName] = useState<string>('');
   const [isCompressing, setIsCompressing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isPro, isLoading: isSubscriptionLoading } = useSubscriptionStatus();
   
   const [options, setOptions] = useState<CompressionOptions>({
     quality: 80,
@@ -110,6 +114,14 @@ export default function ImageCompressorPage() {
 
   // Trigger file input click
   const triggerFileInput = () => {
+    // Check subscription before allowing file selection
+    if (isSubscriptionLoading) return; // Wait for subscription check
+    
+    if (!isPro) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
+    
     fileInputRef.current?.click();
   };
 
@@ -546,6 +558,11 @@ export default function ImageCompressorPage() {
       </section>
       
       <Footer />
+      
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)} 
+      />
     </div>
   );
 } 

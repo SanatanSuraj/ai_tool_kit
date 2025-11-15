@@ -371,7 +371,7 @@ export default function KeywordResearchPage() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-rose-500 mr-2 font-bold">3.</span>
-                    <span>Click &quot;Research Keywords&quot; or press Enter</span>
+                    <span>Click {'"'}Research Keywords{'"'} or press Enter</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-rose-500 mr-2 font-bold">4.</span>
